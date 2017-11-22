@@ -1,0 +1,90 @@
+{
+  "name": "User",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true,
+    "postgresql": {
+      "schema": "public",
+      "table": "dh_user"
+    }
+  },
+  "properties": {
+    "id": {
+      "type": "number",
+      "required": true,
+      "postgresql": {
+        "columnName": "id"
+      }
+    },
+    "login": {
+      "type": "string",
+      "required": true,
+      "postgresql": {
+        "columnName": "login"
+      }
+    },
+    "passwordHash": {
+      "type": "string",
+      "required": true,
+      "postgresql": {
+        "columnName": "password_hash"
+      }
+    },
+    "passwordSalt": {
+      "type": "string",
+      "required": true,
+      "postgresql": {
+        "columnName": "password_salt"
+      }
+    },
+    "loginAttempts": {
+      "type": "number",
+      "postgresql": {
+        "columnName": "login_attempts"
+      }
+    },
+    "role": {
+      "type": "number",
+      "required": true,
+      "postgresql": {
+        "columnName": "role"
+      }
+    },
+    "status": {
+      "type": "number",
+      "required": true,
+      "postgresql": {
+        "columnName": "status"
+      }
+    },
+    "lastLogin": {
+      "type": "date",
+      "postgresql": {
+        "columnName": "last_login"
+      }
+    },
+    "data": {
+      "type": "object",
+      "postgresql": {
+        "columnName": "data"
+      }
+    },
+    "introReviewed": {
+      "type": "boolean",
+      "postgresql": {
+        "columnName": "intro_reviewed"
+      }
+    },
+    "entityVersion": {
+      "type": "number",
+      "postgresql": {
+        "columnName": "entity_version"
+      }
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}
