@@ -8,41 +8,41 @@ const MAX_LISTENERS = 20;
 
 class ProxyClient extends EventEmitter {
 
-  constructor() {
-    super();
+    constructor() {
+        super();
 
-    const me = this;
+        const me = this;
 
-    me.ws = new WS(`ws://localhost:3000`);
-    me.ws.setMaxListeners(MAX_LISTENERS);
+        me.ws = new WS(`ws://localhost:3000`);
+        me.ws.setMaxListeners(MAX_LISTENERS);
 
-    me.ws.addEventListener(`open`, () => {
-      me.emit(`open`);
-    });
+        me.ws.addEventListener(`open`, () => {
+            me.emit(`open`);
+        });
 
-    me.ws.addEventListener(`close`, () => {
-      me.emit(`close`);
-    });
+        me.ws.addEventListener(`close`, () => {
+            me.emit(`close`);
+        });
 
-    me.ws.addEventListener(`message`, (event) => {
-      let messages = JSON.parse(event.data);
-      messages = messages.length ? messages : [messages];
+        me.ws.addEventListener(`message`, (event) => {
+            let messages = JSON.parse(event.data);
+            messages = messages.length ? messages : [messages];
 
-      messages.forEach((message) => {
-        const proxyMessage = ProxyMessage.build(message);
+            messages.forEach((message) => {
+                const proxyMessage = ProxyMessage.normalize(message);
 
-        if (proxyMessage.type === `notif` && !proxyMessage.action) {
-          me.emit(`notification`, JSON.parse(proxyMessage.payload));
-        }
-      });
-    });
-  }
+                if (proxyMessage.type === `notif` && !proxyMessage.action) {
+                    me.emit(`notification`, JSON.parse(proxyMessage.payload));
+                }
+            });
+        });
+    }
 
-  send(data) {
-    const me = this;
+    send(data) {
+        const me = this;
 
-    me.ws.send(data);
-  }
+        me.ws.send(data);
+    }
 }
 
 module.exports = ProxyClient;

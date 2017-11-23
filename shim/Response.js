@@ -2,97 +2,97 @@ const Body = require(`./Body.js`);
 
 class Response {
 
-  constructor ({ body, correlationId, last, errorCode, failed }) {
-    const me = this;
+    constructor({body, correlationId, last, errorCode, failed}) {
+        const me = this;
 
-    me.body = body;
-    me.correlationId = correlationId;
-    me.last = last;
-    me.errorCode = errorCode;
-    me.failed = failed;
-  }
+        me.body = body;
+        me.correlationId = correlationId;
+        me.last = last;
+        me.errorCode = errorCode;
+        me.failed = failed;
+    }
 
-  get body() {
-    const me = this;
+    get body() {
+        const me = this;
 
-    return me._body;
-  }
+        return me._body;
+    }
 
-  set body(value) {
-    const me = this;
+    set body(value) {
+        const me = this;
 
-    me._body = value;
-  }
+        me._body = value;
+    }
 
-  get correlationId() {
-    const me = this;
+    get correlationId() {
+        const me = this;
 
-    return me._correlationId;
-  }
+        return me._correlationId;
+    }
 
-  set correlationId(value) {
-    const me = this;
+    set correlationId(value) {
+        const me = this;
 
-    me._correlationId = value;
-  }
+        me._correlationId = value;
+    }
 
-  get last() {
-    const me = this;
+    get last() {
+        const me = this;
 
-    return me._last;
-  }
+        return me._last;
+    }
 
-  set last(value) {
-    const me = this;
+    set last(value) {
+        const me = this;
 
-    me._last = value;
-  }
+        me._last = value;
+    }
 
-  get errorCode() {
-    const me = this;
+    get errorCode() {
+        const me = this;
 
-    return me._errorCode;
-  }
+        return me._errorCode;
+    }
 
-  set errorCode(value) {
-    const me = this;
+    set errorCode(value) {
+        const me = this;
 
-    me._errorCode = value;
-  }
+        me._errorCode = value;
+    }
 
-  get failed() {
-    const me = this;
+    get failed() {
+        const me = this;
 
-    return me._failed;
-  }
+        return me._failed;
+    }
 
-  set failed(value) {
-    const me = this;
+    set failed(value) {
+        const me = this;
 
-    me._failed = value;
-  }
+        me._failed = value;
+    }
 
-  toString() {
-    const me = this;
+    toString() {
+        const me = this;
 
-    return JSON.stringify({
-      b: me.body ? me.body.toString() : ``,
-      cId: me.correlationId,
-      l: me.last,
-      err: me.errorCode,
-      fld: me.failed
-    });
-  }
+        return JSON.stringify({
+            b: me.body ? me.body.toString() : ``,
+            cId: me.correlationId,
+            l: me.last,
+            err: me.errorCode,
+            fld: me.failed
+        });
+    }
 
-  static build (data) {
-    return new Response({
-      body: new Body(data.b ? JSON.parse(data.b) : {}),
-      correlationId: data.cId,
-      last: data.l,
-      errorCode: data.err,
-      failed: data.fld
-    })
-  }
+    static normalize(data) {
+        return new Response({
+            body: Body.normalize(data.b ? JSON.parse(data.b) : {}),
+            correlationId: data.cId,
+            last: data.l,
+            errorCode: data.err,
+            failed: data.fld
+        })
+    }
 
 }
 

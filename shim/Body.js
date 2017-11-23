@@ -1,37 +1,36 @@
-
 class Body {
 
-  constructor({ action }) {
-    const me = this;
+    constructor({ action }) {
+        const me = this;
 
-    me.action = action;
-  }
+        me.action = action;
+    }
 
-  get action() {
-    const me = this;
+    get action() {
+        const me = this;
 
-    return me._action;
-  }
+        return me._action;
+    }
 
-  set action(value) {
-    const me = this;
+    set action(value) {
+        const me = this;
 
-    me._action = value;
-  }
+        me._action = value;
+    }
 
-  toString() {
-    const me = this;
+    toString() {
+        const me = this;
 
-    return JSON.stringify({
-      a: me.action
-    });
-  }
+        return JSON.stringify({
+            a: me.action
+        });
+    }
 
-  static bild (data) {
-    return new Body({
-      action: data.a
-    });
-  }
+    static normalize(data) {
+        return new Body({
+            action: data.a
+        });
+    }
 }
 
 module.exports = Body;
