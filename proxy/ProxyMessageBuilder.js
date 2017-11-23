@@ -10,7 +10,7 @@ class ProxyMessageBuilder {
         return new ProxyMessage({
             type: `topic`,
             action: `create`,
-            payload: (new TopicCreatePayload(payload)).toString()
+            payload: new TopicCreatePayload(payload).toObject()
         });
     };
 
@@ -25,7 +25,7 @@ class ProxyMessageBuilder {
         return new ProxyMessage({
             type: `topic`,
             action: `subscribe`,
-            payload: (new TopicSubscribePayload(payload)).toString()
+            payload: (new TopicSubscribePayload(payload)).toObject()
         });
     };
 
@@ -40,7 +40,7 @@ class ProxyMessageBuilder {
         return new ProxyMessage({
             type: `notif`,
             action: `create`,
-            payload: (new NotificationCreatePayload(payload)).toString()
+            payload: (new NotificationCreatePayload(payload)).toObject()
         });
     };
 

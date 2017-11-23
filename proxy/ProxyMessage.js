@@ -1,6 +1,8 @@
+const uuid = require('uuid/v1');
+
 class ProxyMessage {
 
-    constructor({id, type, action, status, payload}) {
+    constructor({ id = uuid(), type, action, status, payload }) {
         const me = this;
 
         me._id = id;

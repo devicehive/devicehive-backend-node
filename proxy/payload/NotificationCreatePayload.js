@@ -45,14 +45,20 @@ class NotificationCreatePayload {
         me._partition = value;
     }
 
-    toString() {
+    toObject() {
         const me = this;
 
-        return JSON.stringify({
+        return {
             t: me.topic,
             m: me.message,
             part: me.partition
-        });
+        };
+    }
+
+    toString() {
+        const me = this;
+
+        return JSON.stringify(me.toObject());
     }
 }
 

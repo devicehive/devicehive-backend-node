@@ -18,12 +18,16 @@ class TopicCreatePayload {
         me._topics = value;
     }
 
+    toObject() {
+        const me = this;
+
+        return me.topics;
+    }
+
     toString() {
         const me = this;
 
-        return JSON.stringify({
-            topics: me.topics
-        })
+        return JSON.stringify(me.toObject());
     }
 }
 

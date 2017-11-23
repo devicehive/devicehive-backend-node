@@ -2,10 +2,10 @@ const Body = require(`./Body.js`);
 
 class Response {
 
-    constructor({body, correlationId, last, errorCode, failed}) {
+    constructor({ body, correlationId, last, errorCode, failed } = {}) {
         const me = this;
 
-        me.body = body;
+        me.body = body ? new Body(body) : undefined;
         me.correlationId = correlationId;
         me.last = last;
         me.errorCode = errorCode;
@@ -21,7 +21,7 @@ class Response {
     set body(value) {
         const me = this;
 
-        me._body = value;
+        me._body = new Body(value);
     }
 
     get correlationId() {
@@ -72,16 +72,38 @@ class Response {
         me._failed = value;
     }
 
+    withBody(value) {
+        const me = this;
+
+        me.body = value;
+
+        return me;
+    }
+
+    withErrorCode(value) {
+        const me = this;
+
+        me.errorCode = value;
+
+        return me;
+    }
+
+    toObject() {
+        const me = this;
+
+        return {
+          b: me.body ? me.body.toObject() : undefined,
+          cId: me.correlationId,
+          l: me.last,
+          err: me.errorCode,
+          fld: me.failed
+        };
+    }
+
     toString() {
         const me = this;
 
-        return JSON.stringify({
-            b: me.body ? me.body.toString() : ``,
-            cId: me.correlationId,
-            l: me.last,
-            err: me.errorCode,
-            fld: me.failed
-        });
+        return JSON.stringify(me.toObject());
     }
 
     static normalize(data) {

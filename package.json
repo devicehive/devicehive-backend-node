@@ -18,6 +18,7 @@
     "loopback-connector-postgresql": "^2.8.0",
     "serve-favicon": "^2.0.1",
     "strong-error-handler": "^2.0.0",
+    "uuid": "^3.1.0",
     "ws": "^3.3.2"
   },
   "devDependencies": {

@@ -1,8 +1,23 @@
+const uuid = require('uuid/v1');
 const Body = require(`./Body.js`);
 
 class Request {
 
-    constructor({body, correlationId, partitionKey, singleReplyExpected, replyTo, type}) {
+    static get CLIENT_REQUEST_TYPE () { return 0; }
+    static get PING_TYPE () { return 1; }
+
+    static normalize(data) {
+        return new Request({
+            body: Body.normalize(data.b ? data.b : {}),
+            correlationId: data.cId,
+            partitionKey: data.pK,
+            singleReplyExpected: data.sre,
+            replyTo: data.rTo,
+            type: data.t
+        })
+    }
+
+    constructor({ body, correlationId = uuid(), partitionKey, singleReplyExpected, replyTo, type }) {
         const me = this;
 
         me.body = body;
@@ -86,6 +101,18 @@ class Request {
         me._type = value;
     }
 
+    isPing() {
+      const me = this;
+
+      return me.type === Request.PING_TYPE;
+    }
+
+    isClientRequest() {
+      const me = this;
+
+      return me.type === Request.CLIENT_REQUEST_TYPE;
+    }
+
     toString() {
         const me = this;
 
@@ -97,17 +124,6 @@ class Request {
             rTo: me.replyTo,
             t: me.type,
         });
-    }
-
-    static normalize(data) {
-        return new Request({
-            body: Body.normalize(data.b ? JSON.parse(data.b) : {}),
-            correlationId: data.cId,
-            partitionKey: data.pK,
-            singleReplyExpected: data.sre,
-            replyTo: data.rTo,
-            type: data.t
-        })
     }
 }
 

@@ -1,9 +1,12 @@
+
 class Body {
 
-    constructor({ action }) {
+    constructor({ action, ...rest } = {}) {
         const me = this;
 
         me.action = action;
+        me.rest = rest;
+        Object.assign(me, rest);
     }
 
     get action() {
@@ -18,17 +21,36 @@ class Body {
         me._action = value;
     }
 
+    get rest() {
+        const me = this;
+
+        return me._rest;
+    }
+
+    set rest(value) {
+        const me = this;
+
+        me._rest = value;
+    }
+
+    toObject() {
+        const me = this;
+
+        return Object.assign({
+            a: me.action
+        }, me.rest);
+    }
+
     toString() {
         const me = this;
 
-        return JSON.stringify({
-            a: me.action
-        });
+        return JSON.stringify(me.toObject());
     }
 
-    static normalize(data) {
+    static normalize({ a, ...rest }) {
         return new Body({
-            action: data.a
+            action: a,
+            ...rest
         });
     }
 }
