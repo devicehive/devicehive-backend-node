@@ -4,12 +4,10 @@ const Request = require(`../shim/Request.js`);
 const Response = require(`../shim/Response.js`);
 const RequestHandlerFactory = require(`./RequestHandlerFactory.js`);
 
-const db = require(`../db`);
-
 const proxyClient = new ProxyClient();
 
 
-proxyClient.on(`open`, async () => {
+proxyClient.on(`open`, () => {
     proxyClient.send(ProxyMessageBuilder.createTopic({topics: [`request_topic`]}).toString());
     proxyClient.send(ProxyMessageBuilder.subscribeTopic({
         topics: [`request_topic`],

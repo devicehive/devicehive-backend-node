@@ -47,6 +47,14 @@ class Body {
         return JSON.stringify(me.toObject());
     }
 
+    addField(fieldName, fieldValue) {
+        const me = this;
+
+        me[fieldName] = me.rest[fieldName] = fieldValue;
+
+        return me;
+    }
+
     static normalize({ a, ...rest }) {
         return new Body({
             action: a,

@@ -5,7 +5,7 @@ class Response {
     constructor({ body, correlationId, last, errorCode, failed } = {}) {
         const me = this;
 
-        me.body = body ? new Body(body) : undefined;
+        me.body = body;
         me.correlationId = correlationId;
         me.last = last;
         me.errorCode = errorCode;
@@ -21,7 +21,7 @@ class Response {
     set body(value) {
         const me = this;
 
-        me._body = new Body(value);
+        me._body = value ? new Body(value) : undefined;
     }
 
     get correlationId() {
@@ -77,7 +77,7 @@ class Response {
 
         me.body = value;
 
-        return me;
+        return me.body;
     }
 
     withErrorCode(value) {

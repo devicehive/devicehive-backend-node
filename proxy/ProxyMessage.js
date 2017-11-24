@@ -5,11 +5,11 @@ class ProxyMessage {
     constructor({ id = uuid(), type, action, status, payload }) {
         const me = this;
 
-        me._id = id;
-        me._type = type;
-        me._action = action;
-        me._value = status;
-        me._payload = payload;
+        me.id = id;
+        me.type = type;
+        me.action = action;
+        me.status = status;
+        me.payload = payload;
     }
 
     get id() {
@@ -51,13 +51,13 @@ class ProxyMessage {
     get status() {
         const me = this;
 
-        return me._value;
+        return me._status;
     }
 
     set status(value) {
         const me = this;
 
-        me._value = value;
+        me._status = value;
     }
 
     get payload() {

@@ -1,62 +1,79 @@
 const db = require(`../../db`);
 const Action = require(`../../shim/Action.js`);
 const Response = require(`../../shim/Response.js`);
+const Principal = require(`../../shim/Principal.js`);
+
 
 module.exports = async (request) => {
-    const response = new Response();
+    const principal = new Principal(request.body.principal);
+    const response = new Response({ last: true });
 
     try {
-        const models = await db.getModels();
-        const deviceDAO = models[`Device`];
-        const devices = await deviceDAO.find(buildDeviceFilter(request.body));
+        if (principal.hasAction(Principal.GET_DEVICE_ACTION)) {
+            const devices = await getDevices(request.body, principal);
 
-        if (request.body.networkName) {
-            const networkDAO = models[`Network`];
-            const networks = await deviceDAO.find({ where: { name: request.body.networkName }});
-        }
-
-        response.last = true;
-        response.errorCode = 0;
-        response.failed = false;
-        response.body = {
-            action: Action.LIST_DEVICE_RESPONSE,
-            networks: devices.map((device) => device.toObject())
+            response.errorCode = 0;
+            response.failed = false;
+            response.withBody({ action: Action.LIST_DEVICE_RESPONSE})
+                .addField(`devices`, devices.map((device) => device.toObject()));
+        } else {
+            response.errorCode = 403;
+            response.failed = true;
+            response.withBody({ action: Action.ERROR_RESPONSE});
         }
     } catch (err) {
-        response.last = true;
-        response.errorCode = 500;
+        response.errorCode = 400;
         response.failed = true;
+        response.withBody({ action: Action.ERROR_RESPONSE});
     }
 
     return response;
 };
 
-function buildDeviceFilter (requestBody) {
-    const filterObject = {};
+
+async function getDevices (requestBody, principal) {
+    const models = await db.getModels();
+    const deviceDAO = models[`Device`];
+    const deviceFilterObject = { where: {} };
+    let devices;
 
     if (requestBody.skip) {
-        filterObject.skip = requestBody.skip;
+        deviceFilterObject.skip = requestBody.skip;
     }
 
     if (requestBody.take) {
-        filterObject.limit = requestBody.take;
+        deviceFilterObject.limit = requestBody.take;
     }
 
     if (requestBody.sortField) {
-        filterObject.order = [`${requestBody.sortField} ${requestBody.sortOrder || 'ASC'}`];
+        deviceFilterObject.order = [`${requestBody.sortField} ${requestBody.sortOrder || 'ASC'}`];
     }
 
-    if (requestBody.name || requestBody.namePattern || requestBody.networkId || requestBody.networkName) {
-        filterObject.where = {};
-
-        if (requestBody.name) {
-            filterObject.where.name = requestBody.name
-        }
-
-        if (requestBody.networkId) {
-            filterObject.where.networkId = requestBody.name
-        }
+    if (requestBody.name) {
+        deviceFilterObject.where.name = requestBody.name;
     }
 
-    return filterObject;
+    if (requestBody.namePattern) {
+        deviceFilterObject.where.name = requestBody.name;
+    }
+
+    if (requestBody.networkId) {
+        deviceFilterObject.where.networkId = requestBody.networkId;
+    }
+
+    if (!principal.allDevicesAvailable) {
+        deviceFilterObject.where.id = { inq: principal.deviceIds };
+    }
+
+    if (requestBody.networkName) {
+        deviceFilterObject.where.include = { relation: `network`, scope: { where: { name: requestBody.networkName } } };
+    }
+
+    devices = await deviceDAO.find(deviceFilterObject);
+
+    if (requestBody.networkName) { //TODO native join functionality
+        devices = devices.filter((device) => !!device.toObject().network );
+    }
+
+    return devices;
 }
