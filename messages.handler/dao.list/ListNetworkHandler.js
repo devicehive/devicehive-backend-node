@@ -48,11 +48,9 @@ async function getNetworks (requestBody, principal) {
         filterObject.order = [`${requestBody.sortField} ${requestBody.sortOrder || 'ASC'}`];
     }
 
-    if (requestBody.name) {
-        filterObject.where.name = requestBody.name;
-    }
-
     if (requestBody.namePattern) {
+        filterObject.where.name = { like: requestBody.namePattern };
+    } else if (requestBody.name) {
         filterObject.where.name = requestBody.name;
     }
 

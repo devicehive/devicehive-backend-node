@@ -1,5 +1,5 @@
-const HAZELCAST_CONFIG = require(`./service/hazelcast/config.json`);
-const SearchableField = require(`./common/SearchableField.js`);
+const HAZELCAST_CONFIG = require(`./config.json`);
+const SearchableField = require(`../../common/SearchableField.js`);
 const HazelcastClient = require(`hazelcast-client`).Client;
 const Config = require(`hazelcast-client`).Config;
 

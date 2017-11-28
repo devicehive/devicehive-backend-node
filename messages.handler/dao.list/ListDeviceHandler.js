@@ -49,12 +49,10 @@ async function getDevices (requestBody, principal) {
         deviceFilterObject.order = [`${requestBody.sortField} ${requestBody.sortOrder || 'ASC'}`];
     }
 
-    if (requestBody.name) {
-        deviceFilterObject.where.name = requestBody.name;
-    }
-
     if (requestBody.namePattern) {
-        deviceFilterObject.where.name = requestBody.name;
+        filterObject.where.name = { like: requestBody.namePattern };
+    } else if (requestBody.name) {
+        filterObject.where.name = requestBody.name;
     }
 
     if (requestBody.networkId) {

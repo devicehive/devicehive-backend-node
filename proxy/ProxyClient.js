@@ -13,7 +13,12 @@ class ProxyClient extends EventEmitter {
 
         const me = this;
 
-        me.ws = new WS(`ws://localhost:3000`);
+        me.ws = new WS(`ws://localhost:3000`, {
+            headers: {
+                "client-type": `dh-service`
+            }
+        });
+
         me.ws.setMaxListeners(MAX_LISTENERS);
 
         me.ws.addEventListener(`open`, () => {
