@@ -10,10 +10,10 @@ class SubscriptionRegistry {
         me.proxy = new ComplexMapRegistry();
     }
 
-    register(networkId, deviceTypeId, deviceId, eventType, name, subscriber) {
+    register(subscription, subscriber) {
         const me = this;
 
-        me.proxy.register(networkId, deviceTypeId, deviceId, eventType, name, subscriber);
+        me.proxy.register(subscription, subscriber);
     }
 
     unregister(subscriber) {

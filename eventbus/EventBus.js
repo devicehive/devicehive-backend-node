@@ -8,10 +8,16 @@ class EventBus {
         me.subscriptionRegistry = new SubscriptionRegistry();
     }
 
-    subscribe(networkId, deviceTypeId, deviceId, eventType, name, subscriber) {
+    subscribe(subscription, subscriber) {
         const me = this;
 
-        me.subscriptionRegistry.register(networkId, deviceTypeId, deviceId, eventType, name, subscriber);
+        me.subscriptionRegistry.register(subscription, subscriber);
+    }
+
+    unsubscribe( subscriber) {
+        const me = this;
+
+        me.subscriptionRegistry.unregister(subscriber);
     }
 }
 

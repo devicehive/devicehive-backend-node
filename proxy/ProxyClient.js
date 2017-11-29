@@ -1,3 +1,4 @@
+const PROXY_CONFIG = require(`./config.json`);
 const EventEmitter = require(`events`);
 const WS = require(`ws`);
 
@@ -13,11 +14,8 @@ class ProxyClient extends EventEmitter {
 
         const me = this;
 
-        me.ws = new WS(`ws://localhost:3000`, {
-            headers: {
-                "client-type": `dh-service`
-            }
-        });
+        me.ws = new WS(PROXY_CONFIG.WS_PROXY_ENDPOINT,
+            { headers: { [`${PROXY_CONFIG.DH_SERVICE_HEADER_KEY}`]: `${PROXY_CONFIG.DH_SERVICE_HEADER_VALUE}` } });
 
         me.ws.setMaxListeners(MAX_LISTENERS);
 

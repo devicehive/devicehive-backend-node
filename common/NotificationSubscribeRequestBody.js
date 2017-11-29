@@ -1,9 +1,12 @@
+const Body = require(`../shim/Body.js`);
 const Filter = require(`./Filter.js`);
 
 
-class NotificationSubscribeRequest {
+class NotificationSubscribeRequestBody extends Body {
 
-    constructor({ subscriptionId, device, filter, timestamp }) {
+    constructor({ subscriptionId, device, filter, timestamp, ...rest }) {
+        super({ subscriptionId, device, filter, timestamp, ...rest });
+
         const me = this;
 
         me.subscriptionId = subscriptionId;
@@ -63,4 +66,4 @@ class NotificationSubscribeRequest {
 }
 
 
-module.exports= NotificationSubscribeRequest;
+module.exports = NotificationSubscribeRequestBody;
