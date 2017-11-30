@@ -1,41 +1,29 @@
 const Body = require(`../shim/Body.js`);
 const Action = require(`../shim/Action.js`);
+const DeviceNotification = require(`./DeviceNotification.js`);
 
-class NotificationSubscribeResponseBody extends Body {
+class NotificationInsertResponseBody extends Body {
 
-    constructor({ subId, notifications, ...rest }) {
-        super({ action: Action.NOTIFICATION_SUBSCRIBE_RESPONSE, subId, notifications, ...rest });
+    constructor({ deviceNotification, ...rest }) {
+        super({ action: Action.NOTIFICATION_INSERT_RESPONSE, deviceNotification, ...rest });
 
         const me = this;
 
-        me.subId = subId;
-        me.notifications = notifications;
+        me.deviceNotification = deviceNotification;
     }
 
-    get subId() {
+    get deviceNotification() {
         const me = this;
 
-        return me._subId;
+        return me._deviceNotification;
     }
 
-    set subId(value) {
+    set deviceNotification(value) {
         const me = this;
 
-        me._subId = value;
-    }
-
-    get notifications() {
-        const me = this;
-
-        return me._notifications;
-    }
-
-    set notifications(value) {
-        const me = this;
-
-        me._notifications = value;
+        me._deviceNotification = new DeviceNotification(value);
     }
 }
 
 
-module.exports = NotificationSubscribeResponseBody;
+module.exports = NotificationInsertResponseBody;

@@ -6,7 +6,7 @@ class HazelcastHelper {
 
     static preparePredicate(entityName, { id, deviceIds, names, from, to, returnUpdated, status }) {
         const predicates = [];
-        const namesKey = entityName === DeviceNotification.name ? SearchableField.NOTIFICATION : SearchableField.COMMAND;
+        const namesKey = entityName === DeviceNotification.getClassName() ? SearchableField.NOTIFICATION : SearchableField.COMMAND;
         const timestampKey = returnUpdated ? SearchableField.LAST_UPDATED : SearchableField.TIMESTAMP;
 
         if (id) { predicates.push(Predicates.isEqualTo(SearchableField.ID, id)); }

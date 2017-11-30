@@ -53,8 +53,9 @@ async function findNotifications(deviceId, names, timestamp) {
     let notifications = [];
 
     if (timestamp) {
-        notifications = await hazelcastService.find(DeviceNotification.name,
-            { id: deviceId, names: names, from: timestamp, limit: NOTIFICATIONS_LIMIT });
+        notifications = (await hazelcastService.find(DeviceNotification.getClassName(),
+            { id: deviceId, names: names, from: timestamp, limit: NOTIFICATIONS_LIMIT }))
+            .map((deviceNotification) => deviceNotification.toObject());
     }
 
     return notifications;

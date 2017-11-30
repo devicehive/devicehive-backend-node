@@ -5,6 +5,7 @@ const HazelcastClient = require(`hazelcast-client`).Client;
 const Config = require(`hazelcast-client`).Config;
 const HazelcastHelper = require(`./HazelcastHelper.js`);
 
+const DevicePortableFactory = require(`../../common/DevicePortableFactory.js`);
 const DeviceNotification = require(`../../common/DeviceNotification.js`);
 
 const NOTIFICATIONS_MAP = `NOTIFICATIONS-MAP`;
@@ -23,7 +24,11 @@ class HazelcastService extends EventEmitter {
         me.notificationsMap = {};
         me.commandsMap = {};
 
-        config.networkConfig.addresses = HAZELCAST_CONFIG.addresses;
+        config.groupConfig = HAZELCAST_CONFIG.groupConfig;
+        config.networkConfig.addresses = HAZELCAST_CONFIG.networkConfig.addresses;
+        config.serializationConfig.portableVersion = "0";
+        config.serializationConfig.portableFactories[1] = new DevicePortableFactory();
+        config.properties["hazelcast.client.event.thread.count"] = HAZELCAST_CONFIG.eventThreadCount;
 
         HazelcastClient
             .newHazelcastClient(config)
@@ -38,6 +43,7 @@ class HazelcastService extends EventEmitter {
                 me.client = hazelcastClient;
                 me.isClientReady = true;
 
+                console.log('Hazelcast Client started');
                 me.emit(`clientReady`);
             });
     }
@@ -46,23 +52,19 @@ class HazelcastService extends EventEmitter {
         const me = this;
         const map = me._getMapByEntityName(entityName);
         const predicate = HazelcastHelper.preparePredicate(entityName, filterValues);
-        let result;
 
         await me._getClient();
 
-        try {
-            result = await map.valuesWithPredicate(predicate);
-        } catch (err) {
-            result = [];
-        }
-
-        return result;
+        //return await map.valuesWithPredicate(predicate);
+        return await map.values();
     }
 
-    async store() {
+    async store(entityName, data) {
         const me = this;
+        const map = me._getMapByEntityName(entityName);
 
         await me._getClient();
+        await map.set(data.getHazelcastKey(), data);
     }
 
     _getClient() {
@@ -84,7 +86,7 @@ class HazelcastService extends EventEmitter {
         let map;
 
         switch (entityName) {
-            case DeviceNotification.name:
+            case DeviceNotification.getClassName():
                 map = me.notificationsMap;
                 break
         }
