@@ -1,5 +1,5 @@
-const Body = require(`../shim/Body.js`);
-const Action = require(`../shim/Action.js`);
+const Body = require(`../../../shim/Body.js`);
+const Action = require(`../../../shim/Action.js`);
 
 class NotificationSubscribeResponseBody extends Body {
 

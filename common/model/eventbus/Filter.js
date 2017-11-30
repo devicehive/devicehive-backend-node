@@ -1,4 +1,4 @@
-const HivePrincipal = require(`./HivePrincipal.js`);
+const HivePrincipal = require(`../../HivePrincipal.js`);
 
 
 class Filter {

@@ -1,7 +1,7 @@
 const eventBus = require(`../../eventbus/EventBus.js`);
-const NotificationUnsubscribeRequestBody = require(`../../common/NotificationUnsubscribeRequestBody.js`);
-const NotificationUnsubscribeResponseBody = require(`../../common/NotificationUnsubscribeResponseBody.js`);
-const Subscriber = require(`../../common/Subscriber.js`);
+const NotificationUnsubscribeRequestBody = require(`../../common/model/rpc/NotificationUnsubscribeRequestBody.js`);
+const NotificationUnsubscribeResponseBody = require(`../../common/model/rpc/NotificationUnsubscribeResponseBody.js`);
+const Subscriber = require(`../../common/model/eventbus/Subscriber.js`);
 const Response = require(`../../shim/Response.js`);
 
 

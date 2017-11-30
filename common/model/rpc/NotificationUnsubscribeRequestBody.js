@@ -1,11 +1,10 @@
-const Body = require(`../shim/Body.js`);
-const Action = require(`../shim/Action.js`);
+const Body = require(`../../../shim/Body.js`);
 
 
-class NotificationUnsubscribeResponseBody extends Body {
+class NotificationUnsubscribeRequestBody extends Body {
 
     constructor({ subscriptionIds, ...rest }) {
-        super({ action: Action.NOTIFICATION_UNSUBSCRIBE_RESPONSE, subscriptionIds, ...rest });
+        super({ subscriptionIds, ...rest });
 
         const me = this;
 
@@ -26,4 +25,4 @@ class NotificationUnsubscribeResponseBody extends Body {
 }
 
 
-module.exports = NotificationUnsubscribeResponseBody;
+module.exports = NotificationUnsubscribeRequestBody;

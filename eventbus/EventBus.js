@@ -19,6 +19,10 @@ class EventBus {
 
         me.subscriptionRegistry.unregister(subscriber);
     }
+
+    publish(event) {
+
+    }
 }
 
 module.exports = new EventBus();

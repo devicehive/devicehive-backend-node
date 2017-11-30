@@ -1,12 +1,12 @@
 const db = require(`../../db`);
 const eventBus = require(`../../eventbus/EventBus.js`);
 const hazelcastService = require(`../../service/hazelcast/HazelcastService.js`);
-const NotificationSubscribeRequestBody = require(`../../common/NotificationSubscribeRequestBody.js`);
-const NotificationSubscribeResponseBody = require(`../../common/NotificationSubscribeResponseBody.js`);
-const Subscriber = require(`../../common/Subscriber.js`);
-const Subscription = require(`../../common/Subscription.js`);
+const NotificationSubscribeRequestBody = require(`../../common/model/rpc/NotificationSubscribeRequestBody.js`);
+const NotificationSubscribeResponseBody = require(`../../common/model/rpc/NotificationSubscribeResponseBody.js`);
+const Subscriber = require(`../../common/model/eventbus/Subscriber.js`);
+const Subscription = require(`../../common/model/eventbus/Subscription.js`);
+const DeviceNotification = require(`../../common/model/DeviceNotification.js`);
 const Response = require(`../../shim/Response.js`);
-const DeviceNotification = require(`../../common/DeviceNotification.js`);
 
 const NOTIFICATIONS_LIMIT = 100;
 

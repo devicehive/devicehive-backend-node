@@ -1,12 +1,12 @@
 const HAZELCAST_CONFIG = require(`./config.json`);
 const EventEmitter = require(`events`);
-const SearchableField = require(`../../common/SearchableField.js`);
+const SearchableField = require(`../../common/model/enums/SearchableField.js`);
 const HazelcastClient = require(`hazelcast-client`).Client;
 const Config = require(`hazelcast-client`).Config;
 const HazelcastHelper = require(`./HazelcastHelper.js`);
 
-const DevicePortableFactory = require(`../../common/DevicePortableFactory.js`);
-const DeviceNotification = require(`../../common/DeviceNotification.js`);
+const DevicePortableFactory = require(`../../common/model/DevicePortableFactory.js`);
+const DeviceNotification = require(`../../common/model/DeviceNotification.js`);
 
 const NOTIFICATIONS_MAP = `NOTIFICATIONS-MAP`;
 const COMMANDS_MAP = `COMMANDS-MAP`;

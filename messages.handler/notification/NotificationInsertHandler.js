@@ -1,7 +1,7 @@
 const hazelcastService = require(`../../service/hazelcast/HazelcastService.js`);
-const NotificationInsertRequestBody = require(`../../common/NotificationInsertRequestBody.js`);
-const NotificationInsertResponseBody = require(`../../common/NotificationInsertResponseBody.js`);
-const DeviceNotification = require(`../../common/DeviceNotification.js`);
+const NotificationInsertRequestBody = require(`../../common/model/rpc/NotificationInsertRequestBody.js`);
+const NotificationInsertResponseBody = require(`../../common/model/rpc/NotificationInsertResponseBody.js`);
+const DeviceNotification = require(`../../common/model/DeviceNotification.js`);
 const Response = require(`../../shim/Response.js`);
 
 

@@ -1,5 +1,5 @@
-const Body = require(`../shim/Body.js`);
-const Filter = require(`./Filter.js`);
+const Body = require(`../../../shim/Body.js`);
+const Filter = require(`../eventbus/Filter.js`);
 
 
 class NotificationSubscribeRequestBody extends Body {
