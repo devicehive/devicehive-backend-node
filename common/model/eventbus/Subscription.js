@@ -1,6 +1,11 @@
 
 class Subscription {
 
+    static get FACTORY_ID() { return 1; }
+    static get CLASS_ID() { return 5; }
+
+    static getClassName() { return Subscription.name };
+
     constructor({ networkId, deviceTypeId, deviceId, eventType, name } = {}) {
         const me = this;
 
@@ -71,6 +76,33 @@ class Subscription {
         me._name = value;
     }
 
+    getFactoryId() {
+        return Subscription.FACTORY_ID;
+    };
+
+    getClassId() {
+        return Subscription.CLASS_ID;
+    };
+
+    writePortable(writer) {
+        const me = this;
+
+        writer.writeUTF("networkId", me.networkId);
+        writer.writeUTF("deviceTypeId", me.deviceTypeId);
+        writer.writeUTF("deviceId", me.deviceId);
+        writer.writeUTF("eventType", me.eventType);
+        writer.writeUTF("name", me.name);
+    };
+
+    readPortable(reader) {
+        const me = this;
+
+        reader.readUTF("networkId", me.networkId);
+        reader.readUTF("deviceTypeId", me.deviceTypeId);
+        reader.readUTF("deviceId", me.deviceId);
+        reader.readUTF("eventType", me.eventType);
+        reader.readUTF("name", me.name);
+    };
 }
 
 module.exports = Subscription;

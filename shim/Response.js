@@ -2,7 +2,7 @@ const Body = require(`./Body.js`);
 
 class Response {
 
-    constructor({ body, correlationId, last, errorCode, failed } = {}) {
+    constructor({ body, correlationId, last, errorCode = 0, failed } = {}) {
         const me = this;
 
         me.body = body;

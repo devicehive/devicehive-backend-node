@@ -19,13 +19,8 @@ class ProxyClient extends EventEmitter {
 
         me.ws.setMaxListeners(MAX_LISTENERS);
 
-        me.ws.addEventListener(`open`, () => {
-            me.emit(`open`);
-        });
-
-        me.ws.addEventListener(`close`, () => {
-            me.emit(`close`);
-        });
+        me.ws.addEventListener(`open`, () => process.nextTick(() => me.emit(`open`)));
+        me.ws.addEventListener(`close`, () => me.emit(`close`));
 
         me.ws.addEventListener(`message`, (event) => {
             let messages = JSON.parse(event.data);
@@ -48,4 +43,4 @@ class ProxyClient extends EventEmitter {
     }
 }
 
-module.exports = ProxyClient;
+module.exports = new ProxyClient();

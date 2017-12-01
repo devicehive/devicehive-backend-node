@@ -1,10 +1,11 @@
 const Predicates = require(`hazelcast-client`).Predicates;
 const SearchableField = require(`../../common/model/enums/SearchableField.js`);
 const DeviceNotification = require(`../../common/model/DeviceNotification.js`);
+const HazelcastEntityComparator = require(`../../common/model/HazelcastEntityComparator.js`);
 
 class HazelcastHelper {
 
-    static preparePredicate(entityName, { id, deviceIds, names, from, to, returnUpdated, status }) {
+    static preparePredicate(entityName, { id, deviceIds, names, from, to, returnUpdated, status, limit }) {
         const predicates = [];
         const namesKey = entityName === DeviceNotification.getClassName() ? SearchableField.NOTIFICATION : SearchableField.COMMAND;
         const timestampKey = returnUpdated ? SearchableField.LAST_UPDATED : SearchableField.TIMESTAMP;
@@ -17,7 +18,9 @@ class HazelcastHelper {
         if (to) { predicates.push(Predicates.lessThan(timestampKey, new Date(to).getTime())); }
         if (status) { predicates.push(Predicates.isEqualTo(SearchableField.STATUS, status)); }
 
-        return Predicates.and(predicates);
+        return limit && limit > 0 ?
+            Predicates.paging(Predicates.and(predicates), limit, new HazelcastEntityComparator()) :
+            Predicates.and(predicates);
     }
 }
 

@@ -2,7 +2,6 @@ const Long = require(`long`);
 
 class DeviceNotification {
 
-    static get serialVersionUID() { return 1834383778016225837; }
     static get FACTORY_ID() { return 1; }
     static get CLASS_ID() { return 1; }
 

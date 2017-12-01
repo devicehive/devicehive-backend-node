@@ -1,7 +1,12 @@
-const HivePrincipal = require(`../../HivePrincipal.js`);
+const HivePrincipal = require(`../HivePrincipal.js`);
 
 
 class Filter {
+
+    static get FACTORY_ID() { return 1; }
+    static get CLASS_ID() { return 4; }
+
+    static getClassName() { return Filter.name };
 
     constructor({ principal, global = false, networkIds, deviceIds, eventName, names } = {}) {
         const me = this;
@@ -85,6 +90,24 @@ class Filter {
 
         me._names = value;
     }
+
+    getFactoryId() {
+        return Filter.FACTORY_ID;
+    };
+
+    getClassId() {
+        return Filter.CLASS_ID;
+    };
+
+    writePortable(writer) {
+        const me = this;
+
+    };
+
+    readPortable(reader) {
+        const me = this;
+
+    };
 }
 
 

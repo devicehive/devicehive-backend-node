@@ -1,10 +1,8 @@
-const ProxyClient = require(`../proxy/ProxyClient.js`);
+const proxyClient = require(`../proxy/ProxyClient.js`);
 const ProxyMessageBuilder = require(`../proxy/ProxyMessageBuilder.js`);
 const Request = require(`../shim/Request.js`);
 const Response = require(`../shim/Response.js`);
 const RequestHandlerFactory = require(`./RequestHandlerFactory.js`);
-
-const proxyClient = new ProxyClient();
 
 
 proxyClient.on(`open`, () => {

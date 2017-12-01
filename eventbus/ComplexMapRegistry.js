@@ -46,30 +46,37 @@ class ComplexMapRegistry {
         const me = this;
         const filters = me.subscriptionIdToFilterMap.get(subscriber.id);
 
-        filters.forEach(({ firstLevelKey, secondLevelKey }) => {
-            const filterMap = me.registryMap.get(firstLevelKey) || new Map();
-            const subscribersSet = filterMap.get(secondLevelKey) || new Set();
+        if (filters) {
+            filters.forEach(({firstLevelKey, secondLevelKey}) => {
+                const filterMap = me.registryMap.get(firstLevelKey) || new Map();
+                const subscribersSet = filterMap.get(secondLevelKey) || new Set();
 
-            subscribersSet.forEach((item) => {
-                if (item.id === subscriber.id) {
-                    subscribersSet.delete(item);
+                subscribersSet.forEach((item) => {
+                    if (item.id === subscriber.id) {
+                        subscribersSet.delete(item);
+                    }
+                });
+
+                if (subscribersSet.size === 0) {
+                    filterMap.delete(secondLevelKey);
+
+                    if (filterMap.size === 0) {
+                        me.registryMap.delete(firstLevelKey);
+                    }
                 }
             });
 
-            if (subscribersSet.size === 0) {
-                filterMap.delete(secondLevelKey);
-
-                if (filterMap.size === 0) {
-                    me.registryMap.delete(firstLevelKey);
-                }
-            }
-        });
-
-        me.subscriptionIdToFilterMap.delete(subscriber.id);
+            me.subscriptionIdToFilterMap.delete(subscriber.id);
+        }
     }
 
-    getSubscribers(networkId, deviceTypeId, deviceId, eventType, name) {
+    getSubscribers(subscription) {
         const me = this;
+        const networkId = subscription.networkId;
+        const deviceTypeId = subscription.deviceTypeId;
+        const deviceId = subscription.deviceId;
+        const eventType = subscription.eventType;
+        const name = subscription.name;
         const firstLevelKey = ComplexMapRegistry._buildFirstLevelKey(networkId, deviceTypeId);
         const secondLevelKey = ComplexMapRegistry._buildSecondLevelKey(deviceId, eventType, name);
         const filterMap = me.registryMap.get(firstLevelKey) || new Map();

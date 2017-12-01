@@ -15,7 +15,7 @@ module.exports = async (request) => {
     response.errorCode = 0;
     response.failed = false;
     response.withBody(new NotificationSearchResponseBody({
-        notifications: notifications.map((deviceNotification) => deviceNotification.toObject())
+        notifications: notifications
     }));
 
     return response;
@@ -33,10 +33,12 @@ async function searchMultipleNotifications(notificationSearchRequestBody) {
         status: null
     });
     //TODO
+
+    return [];
 }
 
 
 async function searchSingleNotificationByDeviceAndId(id, deviceId) {
-    return (await hazelcastService.find(DeviceNotification.getClassName(), { id: id, deviceId: deviceId }));
-        //.map((notification) => new DeviceNotification(notification));
+    return (await hazelcastService.find(DeviceNotification.getClassName(), { id: id, deviceId: deviceId }))
+        .map((deviceNotification) => deviceNotification.toObject())
 }

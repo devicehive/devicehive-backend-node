@@ -22,10 +22,10 @@ class SubscriptionRegistry {
         me.proxy.unregister(subscriber);
     }
 
-    getSubscribers(networkId, deviceTypeId, deviceId, eventType, name) {
+    getSubscribers(subscription) {
         const me = this;
 
-        me.proxy.getSubscribers(networkId, deviceTypeId, deviceId, eventType, name);
+        return me.proxy.getSubscribers(subscription);
     }
 }
 
