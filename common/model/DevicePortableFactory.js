@@ -5,6 +5,7 @@ const Filter = require(`./eventbus/Filter.js`);
 const Subscription = require(`./eventbus/Subscription.js`);
 const Subscriber = require(`./eventbus/Subscriber.js`);
 
+
 class DevicePortableFactory {
 
     create(classId) {

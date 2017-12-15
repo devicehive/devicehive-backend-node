@@ -1,46 +1,61 @@
 const PROXY_CONFIG = require(`./config.json`);
-const EventEmitter = require(`events`);
 const WS = require(`ws`);
+const EventEmitter = require(`events`);
+const { Message } = require(`devicehive-proxy-message`);
+const debug = require(`debug`)(`proxy-client`);
 
-const ProxyMessage = require(`./ProxyMessage.js`);
 
-
-const MAX_LISTENERS = 20;
-
+/**
+ * DeviceHive WebSocket Proxy client
+ */
 class ProxyClient extends EventEmitter {
 
-    constructor() {
+    constructor(webSocketServerUrl = PROXY_CONFIG.WS_PROXY_ENDPOINT) {
         super();
 
         const me = this;
 
-        me.ws = new WS(PROXY_CONFIG.WS_PROXY_ENDPOINT,
-            { headers: { [`${PROXY_CONFIG.DH_SERVICE_HEADER_KEY}`]: `${PROXY_CONFIG.DH_SERVICE_HEADER_VALUE}` } });
+        me.ws = new WS(webSocketServerUrl);
 
-        me.ws.setMaxListeners(MAX_LISTENERS);
+        me.ws.addEventListener(`open`, () => {
+            process.nextTick(() => me.emit(`open`));
+            debug(`Connected to ${webSocketServerUrl}`);
+        });
 
-        me.ws.addEventListener(`open`, () => process.nextTick(() => me.emit(`open`)));
-        me.ws.addEventListener(`close`, () => me.emit(`close`));
+        me.ws.addEventListener(`close`, () => {
+            process.nextTick(() => me.emit(`close`));
+            debug(`Connection has been closed`);
+        });
+
+        me.ws.addEventListener(`error`, (error) => {
+            me.emit(`error`, error);
+            debug(`Proxy client error: ${error}`);
+        });
+
+        me.ws.addEventListener(`ping`, (pingData) => {
+            me.emit(`ping`, pingData);
+            debug(`Ping from WebSocket server`);
+        });
 
         me.ws.addEventListener(`message`, (event) => {
-            let messages = JSON.parse(event.data);
-            messages = messages.length ? messages : [messages];
+            try {
+                let messages = JSON.parse(event.data);
+                messages = messages.length ? messages : [messages];
 
-            messages.forEach((message) => {
-                const proxyMessage = ProxyMessage.normalize(message);
-
-                if (proxyMessage.type === `notif` && !proxyMessage.action) {
-                    me.emit(`notification`, JSON.parse(proxyMessage.payload));
-                }
-            });
+                messages.forEach((message) => me.emit(`message`, Message.normalize(message)));
+            } catch (error) {
+                debug(`Error on incoming message: ${error}`);
+            }
         });
     }
 
-    send(data) {
+    sendMessage(message=new Message()) {
         const me = this;
 
-        me.ws.send(data);
+        me.ws.send(message.toString());
     }
 }
 
+
 module.exports = new ProxyClient();
+

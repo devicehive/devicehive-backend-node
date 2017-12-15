@@ -1,5 +1,3 @@
 {
-    "WS_PROXY_ENDPOINT": "ws://localhost:3000",
-    "DH_SERVICE_HEADER_KEY": "client-type",
-    "DH_SERVICE_HEADER_VALUE": "dh-service"
+    "WS_PROXY_ENDPOINT": "ws://localhost:3000"
 }

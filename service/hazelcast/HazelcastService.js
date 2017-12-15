@@ -55,8 +55,7 @@ class HazelcastService extends EventEmitter {
 
         await me._getClient();
 
-        //return await map.valuesWithPredicate(predicate);
-        return await map.values();
+        return await map.valuesWithPredicate(predicate);
     }
 
     async store(entityName, data) {
