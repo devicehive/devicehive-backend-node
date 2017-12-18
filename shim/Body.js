@@ -1,6 +1,13 @@
 
 class Body {
 
+    static normalize({ a, ...rest }) {
+        return new Body({
+            action: a,
+            ...rest
+        });
+    }
+
     constructor({ action, ...rest } = {}) {
         const me = this;
 
@@ -53,13 +60,6 @@ class Body {
         me[fieldName] = me.rest[fieldName] = fieldValue;
 
         return me;
-    }
-
-    static normalize({ a, ...rest }) {
-        return new Body({
-            action: a,
-            ...rest
-        });
     }
 }
 

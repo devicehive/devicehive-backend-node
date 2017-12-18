@@ -1,4 +1,4 @@
 
-module.exports = function(Network) {
+module.exports = (Network) => {
 
 };

@@ -1,75 +1,79 @@
 const db = require(`../../db`);
-const Action = require(`../../shim/Action.js`);
-const Response = require(`../../shim/Response.js`);
-const Principal = require(`../../shim/Principal.js`);
+const Response = require(`../../shim/Response`);
+const Principal = require(`../../shim/Principal`);
+const ListDeviceRequestBody = require(`../../common/model/rpc/ListDeviceRequestBody`);
+const ListDeviceResponseBody = require(`../../common/model/rpc/ListDeviceResponseBody`);
+const ErrorResponseBody = require(`../../common/model/rpc/ErrorResponseBody`);
 
 
 module.exports = async (request) => {
-    const principal = new Principal(request.body.principal);
+    const listDeviceRequestBody = new ListDeviceRequestBody(request.body);
     const response = new Response({ last: true });
 
     try {
-        if (principal.hasAction(Principal.GET_DEVICE_ACTION)) {
-            const devices = await getDevices(request.body, principal);
+        if (listDeviceRequestBody.principal.hasAction(Principal.GET_DEVICE_ACTION)) {
+            const devices = await getDevices(listDeviceRequestBody);
 
             response.errorCode = 0;
             response.failed = false;
-            response.withBody({ action: Action.LIST_DEVICE_RESPONSE})
-                .addField(`devices`, devices.map((device) => device.toObject()));
+            response.withBody(new ListDeviceResponseBody({
+                devices: devices.map((device) => device.toObject())
+            }));
         } else {
             response.errorCode = 403;
             response.failed = true;
-            response.withBody({ action: Action.ERROR_RESPONSE});
+            response.withBody(new ErrorResponseBody());
         }
     } catch (err) {
         response.errorCode = 400;
         response.failed = true;
-        response.withBody({ action: Action.ERROR_RESPONSE});
+        response.withBody(new ErrorResponseBody());
     }
 
     return response;
 };
 
 
-async function getDevices (requestBody, principal) {
+async function getDevices (listDeviceRequestBody) {
     const models = await db.getModels();
     const deviceDAO = models[`Device`];
     const deviceFilterObject = { where: {} };
+    const principal = listDeviceRequestBody.principal;
     let devices;
 
-    if (requestBody.skip) {
-        deviceFilterObject.skip = requestBody.skip;
+    if (listDeviceRequestBody.skip) {
+        deviceFilterObject.skip = listDeviceRequestBody.skip;
     }
 
-    if (requestBody.take) {
-        deviceFilterObject.limit = requestBody.take;
+    if (listDeviceRequestBody.take) {
+        deviceFilterObject.limit = listDeviceRequestBody.take;
     }
 
-    if (requestBody.sortField) {
-        deviceFilterObject.order = [`${requestBody.sortField} ${requestBody.sortOrder || 'ASC'}`];
+    if (listDeviceRequestBody.sortField) {
+        deviceFilterObject.order = [`${listDeviceRequestBody.sortField} ${listDeviceRequestBody.sortOrder || 'ASC'}`];
     }
 
-    if (requestBody.namePattern) {
-        filterObject.where.name = { like: requestBody.namePattern };
-    } else if (requestBody.name) {
-        filterObject.where.name = requestBody.name;
+    if (listDeviceRequestBody.namePattern) {
+        deviceFilterObject.where.name = { like: listDeviceRequestBody.namePattern };
+    } else if (listDeviceRequestBody.name) {
+        deviceFilterObject.where.name = listDeviceRequestBody.name;
     }
 
-    if (requestBody.networkId) {
-        deviceFilterObject.where.networkId = requestBody.networkId;
+    if (listDeviceRequestBody.networkId) {
+        deviceFilterObject.where.networkId = listDeviceRequestBody.networkId;
     }
 
     if (!principal.allDevicesAvailable) {
         deviceFilterObject.where.id = { inq: principal.deviceIds };
     }
 
-    if (requestBody.networkName) {
-        deviceFilterObject.where.include = { relation: `network`, scope: { where: { name: requestBody.networkName } } };
+    if (listDeviceRequestBody.networkName) {
+        deviceFilterObject.where.include = { relation: `network`, scope: { where: { name: listDeviceRequestBody.networkName } } };
     }
 
     devices = await deviceDAO.find(deviceFilterObject);
 
-    if (requestBody.networkName) { //TODO native join functionality
+    if (listDeviceRequestBody.networkName) { //TODO native join functionality
         devices = devices.filter((device) => !!device.toObject().network );
     }
 

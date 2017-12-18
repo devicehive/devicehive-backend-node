@@ -4,7 +4,7 @@ const DeviceNotification = require(`../DeviceNotification.js`);
 
 class NotificationSubscribeRequestBody extends Body {
 
-    constructor({ deviceNotification, ...rest }) {
+    constructor({ deviceNotification, ...rest } = {}) {
         super({ deviceNotification, ...rest });
 
         const me = this;

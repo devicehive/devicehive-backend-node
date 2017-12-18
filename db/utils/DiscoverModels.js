@@ -11,7 +11,15 @@ String.prototype.capitalize = function() {
   return this.charAt(0).toUpperCase() + this.slice(1);
 };
 
-[`device`, `network`, `configuration`, `dh_user`, `user_network`]
+[   `device`,
+    `network`,
+    `configuration`,
+    `dh_user`,
+    `user_network`,
+    `plugin`,
+    `device_type`,
+    `user_device_type`
+]
   .forEach ((modelName) => {
     ds.discoverAndBuildModels(modelName, {visited: {}, associations: true}, (err, models) => {
       if (!err) {

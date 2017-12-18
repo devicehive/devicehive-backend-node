@@ -1,6 +1,7 @@
 const Action = require(`../shim/Action.js`);
 const Response = require(`../shim/Response.js`);
 const listDeviceHandler = require(`../messages.handler/dao.list/ListDeviceHandler.js`);
+const listDeviceTypeHandler = require(`../messages.handler/dao.list/listDeviceTypeHandler.js`);
 const listNetworkHandler = require(`../messages.handler/dao.list/ListNetworkHandler.js`);
 const listUserHandler = require(`../messages.handler/dao.list/ListUserHandler.js`);
 const notificationSubscribeRequestHandler = require(`../messages.handler/notification/NotificationSubscribeRequestHandler.js`);
@@ -25,8 +26,10 @@ actionToHandlerMap.set(Action.PLUGIN_SUBSCRIBE_REQUEST, () => new Response()); /
 actionToHandlerMap.set(Action.PLUGIN_UNSUBSCRIBE_REQUEST, () => new Response()); // TODO
 actionToHandlerMap.set(Action.LIST_USER_REQUEST, listUserHandler);
 actionToHandlerMap.set(Action.LIST_NETWORK_REQUEST, listNetworkHandler);
+actionToHandlerMap.set(Action.LIST_DEVICE_TYPE_REQUEST, listDeviceTypeHandler);
 actionToHandlerMap.set(Action.LIST_DEVICE_REQUEST, listDeviceHandler);
 actionToHandlerMap.set(Action.LIST_SUBSCRIBE_REQUEST, () => new Response()); // TODO
+actionToHandlerMap.set(Action.DEVICE_DELETE_REQUEST, () => new Response()); // TODO
 actionToHandlerMap.set(Action.DEVICE_CREATE_REQUEST, () => new Response()); // TODO
 
 

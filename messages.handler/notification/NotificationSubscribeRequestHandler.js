@@ -17,13 +17,15 @@ module.exports = async (request) => {
     const models = await db.getModels();
     const deviceDAO = models[`Device`];
     const device = await deviceDAO.findOne({ where: { deviceId: notificationSubscribeRequestBody.device }, include: `network` });
-    const networkId = device.toObject().network.id;
+    const deviceObject =  device.toObject();
+    const networkId = deviceObject.network.id;
+    const deviceTypeId = deviceObject.deviceTypeId;
 
     (notificationSubscribeRequestBody.filter.names || [ undefined ]).forEach((name) => {
         eventBus.subscribe(
             new Subscription({
                 networkId: networkId,
-                deviceTypeId: 0,
+                deviceTypeId: deviceTypeId,
                 deviceId: notificationSubscribeRequestBody.device,
                 eventType: 'notification',
                 name: name

@@ -1,12 +1,12 @@
 {
-    "name": "Device",
+    "name": "UserDeviceType",
     "base": "PersistedModel",
     "idInjection": true,
     "options": {
         "validateUpsert": true,
         "postgresql": {
             "schema": "public",
-            "table": "device"
+            "table": "user_device_type"
         }
     },
     "properties": {
@@ -17,42 +17,16 @@
                 "columnName": "id"
             }
         },
-        "deviceId": {
-            "type": "string",
-            "required": true,
-            "postgresql": {
-                "columnName": "device_id"
-            }
-        },
-        "name": {
-            "type": "string",
-            "required": true,
-            "postgresql": {
-                "columnName": "name"
-            }
-        },
-        "data": {
-            "type": "object",
-            "postgresql": {
-                "columnName": "data"
-            }
-        },
-        "networkId": {
+        "userId": {
             "type": "number",
             "required": true,
             "postgresql": {
-                "columnName": "network_id"
-            }
-        },
-        "blocked": {
-            "type": "boolean",
-            "required": true,
-            "postgresql": {
-                "columnName": "blocked"
+                "columnName": "user_id"
             }
         },
         "deviceTypeId": {
             "type": "number",
+            "required": true,
             "postgresql": {
                 "columnName": "device_type_id"
             }
@@ -66,10 +40,10 @@
     },
     "validations": [],
     "relations": {
-        "network": {
+        "user": {
             "type": "belongsTo",
-            "model": "Network",
-            "foreignKey": "networkId"
+            "model": "User",
+            "foreignKey": "userId"
         },
         "deviceType": {
             "type": "belongsTo",

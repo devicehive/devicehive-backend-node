@@ -1,8 +1,8 @@
-const hazelcastService = require(`../../service/hazelcast/HazelcastService.js`);
-const NotificationSearchRequestBody = require(`./common/model/rpc`);
-const NotificationSearchResponseBody = require(`./common/model/rpc`);
-const DeviceNotification = require(`./common/model/DeviceNotification.js`);
-const Response = require(`../../shim/Response.js`);
+const hazelcastService = require(`../../service/hazelcast/HazelcastService`);
+const NotificationSearchRequestBody = require(`../../common/model/rpc/NotificationSearchRequestBody`);
+const NotificationSearchResponseBody = require(`../../common/model/rpc/NotificationSearchResponseBody`);
+const DeviceNotification = require(`../../common/model/DeviceNotification`);
+const Response = require(`../../shim/Response`);
 
 
 module.exports = async (request) => {
@@ -23,7 +23,7 @@ module.exports = async (request) => {
 
 
 async function searchMultipleNotifications(notificationSearchRequestBody) {
-    await hazelcastService.find(DeviceNotification.getClassName(), {
+    const notifications = await hazelcastService.find(DeviceNotification.getClassName(), {
         deviceIds: notificationSearchRequestBody.deviceIds,
         names: notificationSearchRequestBody.names,
         limit: (notificationSearchRequestBody.take || 0) - (notificationSearchRequestBody.skip || 0),
@@ -32,13 +32,12 @@ async function searchMultipleNotifications(notificationSearchRequestBody) {
         returnUpdated: false,
         status: null
     });
-    //TODO
 
-    return [];
+    return notifications;
 }
 
 
 async function searchSingleNotificationByDeviceAndId(id, deviceId) {
-    return (await hazelcastService.find(DeviceNotification.getClassName(), { id: id, deviceId: deviceId }))
+    return (await hazelcastService.find(DeviceNotification.getClassName(), { id: id, deviceIds: [ deviceId ] }))
         .map((deviceNotification) => deviceNotification.toObject())
 }

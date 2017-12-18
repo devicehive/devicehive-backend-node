@@ -90,6 +90,12 @@
             "model": "Network",
             "foreignKey": "networkId",
             "through": "UserNetwork"
+        },
+        "deviceTypes": {
+            "type": "hasMany",
+            "model": "DeviceType",
+            "foreignKey": "deviceTypeId",
+            "through": "UserDeviceType"
         }
     },
     "acls": [],

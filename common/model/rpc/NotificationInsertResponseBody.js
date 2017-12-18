@@ -4,7 +4,7 @@ const DeviceNotification = require(`../DeviceNotification.js`);
 
 class NotificationInsertResponseBody extends Body {
 
-    constructor({ deviceNotification, ...rest }) {
+    constructor({ deviceNotification, ...rest } = {}) {
         super({ action: Action.NOTIFICATION_INSERT_RESPONSE, deviceNotification, ...rest });
 
         const me = this;

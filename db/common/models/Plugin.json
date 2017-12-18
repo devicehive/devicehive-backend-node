@@ -1,12 +1,12 @@
 {
-    "name": "Device",
+    "name": "Plugin",
     "base": "PersistedModel",
     "idInjection": true,
     "options": {
         "validateUpsert": true,
         "postgresql": {
             "schema": "public",
-            "table": "device"
+            "table": "plugin"
         }
     },
     "properties": {
@@ -17,13 +17,6 @@
                 "columnName": "id"
             }
         },
-        "deviceId": {
-            "type": "string",
-            "required": true,
-            "postgresql": {
-                "columnName": "device_id"
-            }
-        },
         "name": {
             "type": "string",
             "required": true,
@@ -31,30 +24,51 @@
                 "columnName": "name"
             }
         },
-        "data": {
+        "description": {
+            "type": "string",
+            "postgresql": {
+                "columnName": "description"
+            }
+        },
+        "topicName": {
+            "type": "string",
+            "required": true,
+            "postgresql": {
+                "columnName": "topic_name"
+            }
+        },
+        "healthCheckUrl": {
+            "type": "string",
+            "required": true,
+            "postgresql": {
+                "columnName": "health_check_url"
+            }
+        },
+        "status": {
+            "type": "number",
+            "required": true,
+            "postgresql": {
+                "columnName": "status"
+            }
+        },
+        "subscriptionId": {
+            "type": "number",
+            "required": true,
+            "postgresql": {
+                "columnName": "subscription_id"
+            }
+        },
+        "userId": {
+            "type": "number",
+            "required": true,
+            "postgresql": {
+                "columnName": "user_id"
+            }
+        },
+        "parameters": {
             "type": "object",
             "postgresql": {
-                "columnName": "data"
-            }
-        },
-        "networkId": {
-            "type": "number",
-            "required": true,
-            "postgresql": {
-                "columnName": "network_id"
-            }
-        },
-        "blocked": {
-            "type": "boolean",
-            "required": true,
-            "postgresql": {
-                "columnName": "blocked"
-            }
-        },
-        "deviceTypeId": {
-            "type": "number",
-            "postgresql": {
-                "columnName": "device_type_id"
+                "columnName": "parameters"
             }
         },
         "entityVersion": {
@@ -65,18 +79,7 @@
         }
     },
     "validations": [],
-    "relations": {
-        "network": {
-            "type": "belongsTo",
-            "model": "Network",
-            "foreignKey": "networkId"
-        },
-        "deviceType": {
-            "type": "belongsTo",
-            "model": "DeviceType",
-            "foreignKey": "deviceTypeId"
-        }
-    },
+    "relations": {},
     "acls": [],
     "methods": {}
 }

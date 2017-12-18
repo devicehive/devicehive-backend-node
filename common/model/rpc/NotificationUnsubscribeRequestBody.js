@@ -3,7 +3,7 @@ const Body = require(`../../../shim/Body.js`);
 
 class NotificationUnsubscribeRequestBody extends Body {
 
-    constructor({ subscriptionIds, ...rest }) {
+    constructor({ subscriptionIds, ...rest } = {}) {
         super({ subscriptionIds, ...rest });
 
         const me = this;

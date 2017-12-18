@@ -36,12 +36,16 @@ class Action {
     static get LIST_USER_RESPONSE() { return 33; }
     static get LIST_NETWORK_REQUEST() { return 34; }
     static get LIST_NETWORK_RESPONSE() { return 35; }
-    static get LIST_DEVICE_REQUEST() { return 36; }
-    static get LIST_DEVICE_RESPONSE() { return 37; }
-    static get LIST_SUBSCRIBE_REQUEST() { return 38; }
-    static get LIST_SUBSCRIBE_RESPONSE() { return 39; }
-    static get DEVICE_CREATE_REQUEST() { return 40; }
-    static get DEVICE_CREATE_RESPONSE() { return 41; }
+    static get LIST_DEVICE_TYPE_REQUEST() { return 36; }
+    static get LIST_DEVICE_TYPE_RESPONSE() { return 37; }
+    static get LIST_DEVICE_REQUEST() { return 38; }
+    static get LIST_DEVICE_RESPONSE() { return 39; }
+    static get LIST_SUBSCRIBE_REQUEST() { return 40; }
+    static get LIST_SUBSCRIBE_RESPONSE() { return 41; }
+    static get DEVICE_DELETE_REQUEST() { return 42; }
+    static get DEVICE_DELETE_RESPONSE() { return 43; }
+    static get DEVICE_CREATE_REQUEST() { return 44; }
+    static get DEVICE_CREATE_RESPONSE() { return 56; }
 }
 
 module.exports = Action;

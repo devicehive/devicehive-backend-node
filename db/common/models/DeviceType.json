@@ -1,0 +1,44 @@
+{
+    "name": "DeviceType",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true,
+        "postgresql": {
+            "schema": "public",
+            "table": "device_type"
+        }
+    },
+    "properties": {
+        "id": {
+            "type": "number",
+            "required": true,
+            "postgresql": {
+                "columnName": "id"
+            }
+        },
+        "name": {
+            "type": "string",
+            "required": true,
+            "postgresql": {
+                "columnName": "name"
+            }
+        },
+        "description": {
+            "type": "string",
+            "postgresql": {
+                "columnName": "description"
+            }
+        },
+        "entityVersion": {
+            "type": "number",
+            "postgresql": {
+                "columnName": "entity_version"
+            }
+        }
+    },
+    "validations": [],
+    "relations": {},
+    "acls": [],
+    "methods": {}
+}

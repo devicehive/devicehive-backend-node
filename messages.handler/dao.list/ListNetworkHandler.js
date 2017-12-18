@@ -1,39 +1,43 @@
 const db = require(`../../db`);
-const Action = require(`../../shim/Action.js`);
-const Response = require(`../../shim/Response.js`);
-const Principal = require(`../../shim/Principal.js`);
+const Response = require(`../../shim/Response`);
+const Principal = require(`../../shim/Principal`);
+const ListNetworkRequestBody = require(`../../common/model/rpc/ListNetworkRequestBody`);
+const ListNetworkResponseBody = require(`../../common/model/rpc/ListNetworkResponseBody`);
+const ErrorResponseBody = require(`../../common/model/rpc/ErrorResponseBody`);
 
 
 module.exports = async (request) => {
-    const principal = new Principal(request.body.principal);
+    const listNetworkRequestBody = new ListNetworkRequestBody(request.body);
     const response = new Response({ last: true });
 
     try {
-        if (principal.hasAction(Principal.GET_NETWORK_ACTION)) {
-            const networks = await getNetworks(request.body, principal);
+        if (listNetworkRequestBody.principal.hasAction(Principal.GET_NETWORK_ACTION)) {
+            const networks = await getNetworks(listNetworkRequestBody);
 
             response.errorCode = 0;
             response.failed = false;
-            response.withBody({ action: Action.LIST_NETWORK_RESPONSE })
-                .addField(`networks`, networks.map((network) => network.toObject()));
+            response.withBody(new ListNetworkResponseBody({
+                networks: networks.map((network) => network.toObject())
+            }));
         } else {
             response.errorCode = 403;
             response.failed = true;
-            response.withBody({ action: Action.ERROR_RESPONSE });
+            response.withBody(new ErrorResponseBody());
         }
     } catch (err) {
         response.errorCode = 400;
         response.failed = true;
-        response.withBody({ action: Action.ERROR_RESPONSE });
+        response.withBody(new ErrorResponseBody());
     }
 
     return response;
 };
 
 
-async function getNetworks (requestBody, principal) {
+async function getNetworks (requestBody) {
     const models = await db.getModels();
     const networkDAO = models[`Network`];
+    const principal = requestBody.principal;
     const filterObject = { where: {} };
 
     if (requestBody.skip) {

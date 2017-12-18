@@ -4,7 +4,7 @@ const Action = require(`../../../shim/Action.js`);
 
 class NotificationUnsubscribeResponseBody extends Body {
 
-    constructor({ subscriptionIds, ...rest }) {
+    constructor({ subscriptionIds, ...rest } = {}) {
         super({ action: Action.NOTIFICATION_UNSUBSCRIBE_RESPONSE, subscriptionIds, ...rest });
 
         const me = this;

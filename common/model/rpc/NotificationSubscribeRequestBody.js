@@ -4,7 +4,7 @@ const Filter = require(`../eventbus/Filter.js`);
 
 class NotificationSubscribeRequestBody extends Body {
 
-    constructor({ subscriptionId, device, filter, timestamp, ...rest }) {
+    constructor({ subscriptionId, device, filter, timestamp, ...rest } = {}) {
         super({ subscriptionId, device, filter, timestamp, ...rest });
 
         const me = this;

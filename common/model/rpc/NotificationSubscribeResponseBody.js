@@ -3,7 +3,7 @@ const Action = require(`../../../shim/Action.js`);
 
 class NotificationSubscribeResponseBody extends Body {
 
-    constructor({ subId, notifications, ...rest }) {
+    constructor({ subId, notifications, ...rest } = {}) {
         super({ action: Action.NOTIFICATION_SUBSCRIBE_RESPONSE, subId, notifications, ...rest });
 
         const me = this;

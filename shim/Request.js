@@ -6,14 +6,14 @@ class Request {
     static get CLIENT_REQUEST_TYPE () { return 0; }
     static get PING_TYPE () { return 1; }
 
-    static normalize(data) {
+    static normalize({ b, cId, pK, sre, rTo, t } = {}) {
         return new Request({
-            body: Body.normalize(data.b ? data.b : {}),
-            correlationId: data.cId,
-            partitionKey: data.pK,
-            singleReplyExpected: data.sre,
-            replyTo: data.rTo,
-            type: data.t
+            body: Body.normalize(b ? b : {}),
+            correlationId: cId,
+            partitionKey: pK,
+            singleReplyExpected: sre,
+            replyTo: rTo,
+            type: t
         })
     }
 

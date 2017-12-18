@@ -4,7 +4,7 @@ const DeviceNotification = require(`../DeviceNotification.js`);
 
 class NotificationSearchResponseBody extends Body {
 
-    constructor({ notifications, ...rest }) {
+    constructor({ notifications, ...rest } = {}) {
         super({ action: Action.NOTIFICATION_SEARCH_RESPONSE, notifications, ...rest });
 
         const me = this;

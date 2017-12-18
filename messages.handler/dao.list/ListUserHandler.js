@@ -1,57 +1,61 @@
 const db = require(`../../db`);
-const Action = require(`../../shim/Action.js`);
-const Response = require(`../../shim/Response.js`);
+const Response = require(`../../shim/Response`);
+const ListUserRequestBody = require(`../../common/model/rpc/ListUserRequestBody`);
+const ListUserResponseBody = require(`../../common/model/rpc/ListUserResponseBody`);
+const ErrorResponseBody = require(`../../common/model/rpc/ErrorResponseBody`);
 
 
 module.exports = async (request) => {
+    const listUserRequestBody = new ListUserRequestBody(request.body);
     const response = new Response({ last: true });
 
     try {
-        const users = await getUsers(request.body);
+        const users = await getUsers(listUserRequestBody);
 
         response.errorCode = 0;
         response.failed = false;
-        response.withBody({ action: Action.LIST_USER_RESPONSE })
-            .addField(`users`, users.map((user) => user.toObject()));
+        response.withBody(new ListUserResponseBody({
+            users: users.map((user) => user.toObject())
+        }));
     } catch (err) {
         response.errorCode = 400;
         response.failed = true;
-        response.withBody({ action: Action.ERROR_RESPONSE });
+        response.withBody(new ErrorResponseBody());
     }
 
     return response;
 };
 
 
-async function getUsers (requestBody) {
+async function getUsers (listUserRequestBody) {
     const models = await db.getModels();
     const userDAO = models[`User`];
     const filterObject = { where: {} };
 
-    if (requestBody.skip) {
-        filterObject.skip = requestBody.skip;
+    if (listUserRequestBody.skip) {
+        filterObject.skip = listUserRequestBody.skip;
     }
 
-    if (requestBody.take) {
-        filterObject.limit = requestBody.take;
+    if (listUserRequestBody.take) {
+        filterObject.limit = listUserRequestBody.take;
     }
 
-    if (requestBody.sortField) {
-        filterObject.order = [`${requestBody.sortField} ${requestBody.sortOrder || 'ASC'}`];
+    if (listUserRequestBody.sortField) {
+        filterObject.order = [`${listUserRequestBody.sortField} ${listUserRequestBody.sortOrder || 'ASC'}`];
     }
 
-    if (requestBody.status) {
-        filterObject.where.status = requestBody.status;
+    if (listUserRequestBody.status) {
+        filterObject.where.status = listUserRequestBody.status;
     }
 
-    if (requestBody.role) {
-        filterObject.where.role = requestBody.role;
+    if (listUserRequestBody.role) {
+        filterObject.where.role = listUserRequestBody.role;
     }
 
-    if (requestBody.loginPattern) {
-        filterObject.where.login = { like: requestBody.loginPattern };
-    } else if (requestBody.login) {
-        filterObject.where.login = requestBody.login;
+    if (listUserRequestBody.loginPattern) {
+        filterObject.where.login = { like: listUserRequestBody.loginPattern };
+    } else if (listUserRequestBody.login) {
+        filterObject.where.login = listUserRequestBody.login;
     }
 
     return await userDAO.find(filterObject);
