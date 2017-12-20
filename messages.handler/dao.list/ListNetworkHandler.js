@@ -20,9 +20,9 @@ module.exports = async (request) => {
                 networks: networks.map((network) => network.toObject())
             }));
         } else {
-            response.errorCode = 403;
-            response.failed = true;
-            response.withBody(new ErrorResponseBody());
+             response.errorCode = 403;
+             response.failed = true;
+             response.withBody(new ErrorResponseBody());
         }
     } catch (err) {
         response.errorCode = 400;
@@ -58,7 +58,7 @@ async function getNetworks (requestBody) {
         filterObject.where.name = requestBody.name;
     }
 
-    if (!principal.allNetworksAvailable) {
+    if (principal && !principal.allNetworksAvailable) {
         filterObject.where.id = { inq: principal.networkIds };
     }
 

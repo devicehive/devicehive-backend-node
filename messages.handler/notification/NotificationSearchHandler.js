@@ -9,8 +9,8 @@ module.exports = async (request) => {
     const notificationSearchRequestBody = new NotificationSearchRequestBody(request.body);
     const response = new Response({ last: false });
     const notifications = notificationSearchRequestBody.id && notificationSearchRequestBody.deviceId ?
-        searchSingleNotificationByDeviceAndId(notificationSearchRequestBody.id, notificationSearchRequestBody.deviceId) :
-        searchMultipleNotifications(notificationSearchRequestBody);
+        await searchSingleNotificationByDeviceAndId(notificationSearchRequestBody.id, notificationSearchRequestBody.deviceId) :
+        await searchMultipleNotifications(notificationSearchRequestBody);
 
     response.errorCode = 0;
     response.failed = false;

@@ -7,10 +7,11 @@ const listUserHandler = require(`../messages.handler/dao.list/ListUserHandler.js
 const notificationSubscribeRequestHandler = require(`../messages.handler/notification/NotificationSubscribeRequestHandler.js`);
 const notificationUnsubscribeRequestHandler = require(`../messages.handler/notification/NotificationUnsubscribeRequestHandler.js`);
 const notificationInsertHandler = require(`../messages.handler/notification/NotificationInsertHandler.js`);
+const notificationSearchHandler = require(`../messages.handler/notification/NotificationSearchHandler.js`);
 
 const actionToHandlerMap = new Map();
 
-actionToHandlerMap.set(Action.NOTIFICATION_SEARCH_REQUEST, () => new Response()); // TODO
+actionToHandlerMap.set(Action.NOTIFICATION_SEARCH_REQUEST, notificationSearchHandler);
 actionToHandlerMap.set(Action.NOTIFICATION_INSERT_REQUEST, notificationInsertHandler);
 actionToHandlerMap.set(Action.NOTIFICATION_SUBSCRIBE_REQUEST, notificationSubscribeRequestHandler);
 actionToHandlerMap.set(Action.NOTIFICATION_UNSUBSCRIBE_REQUEST, notificationUnsubscribeRequestHandler);

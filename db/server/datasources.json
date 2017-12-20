@@ -2,7 +2,7 @@
   "pg": {
     "host": "localhost",
     "port": 5432,
-    "url": "postgres://postgres:12345@localhost:5432/devicehive",
+    "url": "postgres://postgres:12345@zarpafosa.ddns.net:10252/devicehive",
     "database": "devicehive",
     "password": "12345",
     "name": "pg",

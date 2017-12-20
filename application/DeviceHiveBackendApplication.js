@@ -14,26 +14,28 @@ proxyClient.on(`message`, async (message) => {
     if (message.type === MessageUtils.NOTIFICATION_TYPE) {
         const payload = message.payload;
 
-        const request = Request.normalize(payload);
-        let response;
+        if (payload && payload.message) {
+            const request = Request.normalize(JSON.parse(payload.message));
+            let response;
 
-        switch (request.type) {
-            case Request.PING_TYPE:
-                response = getPongResponse(request);
-                break;
-            case Request.CLIENT_REQUEST_TYPE:
-                response = await handleClientRequest(request);
-                break;
-            default:
-                response = getErrorResponse(request);
-                break;
+            switch (request.type) {
+                case Request.PING_TYPE:
+                    response = getPongResponse(request);
+                    break;
+                case Request.CLIENT_REQUEST_TYPE:
+                    response = await handleClientRequest(request);
+                    break;
+                default:
+                    response = getErrorResponse(request);
+                    break;
+            }
+
+            proxyClient.sendMessage(MessageBuilder.createNotification({
+                topic: request.replyTo,
+                message: response.toString(),
+                partition: request.partitionKey
+            }));
         }
-
-        proxyClient.sendMessage(MessageBuilder.createNotification({
-            topic: request.replyTo,
-            message: response.toString(),
-            partition: request.partitionKey
-        }));
     }
 });
 
