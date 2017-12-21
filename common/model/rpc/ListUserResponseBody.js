@@ -1,10 +1,11 @@
-const Body = require(`../../../shim/Body.js`);
+const Body = require(`../../../shim/Body`);
+const Action = require(`../../../shim/Action`);
 
 
 class ListUserResponseBody extends Body {
 
     constructor({ users, ...rest } = {}) {
-        super({ users, ...rest });
+        super({ action: Action.LIST_USER_RESPONSE, users, ...rest });
 
         const me = this;
 

@@ -26,26 +26,22 @@ class Action {
     static get COMMANDS_UPDATE_EVENT() { return 23; }
     static get COMMAND_UPDATE_SUBSCRIBE_REQUEST() { return 24; }
     static get COMMAND_UPDATE_SUBSCRIBE_RESPONSE() { return 25; }
-    static get COMMAND_GET_SUBSCRIPTION_REQUEST() { return 26; }
-    static get COMMAND_GET_SUBSCRIPTION_RESPONSE() { return 27; }
-    static get PLUGIN_SUBSCRIBE_REQUEST() { return 28; }
-    static get PLUGIN_SUBSCRIBE_RESPONSE() { return 29; }
-    static get PLUGIN_UNSUBSCRIBE_REQUEST() { return 30; }
-    static get PLUGIN_UNSUBSCRIBE_RESPONSE() { return 31; }
-    static get LIST_USER_REQUEST() { return 32; }
-    static get LIST_USER_RESPONSE() { return 33; }
-    static get LIST_NETWORK_REQUEST() { return 34; }
-    static get LIST_NETWORK_RESPONSE() { return 35; }
-    static get LIST_DEVICE_TYPE_REQUEST() { return 36; }
-    static get LIST_DEVICE_TYPE_RESPONSE() { return 37; }
-    static get LIST_DEVICE_REQUEST() { return 38; }
-    static get LIST_DEVICE_RESPONSE() { return 39; }
-    static get LIST_SUBSCRIBE_REQUEST() { return 40; }
-    static get LIST_SUBSCRIBE_RESPONSE() { return 41; }
-    static get DEVICE_DELETE_REQUEST() { return 42; }
-    static get DEVICE_DELETE_RESPONSE() { return 43; }
-    static get DEVICE_CREATE_REQUEST() { return 44; }
-    static get DEVICE_CREATE_RESPONSE() { return 56; }
+    static get PLUGIN_SUBSCRIBE_REQUEST() { return 26; }
+    static get PLUGIN_SUBSCRIBE_RESPONSE() { return 27; }
+    static get PLUGIN_UNSUBSCRIBE_REQUEST() { return 28; }
+    static get PLUGIN_UNSUBSCRIBE_RESPONSE() { return 29; }
+    static get LIST_USER_REQUEST() { return 30; }
+    static get LIST_USER_RESPONSE() { return 31; }
+    static get LIST_NETWORK_REQUEST() { return 32; }
+    static get LIST_NETWORK_RESPONSE() { return 33; }
+    static get LIST_DEVICE_TYPE_REQUEST() { return 34; }
+    static get LIST_DEVICE_TYPE_RESPONSE() { return 35; }
+    static get LIST_DEVICE_REQUEST() { return 36; }
+    static get LIST_DEVICE_RESPONSE() { return 37; }
+    static get LIST_SUBSCRIBE_REQUEST() { return 38; }
+    static get LIST_SUBSCRIBE_RESPONSE() { return 39; }
+    static get DEVICE_DELETE_REQUEST() { return 40; }
+    static get DEVICE_DELETE_RESPONSE() { return 41; }
 }
 
 module.exports = Action;

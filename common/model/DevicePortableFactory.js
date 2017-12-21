@@ -1,9 +1,8 @@
-const DeviceNotification = require(`./DeviceNotification.js`);
-const DeviceCommand = require(`./DeviceCommand.js`);
-const HivePrincipal = require(`./HivePrincipal.js`);
-const Filter = require(`./eventbus/Filter.js`);
-const Subscription = require(`./eventbus/Subscription.js`);
-const Subscriber = require(`./eventbus/Subscriber.js`);
+const DeviceNotification = require(`./DeviceNotification`);
+const DeviceCommand = require(`./DeviceCommand`);
+const HivePrincipal = require(`./HivePrincipal`);
+const Filter = require(`./eventbus/Filter`);
+const Subscriber = require(`./eventbus/Subscriber`);
 
 
 class DevicePortableFactory {
@@ -23,9 +22,6 @@ class DevicePortableFactory {
                 break;
             case Filter.CLASS_ID:
                 portable = new Filter();
-                break;
-            case Subscription.CLASS_ID:
-                portable = new Subscription();
                 break;
             case Subscriber.CLASS_ID:
                 portable = new Subscriber();

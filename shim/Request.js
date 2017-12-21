@@ -1,5 +1,5 @@
 const uuid = require('uuid/v1');
-const Body = require(`./Body.js`);
+const Body = require(`./Body`);
 
 class Request {
 

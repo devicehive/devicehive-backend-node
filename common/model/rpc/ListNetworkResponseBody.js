@@ -1,10 +1,11 @@
-const Body = require(`../../../shim/Body.js`);
+const Body = require(`../../../shim/Body`);
+const Action = require(`../../../shim/Action`);
 
 
 class ListNetworkResponseBody extends Body {
 
     constructor({ networks, ...rest } = {}) {
-        super({ networks, ...rest });
+        super({ action: Action.LIST_NETWORK_RESPONSE, networks, ...rest });
 
         const me = this;
 

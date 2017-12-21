@@ -1,6 +1,6 @@
 const { MessageBuilder } = require(`devicehive-proxy-message`);
-const proxyClient = require(`../proxy/ProxyClient.js`);
-const MessageDispatcher = require(`../shim/server/MessageDispatcher.js`);
+const proxyClient = require(`../proxy/ProxyClient`);
+const MessageDispatcher = require(`../shim/server/MessageDispatcher`);
 
 
 class ProxyMessageDispatcher extends MessageDispatcher {

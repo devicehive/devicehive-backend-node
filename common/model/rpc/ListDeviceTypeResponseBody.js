@@ -1,10 +1,11 @@
-const Body = require(`../../../shim/Body.js`);
+const Body = require(`../../../shim/Body`);
+const Action = require(`../../../shim/Action`);
 
 
 class ListDeviceTypeResponseBody extends Body {
 
     constructor({ deviceTypes, ...rest } = {}) {
-        super({ name, ...rest });
+        super({ action: Action.LIST_DEVICE_TYPE_RESPONSE, deviceTypes, ...rest });
 
         const me = this;
 

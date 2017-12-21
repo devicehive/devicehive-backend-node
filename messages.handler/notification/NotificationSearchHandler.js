@@ -7,7 +7,7 @@ const Response = require(`../../shim/Response`);
 
 module.exports = async (request) => {
     const notificationSearchRequestBody = new NotificationSearchRequestBody(request.body);
-    const response = new Response({ last: false });
+    const response = new Response({last: false});
     const notifications = notificationSearchRequestBody.id && notificationSearchRequestBody.deviceId ?
         await searchSingleNotificationByDeviceAndId(notificationSearchRequestBody.id, notificationSearchRequestBody.deviceId) :
         await searchMultipleNotifications(notificationSearchRequestBody);

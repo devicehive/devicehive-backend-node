@@ -1,5 +1,5 @@
-const ComplexMapRegistry = require(`./ComplexMapRegistry.js`);
-const TopicPatternsRegistry = require(`./TopicPatternsRegistry.js`);
+const ComplexMapRegistry = require(`./ComplexMapRegistry`);
+const TopicPatternsRegistry = require(`./TopicPatternsRegistry`);
 
 
 class SubscriptionRegistry {

@@ -1,5 +1,6 @@
 const Long = require(`long`);
 
+
 class DeviceNotification {
 
     static get FACTORY_ID() { return 1; }
@@ -7,13 +8,14 @@ class DeviceNotification {
 
     static getClassName() { return DeviceNotification.name };
 
-    constructor({ id, notification, deviceId, networkId, timestamp, parameters } = {}) {
+    constructor({ id, notification, deviceId, networkId, deviceTypeId, timestamp, parameters } = {}) {
         const me = this;
 
         me.id = id;
         me.notification = notification;
         me.deviceId = deviceId;
         me.networkId = networkId;
+        me.deviceTypeId = deviceTypeId;
         me.timestamp = timestamp;
         me.parameters = parameters;
     }
@@ -58,6 +60,16 @@ class DeviceNotification {
         this._networkId = value;
     }
 
+    get deviceTypeId() {
+        const me = this;
+
+        return me._deviceTypeId;
+    }
+
+    set deviceTypeId(value) {
+        this._deviceTypeId = value;
+    }
+
     get timestamp() {
         const me = this;
 
@@ -86,6 +98,7 @@ class DeviceNotification {
             notification: me.notification,
             deviceId: me.deviceId,
             networkId: me.networkId,
+            deviceTypeId: me.deviceTypeId,
             timestamp: me.timestamp,
             parameters: me.parameters
         }
@@ -108,28 +121,24 @@ class DeviceNotification {
     writePortable(writer) {
         const me = this;
 
-        //writer.writeLong("id", Long.fromNumber(me.id, true));
-        writer.writeDouble("id", me.id, true);
+        writer.writeLong("id", Long.fromNumber(me.id, false));
         writer.writeUTF("notification", me.notification);
         writer.writeUTF("deviceId", me.deviceId);
-        //writer.writeLong("networkId", Long.fromNumber(me.networkId, true));
-        writer.writeDouble("networkId", me.networkId, true);
-        //writer.writeLong("timestamp", Long.fromNumber(new Date(me.timestamp).getTime(), true));
-        writer.writeDouble("timestamp", new Date(me.timestamp).getTime(), true);
-        writer.writeUTF("parameters", JSON.stringify(me.parameters));
+        writer.writeLong("networkId", Long.fromNumber(me.networkId, false));
+        writer.writeLong("deviceTypeId", Long.fromNumber(me.networkId, false));
+        writer.writeLong("timestamp", Long.fromNumber(new Date(me.timestamp).getTime(), false));
+        writer.writeUTF("parameters", me.parameters ? JSON.stringify(me.parameters) : null);
     };
 
     readPortable(reader) {
         const me = this;
 
-        //me.id = reader.readLong("id").toNumber();
-        me.id = reader.readDouble("id");
+        me.id = reader.readLong("id").toNumber();
         me.notification = reader.readUTF("notification");
         me.deviceId = reader.readUTF("deviceId");
-        //me.networkId = reader.readLong("networkId").toNumber();
-        me.networkId = reader.readDouble("networkId");
-        //me.timestamp = new Date(reader.readLong("timestamp"));
-        me.timestamp = new Date(reader.readDouble("timestamp"));
+        me.networkId = reader.readLong("networkId").toNumber();
+        me.deviceTypeId = reader.readLong("deviceTypeId").toNumber();
+        me.timestamp = new Date(reader.readLong("timestamp").toNumber());
         me.parameters = JSON.parse(reader.readUTF("parameters"));
     };
 }

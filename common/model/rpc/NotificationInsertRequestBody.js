@@ -1,8 +1,8 @@
-const Body = require(`../../../shim/Body.js`);
-const DeviceNotification = require(`../DeviceNotification.js`);
+const Body = require(`../../../shim/Body`);
+const DeviceNotification = require(`../DeviceNotification`);
 
 
-class NotificationSubscribeRequestBody extends Body {
+class NotificationInsertRequestBody extends Body {
 
     constructor({ deviceNotification, ...rest } = {}) {
         super({ deviceNotification, ...rest });
@@ -26,4 +26,4 @@ class NotificationSubscribeRequestBody extends Body {
 }
 
 
-module.exports = NotificationSubscribeRequestBody;
+module.exports = NotificationInsertRequestBody;

@@ -11,18 +11,18 @@
   "dependencies": {
     "compression": "^1.0.3",
     "cors": "^2.5.2",
-    "devicehive-proxy-message": "^1.0.7",
+    "devicehive-proxy-message": "^1.0.8",
     "hazelcast-client": "^0.6.2",
     "helmet": "^1.3.0",
     "long": "^3.2.0",
-    "loopback": "^3.0.0",
+    "loopback": "^3.17.1",
     "loopback-boot": "^2.6.5",
     "loopback-component-explorer": "^4.0.0",
     "loopback-connector-postgresql": "^2.8.0",
     "serve-favicon": "^2.0.1",
     "strong-error-handler": "^2.0.0",
     "uuid": "^3.1.0",
-    "ws": "^3.3.2"
+    "ws": "^3.3.3"
   },
   "devDependencies": {
     "eslint": "^3.17.1",

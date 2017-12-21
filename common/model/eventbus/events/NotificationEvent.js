@@ -1,7 +1,7 @@
-const Event = require(`./Event.js`);
-const DeviceNotification = require(`../../DeviceNotification.js`);
-const Action = require(`../../../../shim/Action.js`);
-const Subscription = require(`../Subscription.js`);
+const Event = require(`./Event`);
+const DeviceNotification = require(`../../DeviceNotification`);
+const Action = require(`../../../../shim/Action`);
+const Filter = require(`../Filter`);
 
 
 class NotificationEvent extends Event {
@@ -22,23 +22,24 @@ class NotificationEvent extends Event {
         this._notification = new DeviceNotification(value);
     }
 
-    getApplicableSubscriptions() {
+    getApplicableFilters() {
         const me = this;
-        const deviceOnly = new Subscription({
-            networkId: me.notification.networkId,
-            deviceTypeId: 0,
-            deviceId: me.notification.deviceId,
-            eventType: `notification`,
-        });
-        const deviceWithName = new Subscription({
-            networkId: me.notification.networkId,
-            deviceTypeId: 0,
-            deviceId: me.notification.deviceId,
-            eventType: `notification`,
-            name: me.notification.notification
-        });
 
-        return [ deviceOnly, deviceWithName ];
+        return [
+            new Filter({
+                networkId: me.notification.networkId,
+                deviceTypeId: me.notification.deviceTypeId,
+                deviceId: me.notification.deviceId,
+                eventName: `notification`,
+            }),
+            new Filter({
+                networkId: me.notification.networkId,
+                deviceTypeId:  me.notification.deviceTypeId,
+                deviceId: me.notification.deviceId,
+                eventName: `notification`,
+                name: me.notification.notification
+            })
+        ];
     }
 }
 

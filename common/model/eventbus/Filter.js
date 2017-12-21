@@ -1,5 +1,7 @@
-const HivePrincipal = require(`../HivePrincipal.js`);
+const Long = require(`long`);
 
+const WILDE_CARD = `*`;
+const KEY_JOINER = `,`;
 
 class Filter {
 
@@ -8,87 +10,72 @@ class Filter {
 
     static getClassName() { return Filter.name };
 
-    constructor({ principal, global = false, networkIds, deviceIds, eventName, names } = {}) {
+    constructor({ networkId, deviceTypeId, deviceId, eventName, name } = {}) {
         const me = this;
 
-        me.principal = principal;
-        me.global = global;
-        me.networkIds = networkIds;
-        me.deviceIds = deviceIds;
+        me.networkId = networkId;
+        me.deviceTypeId = deviceTypeId;
+        me.deviceId = deviceId;
         me.eventName = eventName;
-        me.names = names;
+        me.name = name;
     }
 
-    get principal() {
-        const me = this;
-
-        return me._principal;
+    get deviceTypeId() {
+        return this._deviceTypeId;
     }
 
-    set principal(value) {
-        const me = this;
-
-        me._principal = new HivePrincipal(value);
+    set deviceTypeId(value) {
+        this._deviceTypeId = value;
     }
 
-    get global() {
-        const me = this;
-
-        return me._global;
+    get networkId() {
+        return this._networkId;
     }
 
-    set global(value) {
-        const me = this;
-
-        me._global = value;
+    set networkId(value) {
+        this._networkId = value;
     }
 
-    get networkIds() {
-        const me = this;
-
-        return me._networkIds;
+    get deviceId() {
+        return this._deviceId;
     }
 
-    set networkIds(value) {
-        const me = this;
-
-        me._networkIds = value;
-    }
-
-    get deviceIds() {
-        const me = this;
-
-        return me._deviceIds;
-    }
-
-    set deviceIds(value) {
-        const me = this;
-
-        me._deviceIds = value;
+    set deviceId(value) {
+        this._deviceId = value;
     }
 
     get eventName() {
-        const me = this;
-
-        return me._eventName;
+        return this._eventName;
     }
 
     set eventName(value) {
-        const me = this;
-
-        me._eventName = value;
+        this._eventName = value;
     }
 
-    get names() {
-        const me = this;
-
-        return me._names;
+    get name() {
+        return this._name;
     }
 
-    set names(value) {
+    set name(value) {
+        this._name = value;
+    }
+
+    getFirstKey() {
         const me = this;
 
-        me._names = value;
+        return [me.networkId || WILDE_CARD, me.deviceTypeId || WILDE_CARD, me.deviceId || WILDE_CARD].join(KEY_JOINER);
+    }
+
+    getDeviceIgnoredFirstKey() {
+        const me = this;
+
+        return [me.networkId || WILDE_CARD, me.deviceTypeId || WILDE_CARD, WILDE_CARD].join(KEY_JOINER);
+    }
+
+    getSecondKey() {
+        const me = this;
+
+        return [me.eventName || WILDE_CARD, me.name || WILDE_CARD].join(KEY_JOINER)
     }
 
     getFactoryId() {
@@ -102,11 +89,21 @@ class Filter {
     writePortable(writer) {
         const me = this;
 
+        writer.writeLong("networkId", Long.fromNumber(me.networkId, false));
+        writer.writeLong("deviceTypeId", Long.fromNumber(me.deviceTypeId , false));
+        writer.writeUTF("deviceId", me.deviceId);
+        writer.writeUTF("eventName", me.eventName);
+        writer.writeUTF("name", me.name);
     };
 
     readPortable(reader) {
         const me = this;
 
+        me.networkId = reader.readLong("networkId").toNumber();
+        me.deviceTypeId = reader.readLong("deviceTypeId").toNumber();
+        me.deviceId = reader.readUTF("deviceId");
+        me.eventName = reader.readUTF("eventName");
+        me.name = reader.readUTF("name");
     };
 }
 

@@ -1,4 +1,4 @@
-const Body = require(`../../../shim/Body.js`);
+const Body = require(`../../../shim/Body`);
 
 
 class NotificationSearchRequestBody extends Body {
@@ -124,16 +124,6 @@ class NotificationSearchRequestBody extends Body {
 
     set skip(value) {
         this._skip = value;
-    }
-
-    get rest() {
-        const me = this;
-
-        return me._rest;
-    }
-
-    set rest(value) {
-        this._rest = value;
     }
 }
 

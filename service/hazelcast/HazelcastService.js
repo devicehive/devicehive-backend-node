@@ -1,12 +1,12 @@
 const HAZELCAST_CONFIG = require(`./config.json`);
 const EventEmitter = require(`events`);
-const SearchableField = require(`../../common/model/enums/SearchableField.js`);
+const SearchableField = require(`../../common/model/enums/SearchableField`);
 const HazelcastClient = require(`hazelcast-client`).Client;
 const Config = require(`hazelcast-client`).Config;
-const HazelcastHelper = require(`./HazelcastHelper.js`);
+const HazelcastHelper = require(`./HazelcastHelper`);
 
-const DevicePortableFactory = require(`../../common/model/DevicePortableFactory.js`);
-const DeviceNotification = require(`../../common/model/DeviceNotification.js`);
+const DevicePortableFactory = require(`../../common/model/DevicePortableFactory`);
+const DeviceNotification = require(`../../common/model/DeviceNotification`);
 
 const NOTIFICATIONS_MAP = `NOTIFICATIONS-MAP`;
 const COMMANDS_MAP = `COMMANDS-MAP`;
@@ -26,7 +26,6 @@ class HazelcastService extends EventEmitter {
 
         config.groupConfig = HAZELCAST_CONFIG.groupConfig;
         config.networkConfig.addresses = HAZELCAST_CONFIG.networkConfig.addresses;
-        config.serializationConfig.portableVersion = "0";
         config.serializationConfig.portableFactories[1] = new DevicePortableFactory();
         config.properties["hazelcast.client.event.thread.count"] = HAZELCAST_CONFIG.eventThreadCount;
 
@@ -54,7 +53,6 @@ class HazelcastService extends EventEmitter {
         const predicate = HazelcastHelper.preparePredicate(entityName, filterValues);
 
         await me._getClient();
-
         return await map.valuesWithPredicate(predicate);
     }
 

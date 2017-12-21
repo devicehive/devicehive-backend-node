@@ -1,3 +1,5 @@
+const Long = require(`long`);
+
 
 class Subscriber {
 
@@ -61,11 +63,17 @@ class Subscriber {
     writePortable(writer) {
         const me = this;
 
+        writer.writeLong("id", Long.fromNumber(me.id, false));
+        writer.writeUTF("replyTo", me.replyTo);
+        writer.writeUTF("correlationId", me.correlationId);
     };
 
     readPortable(reader) {
         const me = this;
 
+        me.id = reader.readLong("id").toNumber();
+        me.replyTo = reader.readUTF("replyTo");
+        me.correlationId = reader.readUTF("correlationId");
     };
 }
 

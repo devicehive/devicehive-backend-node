@@ -1,5 +1,5 @@
-const Body = require(`../../../shim/Body.js`);
-const Principal = require(`../../../shim/Principal.js`);
+const Body = require(`../../../shim/Body`);
+const Principal = require(`../../../shim/Principal`);
 
 class ListUserRequestBody extends Body {
 
@@ -80,14 +80,6 @@ class ListUserRequestBody extends Body {
 
     set skip(value) {
         this._skip = value;
-    }
-
-    get rest() {
-        return this._rest;
-    }
-
-    set rest(value) {
-        this._rest = value;
     }
 }
 

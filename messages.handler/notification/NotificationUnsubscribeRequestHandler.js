@@ -1,8 +1,8 @@
-const eventBus = require(`../../eventbus/EventBus.js`);
-const NotificationUnsubscribeRequestBody = require(`../../common/model/rpc/NotificationUnsubscribeRequestBody.js`);
-const NotificationUnsubscribeResponseBody = require(`../../common/model/rpc/NotificationUnsubscribeResponseBody.js`);
-const Subscriber = require(`../../common/model/eventbus/Subscriber.js`);
-const Response = require(`../../shim/Response.js`);
+const eventBus = require(`../../eventbus/EventBus`);
+const NotificationUnsubscribeRequestBody = require(`../../common/model/rpc/NotificationUnsubscribeRequestBody`);
+const NotificationUnsubscribeResponseBody = require(`../../common/model/rpc/NotificationUnsubscribeResponseBody`);
+const Subscriber = require(`../../common/model/eventbus/Subscriber`);
+const Response = require(`../../shim/Response`);
 
 
 module.exports = async (request) => {

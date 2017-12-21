@@ -1,4 +1,4 @@
-const Body = require(`../../../shim/Body.js`);
+const Body = require(`../../../shim/Body`);
 
 
 class NotificationUnsubscribeRequestBody extends Body {

@@ -5,6 +5,8 @@ class SearchableField {
     static get TIMESTAMP() { return `timestamp`; }
     static get LAST_UPDATED() { return `lastUpdated`; }
     static get DEVICE_IDS() { return `deviceId`; }
+    static get NETWORK_IDS() { return `networkId`; }
+    static get DEVICE_TYPE_IDS() { return `deviceTypeId`; }
     static get NOTIFICATION() { return `notification`; }
     static get COMMAND() { return `command`; }
     static get STATUS() { return `status`; }

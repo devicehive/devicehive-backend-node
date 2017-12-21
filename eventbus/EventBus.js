@@ -1,6 +1,6 @@
-const SubscriptionRegistry = require(`./SubscriptionRegistry.js`);
-const MessageDispatcher = require(`./ProxyMessageDispatcher.js`);
-const Response = require(`../shim/Response.js`);
+const SubscriptionRegistry = require(`./SubscriptionRegistry`);
+const MessageDispatcher = require(`./ProxyMessageDispatcher`);
+const Response = require(`../shim/Response`);
 
 
 class EventBus {
@@ -8,27 +8,27 @@ class EventBus {
     constructor() {
         const me = this;
 
-        me.subscriptionRegistry = new SubscriptionRegistry();
+        me.filterRegistry = new SubscriptionRegistry();
         me.messageDispatcher = new MessageDispatcher();
     }
 
-    subscribe(subscription, subscriber) {
+    subscribe(filter, subscriber) {
         const me = this;
 
-        me.subscriptionRegistry.register(subscription, subscriber);
+        me.filterRegistry.register(filter, subscriber);
     }
 
-    unsubscribe( subscriber) {
+    unsubscribe(subscriber) {
         const me = this;
 
-        me.subscriptionRegistry.unregister(subscriber);
+        me.filterRegistry.unregister(subscriber);
     }
 
     publish(event) {
         const me = this;
 
-        event.getApplicableSubscriptions()
-            .map((subscription) => me.subscriptionRegistry.getSubscribers(subscription))
+        event.getApplicableFilters()
+            .map((filter) => me.filterRegistry.getSubscribers(filter))
             .forEach((subscribers) => subscribers.forEach((subscriber) => {
                 const response = new Response({
                     correlationId: subscriber.correlationId,

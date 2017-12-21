@@ -1,0 +1,29 @@
+const Body = require(`../../../shim/Body`);
+const DeviceCommand = require(`../DeviceCommand`);
+
+
+class CommandInsertRequestBody extends Body {
+
+    constructor({ deviceCommand, ...rest } = {}) {
+        super({ deviceCommand, ...rest });
+
+        const me = this;
+
+        me.deviceCommand = deviceCommand;
+    }
+
+    get deviceCommand() {
+        const me = this;
+
+        return me._deviceCommand;
+    }
+
+    set deviceCommand(value) {
+        const me = this;
+
+        me._deviceCommand = new DeviceCommand(value);
+    }
+}
+
+
+module.exports = CommandInsertRequestBody;

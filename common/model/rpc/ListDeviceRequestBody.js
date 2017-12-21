@@ -1,5 +1,5 @@
-const Body = require(`../../../shim/Body.js`);
-const Principal = require(`../../../shim/Principal.js`);
+const Body = require(`../../../shim/Body`);
+const Principal = require(`../../../shim/Principal`);
 
 class ListDeviceRequestBody extends Body {
 
@@ -89,14 +89,6 @@ class ListDeviceRequestBody extends Body {
 
     set principal(value) {
         this._principal = value;
-    }
-
-    get rest() {
-        return this._rest;
-    }
-
-    set rest(value) {
-        this._rest = value;
     }
 }
 

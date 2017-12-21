@@ -1,4 +1,4 @@
-const Body = require(`./Body.js`);
+const Body = require(`./Body`);
 
 class Response {
 
