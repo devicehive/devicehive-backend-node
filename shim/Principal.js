@@ -1,23 +1,6 @@
 
 class Principal {
 
-    static get GET_NETWORK_ACTION() { return "GET_NETWORK"; };
-    static get GET_DEVICE_ACTION() { return "GET_DEVICE"; };
-    static get GET_DEVICE_NOTIFICATION_ACTION() { return "GET_DEVICE_NOTIFICATION"; };
-    static get GET_DEVICE_COMMAND_ACTION() { return "GET_DEVICE_COMMAND"; };
-    static get REGISTER_DEVICE_ACTION() { return "REGISTER_DEVICE"; };
-    static get CREATE_DEVICE_NOTIFICATION_ACTION() { return "CREATE_DEVICE_NOTIFICATION"; };
-    static get CREATE_DEVICE_COMMAND_ACTION() { return "CREATE_DEVICE_COMMAND"; };
-    static get UPDATE_DEVICE_COMMAND_ACTION() { return "UPDATE_DEVICE_COMMAND"; };
-    static get GET_CURRENT_USER_ACTION() { return "GET_CURRENT_USER"; };
-    static get UPDATE_CURRENT_USER_ACTION() { return "UPDATE_CURRENT_USER"; };
-    static get MANAGE_TOKEN_ACTION() { return "MANAGE_TOKEN"; };
-    static get MANAGE_USER_ACTION() { return "MANAGE_USER"; };
-    static get MANAGE_CONFIGURATION_ACTION() { return "MANAGE_CONFIGURATION"; };
-    static get MANAGE_NETWORK_ACTION() { return "MANAGE_NETWORK"; };
-    static get MANAGE_PLUGIN_ACTION() { return "MANAGE_PLUGIN"; };
-
-
     constructor({ actions, networkIds, deviceIds, allNetworksAvailable, allDevicesAvailable, user }) {
         const me = this;
 

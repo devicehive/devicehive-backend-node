@@ -11,19 +11,13 @@ module.exports = async (request) => {
     const response = new Response({ last: true });
 
     try {
-        if (listDeviceRequestBody.principal.hasAction(Principal.GET_DEVICE_ACTION)) {
-            const devices = await getDevices(listDeviceRequestBody);
+        const devices = await getDevices(listDeviceRequestBody);
 
-            response.errorCode = 0;
-            response.failed = false;
-            response.withBody(new ListDeviceResponseBody({
-                devices: devices.map((device) => device.toObject())
-            }));
-        } else {
-            response.errorCode = 403;
-            response.failed = true;
-            response.withBody(new ErrorResponseBody());
-        }
+        response.errorCode = 0;
+        response.failed = false;
+        response.withBody(new ListDeviceResponseBody({
+            devices: devices.map((device) => device.toObject())
+        }));
     } catch (err) {
         response.errorCode = 400;
         response.failed = true;
