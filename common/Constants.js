@@ -120,5 +120,5 @@ class Constants {
    static get WELCOME_MESSAGE() { return `The DeviceHive RESTful API is now running, please refer to documentation to get the list of available resources.`; }
 }
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                               ; }
+
 module.exports = Constants;
