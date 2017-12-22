@@ -26,7 +26,7 @@ module.exports = async (request) => {
 
 
 function removeNotificationSubscription(pluginSubscribeRequestBody) {
-    notificationUnsubscribeRequestHandler(new Request({
+    notificationUnsubscribeRequestHandler(new Request({ //TODO
         body: new NotificationUnsubscribeRequestBody({
             subscriptionIds: [pluginSubscribeRequestBody.subscriptionId]
         }),
@@ -37,7 +37,7 @@ function removeNotificationSubscription(pluginSubscribeRequestBody) {
 
 
 function removeCommandSubscription(pluginSubscribeRequestBody) {
-    commandUnsubscribeRequestHandler(new Request({
+    commandUnsubscribeRequestHandler(new Request({ //TODO
         body: new CommandUnsubscribeRequestBody({
             subscriptionId: [pluginSubscribeRequestBody.subscriptionId]
         }),

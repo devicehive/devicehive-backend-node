@@ -1,5 +1,7 @@
 const PluginSubscribeRequestBody = require(`../../common/model/rpc/PluginSubscribeRequestBody`);
 const PluginSubscribeResponseBody = require(`../../common/model/rpc/PluginSubscribeResponseBody`);
+const PluginUnsubscribeRequestBody = require(`../../common/model/rpc/PluginUnsubscribeRequestBody`);
+const pluginUnsubscribeRequestHandler = require(`./PluginUnsubscribeRequestHandler`);
 const NotificationSubscribeRequestBody = require(`../../common/model/rpc/NotificationSubscribeRequestBody`);
 const notificationSubscribeRequestHandler = require(`../notification/NotificationSubscribeRequestHandler`);
 const CommandSubscribeRequestBody = require(`../../common/model/rpc/CommandSubscribeRequestBody`);
@@ -11,6 +13,8 @@ const Response = require(`../../shim/Response`);
 module.exports = async (request) => {
     const pluginSubscribeRequestBody = new PluginSubscribeRequestBody(request.body);
     const response = new Response({ last: false });
+
+    // TODO unsubscribe
 
     if (pluginSubscribeRequestBody.returnCommands === true) {
         createCommandSubscription(pluginSubscribeRequestBody, false);
@@ -40,7 +44,7 @@ function createNotificationSubscription(pluginSubscribeRequestBody) {
         .forEach((filter) => {
             filter.eventName = `NOTIFICATION_EVENT`; //TODO
 
-            notificationSubscribeRequestHandler(new Request({
+            notificationSubscribeRequestHandler(new Request({ //TODO
                 body: new NotificationSubscribeRequestBody({
                     subscriptionId: pluginSubscribeRequestBody.subscriptionId,
                     filter: filter,
@@ -59,7 +63,7 @@ function createCommandSubscription(pluginSubscribeRequestBody, returnUpdated) {
         .forEach((filter) => {
             filter.eventName = `COMMAND_EVENT`; //TODO
 
-            commandSubscribeRequestHandler(new Request({
+            commandSubscribeRequestHandler(new Request({ //TODO
                 body: new CommandSubscribeRequestBody({
                     subscriptionId: pluginSubscribeRequestBody.subscriptionId,
                     filter: filter,
