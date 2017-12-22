@@ -1,7 +1,10 @@
 const PluginSubscribeRequestBody = require(`../../common/model/rpc/PluginSubscribeRequestBody`);
 const PluginSubscribeResponseBody = require(`../../common/model/rpc/PluginSubscribeResponseBody`);
 const NotificationSubscribeRequestBody = require(`../../common/model/rpc/NotificationSubscribeRequestBody`);
-const PluginSubscribeResponseBody = require(`../../common/model/rpc/PluginSubscribeResponseBody`);
+const notificationSubscribeRequestHandler = require(`../notification/NotificationSubscribeRequestHandler`);
+const CommandSubscribeRequestBody = require(`../../common/model/rpc/CommandSubscribeRequestBody`);
+const commandSubscribeRequestHandler = require(`../command/CommandSubscribeRequestHandler`);
+const Request = require(`../../shim/Request`);
 const Response = require(`../../shim/Response`);
 
 
@@ -30,26 +33,25 @@ module.exports = async (request) => {
     return response;
 };
 
+
 function createNotificationSubscription(pluginSubscribeRequestBody) {
 
     pluginSubscribeRequestBody.filters
         .forEach((filter) => {
             filter.eventName = `NOTIFICATION_EVENT`; //TODO
 
-            const notificationSubscribeRequestBody = new NotificationSubscribeRequestBody({
-                subscriptionId: pluginSubscribeRequestBody.subscriptionId,
-                filter: filter,
-                names: pluginSubscribeRequestBody.names,
-            });
-
-            // notificationRequest = Request.newBuilder()
-            //     .withBody(notificationSubscribeRequestBody)
-            //     .withSingleReply(false)
-            //     .build();
-            // notificationRequest.setReplyTo(pluginSubscribeRequestBody.getTopicName());
-            // return notificationSubscribeRequestHandler.handle(notificationRequest);
+            notificationSubscribeRequestHandler(new Request({
+                body: new NotificationSubscribeRequestBody({
+                    subscriptionId: pluginSubscribeRequestBody.subscriptionId,
+                    filter: filter,
+                    names: pluginSubscribeRequestBody.names,
+                }),
+                singleReplyExpected: false,
+                replyTo: pluginSubscribeRequestBody.topicName
+            }));
         });
 }
+
 
 function createCommandSubscription(pluginSubscribeRequestBody, returnUpdated) {
 
@@ -57,14 +59,16 @@ function createCommandSubscription(pluginSubscribeRequestBody, returnUpdated) {
         .forEach((filter) => {
             filter.eventName = `COMMAND_EVENT`; //TODO
 
-            // CommandSubscribeRequest commandSubscribeRequest = new CommandSubscribeRequest(pluginSubscribeRequestBody.getSubscriptionId(),
-            //     filter, pluginSubscribeRequestBody.getNames(), null, returnUpdated, 0);
-            //
-            // Request commandRequest = Request.newBuilder()
-            //     .withBody(commandSubscribeRequest)
-            //     .withSingleReply(false)
-            //     .build();
-            // commandRequest.setReplyTo(pluginSubscribeRequestBody.getTopicName());
-            // return commandSubscribeRequestHandler.handle(commandRequest);
+            commandSubscribeRequestHandler(new Request({
+                body: new CommandSubscribeRequestBody({
+                    subscriptionId: pluginSubscribeRequestBody.subscriptionId,
+                    filter: filter,
+                    names: pluginSubscribeRequestBody.names,
+                    returnUpdated: returnUpdated,
+                    limit: 0
+                }),
+                singleReplyExpected: false,
+                replyTo: pluginSubscribeRequestBody.topicName
+            }));
         });
 }

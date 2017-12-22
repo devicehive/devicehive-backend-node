@@ -10,6 +10,9 @@ class Filter {
 
     static getClassName() { return Filter.name };
 
+    static FIRST_KEY_WILDE_CARD() { return `${WILDE_CARD}${KEY_JOINER}${WILDE_CARD}${KEY_JOINER}${WILDE_CARD}`}
+    static SECOND_KEY_WILDE_CARD() { return `${WILDE_CARD}${KEY_JOINER}${WILDE_CARD}`}
+
     constructor({ networkId, deviceTypeId, deviceId, eventName, name } = {}) {
         const me = this;
 

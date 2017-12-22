@@ -1,4 +1,4 @@
-const SubscriptionRegistry = require(`./SubscriptionRegistry`);
+const FilterRegistry = require(`./FilterRegistry`);
 const MessageDispatcher = require(`./ProxyMessageDispatcher`);
 const Response = require(`../shim/Response`);
 
@@ -8,7 +8,7 @@ class EventBus {
     constructor() {
         const me = this;
 
-        me.filterRegistry = new SubscriptionRegistry();
+        me.filterRegistry = new FilterRegistry();
         me.messageDispatcher = new MessageDispatcher();
     }
 
@@ -40,6 +40,12 @@ class EventBus {
 
                 me.messageDispatcher.send(subscriber.replyTo, response);
             }));
+    }
+
+    unsubscribeDevice(device) {
+        const me = this;
+
+        me.filterRegistry.unregisterDevice(device);
     }
 }
 
