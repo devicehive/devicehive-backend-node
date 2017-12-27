@@ -1,6 +1,7 @@
+const HazelcastPortable = require(`./HazelcastPortable`);
 const Long = require(`long`);
 
-class HivePrincipal {
+class HivePrincipal extends HazelcastPortable {
 
     static get FACTORY_ID() { return 1; }
     static get CLASS_ID() { return 3; }
@@ -8,8 +9,9 @@ class HivePrincipal {
     static getClassName() { return HivePrincipal.name };
 
     constructor({ } = {}) {
-        const me = this;
+        super();
 
+        const me = this;
     }
 
     getFactoryId() {

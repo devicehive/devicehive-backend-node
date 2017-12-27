@@ -8,7 +8,7 @@ const CommandEvent = require(`../../common/model/eventbus/events/CommandEvent`);
 
 
 module.exports = async (request) => {
-    const commandInsertRequestBody = new CommandInsertRequestBody({ deviceCommand: request.body });
+    const commandInsertRequestBody = new CommandInsertRequestBody(request.body);
     const deviceCommand = commandInsertRequestBody.deviceCommand;
     const commandEvent = new CommandEvent(request.body);
     const response = new Response({ last: false });

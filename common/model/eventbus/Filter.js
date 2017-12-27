@@ -1,9 +1,10 @@
+const HazelcastPortable = require(`../HazelcastPortable`);
 const Long = require(`long`);
 
 const WILDE_CARD = `*`;
 const KEY_JOINER = `,`;
 
-class Filter {
+class Filter extends HazelcastPortable {
 
     static get FACTORY_ID() { return 1; }
     static get CLASS_ID() { return 4; }
@@ -14,6 +15,8 @@ class Filter {
     static SECOND_KEY_WILDE_CARD() { return `${WILDE_CARD}${KEY_JOINER}${WILDE_CARD}`}
 
     constructor({ networkId, deviceTypeId, deviceId, eventName, name } = {}) {
+        super();
+
         const me = this;
 
         me.networkId = networkId;

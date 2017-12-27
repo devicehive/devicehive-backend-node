@@ -33,11 +33,11 @@ async function searchMultipleCommands(commandSearchRequestBody) {
         status: null
     });
 
-    return commands;
+    return commands.map((deviceCommand) => deviceCommand.toObject());
 }
 
 
 async function searchSingleCommandByDeviceAndId(id, deviceId) {
     return (await hazelcastService.find(DeviceCommand.getClassName(), { id: id, deviceIds: [ deviceId ] }))
-        .map((deviceCommand) => deviceCommand.toObject())
+        .map((deviceCommand) => deviceCommand.toObject());
 }

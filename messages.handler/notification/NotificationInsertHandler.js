@@ -8,7 +8,7 @@ const NotificationEvent = require(`../../common/model/eventbus/events/Notificati
 
 
 module.exports = async (request) => {
-    const notificationInsertRequestBody = new NotificationInsertRequestBody({ deviceNotification: request.body });
+    const notificationInsertRequestBody = new NotificationInsertRequestBody(request.body);
     const deviceNotification = notificationInsertRequestBody.deviceNotification;
     const notificationEvent = new NotificationEvent(request.body);
     const response = new Response({ last: false });

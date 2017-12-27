@@ -52,7 +52,7 @@ async function getNetworks (requestBody) {
         filterObject.where.name = requestBody.name;
     }
 
-    if (principal && !principal.allNetworksAvailable) {
+    if (principal && !principal.allNetworksAvailable && principal.networkIds) {
         filterObject.where.id = { inq: principal.networkIds };
     }
 

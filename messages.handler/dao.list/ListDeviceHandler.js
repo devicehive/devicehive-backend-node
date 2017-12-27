@@ -57,7 +57,7 @@ async function getDevices (listDeviceRequestBody) {
         deviceFilterObject.where.networkId = listDeviceRequestBody.networkId;
     }
 
-    if (!principal.allDevicesAvailable) {
+    if (principal && !principal.allDevicesAvailable && principal.deviceIds) {
         deviceFilterObject.where.id = { inq: principal.deviceIds };
     }
 

@@ -12,7 +12,7 @@ module.exports = async (request) => {
     const response = new Response({ last: false });
 
     if (commandSubscribeRequestBody.returnUpdated === true) {
-        commandSubscribeRequestBody.filter.eventName(`COMMANDS_UPDATE_EVENT`); // TODO
+        commandSubscribeRequestBody.filter.eventName = `COMMANDS_UPDATE_EVENT`; // TODO
     }
 
     eventBus.subscribe(

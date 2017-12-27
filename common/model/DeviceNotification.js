@@ -1,7 +1,8 @@
+const HazelcastPortable = require(`./HazelcastPortable`);
 const Long = require(`long`);
 
 
-class DeviceNotification {
+class DeviceNotification extends HazelcastPortable {
 
     static get FACTORY_ID() { return 1; }
     static get CLASS_ID() { return 1; }
@@ -9,6 +10,8 @@ class DeviceNotification {
     static getClassName() { return DeviceNotification.name };
 
     constructor({ id, notification, deviceId, networkId, deviceTypeId, timestamp, parameters } = {}) {
+        super();
+
         const me = this;
 
         me.id = id;

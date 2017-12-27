@@ -33,7 +33,7 @@ async function searchMultipleNotifications(notificationSearchRequestBody) {
         status: null
     });
 
-    return notifications;
+    return notifications.map((deviceNotification) => deviceNotification.toObject());
 }
 
 

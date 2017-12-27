@@ -7,6 +7,7 @@ const HazelcastHelper = require(`./HazelcastHelper`);
 
 const DevicePortableFactory = require(`../../common/model/DevicePortableFactory`);
 const DeviceNotification = require(`../../common/model/DeviceNotification`);
+const DeviceCommand = require(`../../common/model/DeviceCommand`);
 
 const NOTIFICATIONS_MAP = `NOTIFICATIONS-MAP`;
 const COMMANDS_MAP = `COMMANDS-MAP`;
@@ -26,6 +27,7 @@ class HazelcastService extends EventEmitter {
 
         config.groupConfig = HAZELCAST_CONFIG.groupConfig;
         config.networkConfig.addresses = HAZELCAST_CONFIG.networkConfig.addresses;
+        config.serializationConfig.portableVersion = 0;
         config.serializationConfig.portableFactories[1] = new DevicePortableFactory();
         config.properties["hazelcast.client.event.thread.count"] = HAZELCAST_CONFIG.eventThreadCount;
 
@@ -85,7 +87,10 @@ class HazelcastService extends EventEmitter {
         switch (entityName) {
             case DeviceNotification.getClassName():
                 map = me.notificationsMap;
-                break
+                break;
+            case DeviceCommand.getClassName():
+                map = me.commandsMap;
+                break;
         }
 
         return map;

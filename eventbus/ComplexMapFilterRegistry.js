@@ -28,7 +28,7 @@ class ComplexMapFilterRegistry {
             filters.forEach((filter) => {
                 const subscribersSet = me.registryTable.get(filter.getFirstKey(), filter.getSecondKey());
 
-                Utils.forEach(subscribersSet, (item) => {
+                Utils.forEach(Array.from(subscribersSet), (item) => {
                     if (item.id === subscriber.id) {
                         subscribersSet.delete(item);
                     }

@@ -1,7 +1,8 @@
+const HazelcastPortable = require(`../HazelcastPortable`);
 const Long = require(`long`);
 
 
-class Subscriber {
+class Subscriber extends HazelcastPortable {
 
     static get FACTORY_ID() { return 1; }
     static get CLASS_ID() { return 6; }
@@ -9,6 +10,8 @@ class Subscriber {
     static getClassName() { return Subscriber.name };
 
     constructor({ id, replyTo, correlationId }) {
+        super();
+
         const me = this;
 
         me.id = id;
