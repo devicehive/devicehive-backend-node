@@ -1,9 +1,8 @@
 const { MessageBuilder } = require(`devicehive-proxy-message`);
 const proxyClient = require(`../proxy/ProxyClient`);
-const MessageDispatcher = require(`../shim/server/MessageDispatcher`);
 
 
-class ProxyMessageDispatcher extends MessageDispatcher {
+class ProxyMessageDispatcher {
 
     send(to, response) {
         proxyClient.sendMessage(MessageBuilder.createNotification({

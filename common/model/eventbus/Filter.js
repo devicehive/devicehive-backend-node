@@ -4,6 +4,7 @@ const Long = require(`long`);
 const WILDE_CARD = `*`;
 const KEY_JOINER = `,`;
 
+
 class Filter extends HazelcastPortable {
 
     static get FACTORY_ID() { return 1; }

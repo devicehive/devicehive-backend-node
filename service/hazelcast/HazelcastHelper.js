@@ -1,7 +1,7 @@
 const Predicates = require(`hazelcast-client`).Predicates;
 const SearchableField = require(`../../common/model/enums/SearchableField`);
 const DeviceNotification = require(`../../common/model/DeviceNotification`);
-const HazelcastEntityComparator = require(`../../common/model/HazelcastEntityComparator`);
+
 
 class HazelcastHelper {
 

@@ -1,6 +1,5 @@
 const db = require(`../../db`);
 const Response = require(`../../shim/Response`);
-const Principal = require(`../../shim/Principal`);
 const ListNetworkRequestBody = require(`../../common/model/rpc/ListNetworkRequestBody`);
 const ListNetworkResponseBody = require(`../../common/model/rpc/ListNetworkResponseBody`);
 const ErrorResponseBody = require(`../../common/model/rpc/ErrorResponseBody`);

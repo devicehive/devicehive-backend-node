@@ -30,13 +30,13 @@ class NotificationEvent extends Event {
                 networkId: me.notification.networkId,
                 deviceTypeId: me.notification.deviceTypeId,
                 deviceId: me.notification.deviceId,
-                eventName: `NOTIFICATION_EVENT`,
+                eventName: `NOTIFICATION_EVENT`, // TODO
             }),
             new Filter({
                 networkId: me.notification.networkId,
                 deviceTypeId:  me.notification.deviceTypeId,
                 deviceId: me.notification.deviceId,
-                eventName: `NOTIFICATION_EVENT`,
+                eventName: `NOTIFICATION_EVENT`, // TODO
                 name: me.notification.notification
             })
         ];

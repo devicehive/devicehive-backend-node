@@ -1,6 +1,5 @@
 const db = require(`../../db`);
 const Response = require(`../../shim/Response`);
-const Principal = require(`../../shim/Principal`);
 const ListDeviceRequestBody = require(`../../common/model/rpc/ListDeviceRequestBody`);
 const ListDeviceResponseBody = require(`../../common/model/rpc/ListDeviceResponseBody`);
 const ErrorResponseBody = require(`../../common/model/rpc/ErrorResponseBody`);
@@ -57,7 +56,7 @@ async function getDevices (listDeviceRequestBody) {
         deviceFilterObject.where.networkId = listDeviceRequestBody.networkId;
     }
 
-    if (principal && !principal.allDevicesAvailable && principal.deviceIds) {
+    if (principal && !principal.allDeviceTypesAvailable && principal.deviceIds) {
         deviceFilterObject.where.id = { inq: principal.deviceIds };
     }
 

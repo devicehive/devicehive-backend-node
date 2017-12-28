@@ -21,7 +21,7 @@ class PluginSubscribeResponseBody extends Body {
     set subId(value) {
         const me = this;
 
-        me._subId = subId;
+        me._subId = value;
     }
 }
 

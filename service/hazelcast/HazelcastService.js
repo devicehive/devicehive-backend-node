@@ -27,7 +27,6 @@ class HazelcastService extends EventEmitter {
 
         config.groupConfig = HAZELCAST_CONFIG.groupConfig;
         config.networkConfig.addresses = HAZELCAST_CONFIG.networkConfig.addresses;
-        config.serializationConfig.portableVersion = 0;
         config.serializationConfig.portableFactories[1] = new DevicePortableFactory();
         config.properties["hazelcast.client.event.thread.count"] = HAZELCAST_CONFIG.eventThreadCount;
 

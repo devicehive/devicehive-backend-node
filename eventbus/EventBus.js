@@ -1,5 +1,5 @@
 const FilterRegistry = require(`./FilterRegistry`);
-const MessageDispatcher = require(`./ProxyMessageDispatcher`);
+const ProxyMessageDispatcher = require(`./ProxyMessageDispatcher`);
 const Response = require(`../shim/Response`);
 
 
@@ -9,7 +9,7 @@ class EventBus {
         const me = this;
 
         me.filterRegistry = new FilterRegistry();
-        me.messageDispatcher = new MessageDispatcher();
+        me.messageDispatcher = new ProxyMessageDispatcher();
     }
 
     subscribe(filter, subscriber) {

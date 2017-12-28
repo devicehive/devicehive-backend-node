@@ -1,5 +1,4 @@
 const Body = require(`../../../shim/Body`);
-const Principal = require(`../../../shim/Principal`);
 
 class ListUserRequestBody extends Body {
 

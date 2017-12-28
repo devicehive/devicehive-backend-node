@@ -1,5 +1,5 @@
 const Body = require(`../../../shim/Body`);
-const Principal = require(`../../../shim/Principal`);
+const HivePrincipal = require(`../HivePrincipal`);
 
 class ListNetworkRequestBody extends Body {
 
@@ -14,7 +14,7 @@ class ListNetworkRequestBody extends Body {
         me.sortOrder = sortOrder;
         me.take = take;
         me.skip = skip;
-        me.principal = principal ? new Principal(principal) : principal;
+        me.principal = principal ? new HivePrincipal(principal) : principal;
     }
 
     get name() {
