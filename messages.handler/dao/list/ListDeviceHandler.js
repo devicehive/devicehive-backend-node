@@ -1,8 +1,8 @@
-const db = require(`../../db`);
-const Response = require(`../../shim/Response`);
-const ListDeviceRequestBody = require(`../../common/model/rpc/ListDeviceRequestBody`);
-const ListDeviceResponseBody = require(`../../common/model/rpc/ListDeviceResponseBody`);
-const ErrorResponseBody = require(`../../common/model/rpc/ErrorResponseBody`);
+const db = require(`../../../db/index`);
+const Response = require(`../../../shim/Response`);
+const ListDeviceRequestBody = require(`../../../common/model/rpc/ListDeviceRequestBody`);
+const ListDeviceResponseBody = require(`../../../common/model/rpc/ListDeviceResponseBody`);
+const ErrorResponseBody = require(`../../../common/model/rpc/ErrorResponseBody`);
 
 
 module.exports = async (request) => {
@@ -15,8 +15,8 @@ module.exports = async (request) => {
         response.errorCode = 0;
         response.failed = false;
         response.withBody(new ListDeviceResponseBody({
-            devices: devices.map((device) => device.toObject())
-        }));
+            devices: devices.map((device) => Object.assign(device.toObject(), { id: device.deviceId }))
+        }))
     } catch (err) {
         response.errorCode = 400;
         response.failed = true;
@@ -57,7 +57,7 @@ async function getDevices (listDeviceRequestBody) {
     }
 
     if (principal && !principal.allDeviceTypesAvailable && principal.deviceIds) {
-        deviceFilterObject.where.id = { inq: principal.deviceIds };
+        deviceFilterObject.where.deviceId = { inq: principal.deviceIds };
     }
 
     if (listDeviceRequestBody.networkName) {

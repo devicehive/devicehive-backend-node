@@ -22,7 +22,7 @@ module.exports = async (request) => {
     response.errorCode = 0;
     response.failed = false;
     response.withBody(new CommandUpdateSubscribeResponseBody({
-        subscriptionIds: commandUpdateSubscribeRequestBody.subscriptionId,
+        subscriptionId: commandUpdateSubscribeRequestBody.subscriptionId,
         deviceCommand: await findCommand(
             commandUpdateSubscribeRequestBody.commandId,
             commandUpdateSubscribeRequestBody.deviceId
@@ -36,5 +36,5 @@ async function findCommand(id, deviceId) {
     return await hazelcastService.find(DeviceCommand.getClassName(), {
         id: id,
         deviceIds: [ deviceId ]
-    })[0];
+    })[0] || null;
 }

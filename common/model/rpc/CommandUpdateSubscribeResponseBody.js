@@ -31,7 +31,7 @@ class CommandUpdateSubscribeResponseBody extends Body {
     }
 
     set deviceCommand(value) {
-        this._deviceCommand = new DeviceCommand(value);
+        this._deviceCommand = value ? new DeviceCommand(value) : null;
     }
 
 }

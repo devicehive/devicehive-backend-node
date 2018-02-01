@@ -1,9 +1,15 @@
 const Action = require(`../shim/Action`);
 const Response = require(`../shim/Response`);
-const listDeviceHandler = require(`../messages.handler/dao.list/ListDeviceHandler`);
-const listDeviceTypeHandler = require(`../messages.handler/dao.list/listDeviceTypeHandler`);
-const listNetworkHandler = require(`../messages.handler/dao.list/ListNetworkHandler`);
-const listUserHandler = require(`../messages.handler/dao.list/ListUserHandler`);
+const listDeviceHandler = require(`../messages.handler/dao/list/ListDeviceHandler`);
+const listDeviceTypeHandler = require(`../messages.handler/dao/list/listDeviceTypeHandler`);
+const listNetworkHandler = require(`../messages.handler/dao/list/ListNetworkHandler`);
+const listUserHandler = require(`../messages.handler/dao/list/ListUserHandler`);
+const listPluginHandler = require(`../messages.handler/dao/list/ListPluginHandler`);
+const countDeviceHandler = require(`../messages.handler/dao/count/CountDeviceHandler`);
+const countDeviceTypeHandler = require(`../messages.handler/dao/count/CountDeviceTypeHandler`);
+const countNetworkHandler = require(`../messages.handler/dao/count/CountNetworkHandler`);
+const countPluginHandler = require(`../messages.handler/dao/count/CountPluginHandler`);
+const countUserHandler = require(`../messages.handler/dao/count/CountUserHandler`);
 const notificationSubscribeRequestHandler = require(`../messages.handler/notification/NotificationSubscribeRequestHandler`);
 const notificationUnsubscribeRequestHandler = require(`../messages.handler/notification/NotificationUnsubscribeRequestHandler`);
 const notificationInsertHandler = require(`../messages.handler/notification/NotificationInsertHandler`);
@@ -38,8 +44,13 @@ actionToHandlerMap.set(Action.LIST_USER_REQUEST, listUserHandler);
 actionToHandlerMap.set(Action.LIST_NETWORK_REQUEST, listNetworkHandler);
 actionToHandlerMap.set(Action.LIST_DEVICE_TYPE_REQUEST, listDeviceTypeHandler);
 actionToHandlerMap.set(Action.LIST_DEVICE_REQUEST, listDeviceHandler);
-actionToHandlerMap.set(Action.LIST_SUBSCRIBE_REQUEST, () => new Response()); // TODO
 actionToHandlerMap.set(Action.DEVICE_DELETE_REQUEST, deviceDeleteHandler);
+actionToHandlerMap.set(Action.LIST_PLUGIN_REQUEST, listPluginHandler);
+actionToHandlerMap.set(Action.COUNT_DEVICE_REQUEST, countDeviceHandler);
+actionToHandlerMap.set(Action.COUNT_DEVICE_TYPE_REQUEST, countDeviceTypeHandler);
+actionToHandlerMap.set(Action.COUNT_NETWORK_REQUEST, countNetworkHandler);
+actionToHandlerMap.set(Action.COUNT_PLUGIN_REQUEST, countPluginHandler);
+actionToHandlerMap.set(Action.COUNT_USER_REQUEST, countUserHandler);
 
 
 class RequestHandlerFactory {

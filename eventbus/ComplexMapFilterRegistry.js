@@ -28,17 +28,19 @@ class ComplexMapFilterRegistry {
             filters.forEach((filter) => {
                 const subscribersSet = me.registryTable.get(filter.getFirstKey(), filter.getSecondKey());
 
-                Utils.forEach(Array.from(subscribersSet), (item) => {
-                    if (item.id === subscriber.id) {
-                        subscribersSet.delete(item);
-                    }
-                });
+                if (subscribersSet) {
+                    Utils.forEach(Array.from(subscribersSet), (item) => {
+                        if (item.id === subscriber.id) {
+                            subscribersSet.delete(item);
+                        }
+                    });
 
-                if (subscribersSet && subscribersSet.size === 0) {
-                    me.registryTable.delete(filter.getFirstKey(), filter.getSecondKey());
+                    if (subscribersSet && subscribersSet.size === 0) {
+                        me.registryTable.delete(filter.getFirstKey(), filter.getSecondKey());
 
-                    if (me.registryTable.size(filter.getFirstKey(), filter.getSecondKey()) === 0) {
-                        me.registryTable.delete(filter.getFirstKey());
+                        if (me.registryTable.size(filter.getFirstKey(), filter.getSecondKey()) === 0) {
+                            me.registryTable.delete(filter.getFirstKey());
+                        }
                     }
                 }
             });

@@ -1,8 +1,8 @@
-const db = require(`../../db`);
-const Response = require(`../../shim/Response`);
-const ListNetworkRequestBody = require(`../../common/model/rpc/ListNetworkRequestBody`);
-const ListNetworkResponseBody = require(`../../common/model/rpc/ListNetworkResponseBody`);
-const ErrorResponseBody = require(`../../common/model/rpc/ErrorResponseBody`);
+const db = require(`../../..//db/index`);
+const Response = require(`../../../shim/Response`);
+const ListNetworkRequestBody = require(`../../../common/model/rpc/ListNetworkRequestBody`);
+const ListNetworkResponseBody = require(`../../../common/model/rpc/ListNetworkResponseBody`);
+const ErrorResponseBody = require(`../../../common/model/rpc/ErrorResponseBody`);
 
 
 module.exports = async (request) => {

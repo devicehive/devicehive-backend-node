@@ -1,8 +1,8 @@
-const db = require(`../../db`);
-const Response = require(`../../shim/Response`);
-const ListDeviceTypeRequestBody = require(`../../common/model/rpc/ListDeviceTypeRequestBody`);
-const ListDeviceTypeResponseBody = require(`../../common/model/rpc/ListDeviceTypeResponseBody`);
-const ErrorResponseBody = require(`../../common/model/rpc/ErrorResponseBody`);
+const db = require(`../../../db/index`);
+const Response = require(`../../../shim/Response`);
+const ListDeviceTypeRequestBody = require(`../../../common/model/rpc/ListDeviceTypeRequestBody`);
+const ListDeviceTypeResponseBody = require(`../../../common/model/rpc/ListDeviceTypeResponseBody`);
+const ErrorResponseBody = require(`../../../common/model/rpc/ErrorResponseBody`);
 
 
 module.exports = async (request) => {

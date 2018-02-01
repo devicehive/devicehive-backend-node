@@ -37,13 +37,6 @@
                 "columnName": "topic_name"
             }
         },
-        "healthCheckUrl": {
-            "type": "string",
-            "required": true,
-            "postgresql": {
-                "columnName": "health_check_url"
-            }
-        },
         "status": {
             "type": "number",
             "required": true,
@@ -69,6 +62,12 @@
             "type": "object",
             "postgresql": {
                 "columnName": "parameters"
+            }
+        },
+        "filter": {
+            "type": "string",
+            "postgresql": {
+                "columnName": "filter"
             }
         },
         "entityVersion": {

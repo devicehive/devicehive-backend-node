@@ -39,7 +39,7 @@ function removeNotificationSubscription(pluginSubscribeRequestBody) {
 function removeCommandSubscription(pluginSubscribeRequestBody) {
     commandUnsubscribeRequestHandler(new Request({ //TODO
         body: new CommandUnsubscribeRequestBody({
-            subscriptionId: [pluginSubscribeRequestBody.subscriptionId]
+            subscriptionIds: [pluginSubscribeRequestBody.subscriptionId]
         }),
         singleReplyExpected: false,
         replyTo: pluginSubscribeRequestBody.topicName

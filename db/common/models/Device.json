@@ -11,7 +11,7 @@
     },
     "properties": {
         "id": {
-            "type": "number",
+            "type": "string",
             "required": true,
             "postgresql": {
                 "columnName": "id"
