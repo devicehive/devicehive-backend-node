@@ -33,8 +33,10 @@ module.exports = async (request) => {
 };
 
 async function findCommand(id, deviceId) {
-    return await hazelcastService.find(DeviceCommand.getClassName(), {
+    const deviceCommand = await hazelcastService.find(DeviceCommand.getClassName(), {
         id: id,
         deviceIds: [ deviceId ]
-    })[0] || null;
+    })[0];
+
+    return deviceCommand ? deviceCommand.toObject() : deviceCommand;
 }

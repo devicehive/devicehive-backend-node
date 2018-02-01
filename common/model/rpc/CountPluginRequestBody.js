@@ -14,7 +14,7 @@ class CountPluginRequestBody extends Body {
         me.topicName = topicName;
         me.status = status;
         me.userId = userId;
-        me.principal = principal ? new HivePrincipal(principal) : principal;
+        me.principal = principal;
     }
 
     get name() {
@@ -62,7 +62,7 @@ class CountPluginRequestBody extends Body {
     }
 
     set principal(value) {
-        this._principal = value;
+        this._principal = value  ? new HivePrincipal(value) : value;
     }
 }
 

@@ -36,7 +36,7 @@ class NotificationSubscribeRequestBody extends Body {
     set filter(value) {
         const me = this;
 
-        me._filter = new Filter(value);
+        me._filter = value ? new Filter(value) : value;
     }
 
     get names() {

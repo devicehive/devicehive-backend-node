@@ -21,7 +21,7 @@ class NotificationSearchResponseBody extends Body {
     set notifications(value) {
         const me = this;
 
-        me._notifications = value.map((notification) => new DeviceNotification(notification));
+        me._notifications = value.map((notification) => notification ? new DeviceNotification(notification) : notification);
     }
 }
 

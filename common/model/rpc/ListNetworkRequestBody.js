@@ -14,7 +14,7 @@ class ListNetworkRequestBody extends Body {
         me.sortOrder = sortOrder;
         me.take = take;
         me.skip = skip;
-        me.principal = principal ? new HivePrincipal(principal) : principal;
+        me.principal = principal;
     }
 
     get name() {
@@ -70,7 +70,7 @@ class ListNetworkRequestBody extends Body {
     }
 
     set principal(value) {
-        this._principal = value;
+        this._principal = value ? new HivePrincipal(value) : value;
     }
 }
 

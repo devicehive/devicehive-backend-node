@@ -21,7 +21,7 @@ class NotificationInsertRequestBody extends Body {
     set deviceNotification(value) {
         const me = this;
 
-        me._deviceNotification = new DeviceNotification(value);
+        me._deviceNotification = value ? new DeviceNotification(value) : value;
     }
 }
 

@@ -7,7 +7,7 @@ const Response = require(`../../shim/Response`);
 
 module.exports = async (request) => {
     const commandSearchRequestBody = new CommandSearchRequestBody(request.body);
-    const response = new Response({ last: false });
+    const response = new Response();
     const commands = commandSearchRequestBody.id && commandSearchRequestBody.deviceId ?
         await searchSingleCommandByDeviceAndId(commandSearchRequestBody.id, commandSearchRequestBody.deviceId) :
         await searchMultipleCommands(commandSearchRequestBody);

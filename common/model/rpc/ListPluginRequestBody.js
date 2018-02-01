@@ -18,7 +18,7 @@ class ListPluginRequestBody extends Body {
         me.sortOrderAsc = sortOrderAsc;
         me.take = take;
         me.skip = skip;
-        me.principal = principal ? new HivePrincipal(principal) : principal;;
+        me.principal = principal;
     }
 
     get name() {
@@ -98,15 +98,7 @@ class ListPluginRequestBody extends Body {
     }
 
     set principal(value) {
-        this._principal = value;
-    }
-
-    get rest() {
-        return this._rest;
-    }
-
-    set rest(value) {
-        this._rest = value;
+        this._principal = value ? new HivePrincipal(value) : value;
     }
 }
 

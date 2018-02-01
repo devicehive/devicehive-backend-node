@@ -22,7 +22,7 @@ class CommandInsertResponseBody extends Body {
     set deviceCommand(value) {
         const me = this;
 
-        me._deviceCommand = new DeviceCommand(value);
+        me._deviceCommand = value ? new DeviceCommand(value) : value;
     }
 }
 

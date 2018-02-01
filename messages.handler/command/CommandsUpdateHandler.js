@@ -8,7 +8,7 @@ const CommandsUpdateEvent = require(`../../common/model/eventbus/events/Commands
 
 module.exports = async (request) => {
     const commandsUpdateRequestBody = new CommandsUpdateRequestBody(request.body);
-    const response = new Response({ last: false });
+    const response = new Response();
 
     await hazelcastService.store(DeviceCommand.getClassName(), commandsUpdateRequestBody.deviceCommand);
     eventBus.publish(new CommandsUpdateEvent(request.body));

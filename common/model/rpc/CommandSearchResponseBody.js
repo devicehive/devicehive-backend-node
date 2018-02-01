@@ -22,7 +22,9 @@ class CommandSearchResponseBody extends Body {
     set commands(value) {
         const me = this;
 
-        me._commands = value.map((command) => new DeviceCommand(command));
+        me._commands = value ?
+            value.map((command) => command ?
+                new DeviceCommand(command) : command) : value;
     }
 }
 

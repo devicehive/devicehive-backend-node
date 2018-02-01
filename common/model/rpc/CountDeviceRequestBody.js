@@ -13,7 +13,7 @@ class CountDeviceRequestBody extends Body {
         me.namePattern = namePattern;
         me.networkId = networkId;
         me.networkName = networkName;
-        me.principal = principal ? new HivePrincipal(principal) : principal;
+        me.principal = principal;
     }
 
     get name() {
@@ -53,7 +53,7 @@ class CountDeviceRequestBody extends Body {
     }
 
     set principal(value) {
-        this._principal = value;
+        this._principal = value ? new HivePrincipal(value) : value;
     }
 }
 

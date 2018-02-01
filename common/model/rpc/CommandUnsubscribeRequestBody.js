@@ -3,24 +3,24 @@ const Body = require(`../../../shim/Body`);
 
 class CommandUnsubscribeRequestBody extends Body {
 
-    constructor({ subscriptionId, ...rest } = {}) {
-        super({ subscriptionId, ...rest });
+    constructor({ subscriptionIds, ...rest } = {}) {
+        super({ subscriptionIds, ...rest });
 
         const me = this;
 
-        me.subscriptionId = subscriptionId;
+        me.subscriptionIds = subscriptionIds;
     }
 
-    get subscriptionId() {
+    get subscriptionIds() {
         const me = this;
 
-        return me._subscriptionId;
+        return me._subscriptionIds;
     }
 
-    set subscriptionId(value) {
+    set subscriptionIds(value) {
         const me = this;
 
-        me._subscriptionId = value;
+        me._subscriptionIds = value;
     }
 }
 

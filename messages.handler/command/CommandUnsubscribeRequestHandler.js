@@ -7,7 +7,7 @@ const Response = require(`../../shim/Response`);
 
 module.exports = async (request) => {
     const commandUnsubscribeRequestBody = new CommandUnsubscribeRequestBody(request.body);
-    const response = new Response({ last: false });
+    const response = new Response();
 
     commandUnsubscribeRequestBody.subscriptionIds.forEach((subscriptionId) => {
         eventBus.unsubscribe(new Subscriber({

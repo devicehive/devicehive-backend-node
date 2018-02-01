@@ -11,7 +11,7 @@ module.exports = async (request) => {
     const commandInsertRequestBody = new CommandInsertRequestBody(request.body);
     const deviceCommand = commandInsertRequestBody.deviceCommand;
     const commandEvent = new CommandEvent(request.body);
-    const response = new Response({ last: false });
+    const response = new Response();
 
     await hazelcastService.store(DeviceCommand.getClassName(), deviceCommand);
     eventBus.publish(commandEvent);

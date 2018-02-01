@@ -44,7 +44,7 @@ class CommandUpdateSubscribeRequestBody extends Body {
     }
 
     set filter(value) {
-        this._filter = new Filter(value);
+        this._filter = value ? new Filter(value) : value;
     }
 }
 
