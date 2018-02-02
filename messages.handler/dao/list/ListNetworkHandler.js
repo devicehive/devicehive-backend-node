@@ -31,29 +31,45 @@ async function getNetworks (requestBody) {
     const models = await db.getModels();
     const networkDAO = models[`Network`];
     const principal = requestBody.principal;
-    const filterObject = { where: {} };
+    const networkFilterObject = { where: {} };
 
     if (requestBody.skip) {
-        filterObject.skip = requestBody.skip;
+        networkFilterObject.skip = requestBody.skip;
     }
 
     if (requestBody.take) {
-        filterObject.limit = requestBody.take;
+        networkFilterObject.limit = requestBody.take;
     }
 
     if (requestBody.sortField) {
-        filterObject.order = [`${requestBody.sortField} ${requestBody.sortOrder || 'ASC'}`];
+        networkFilterObject.order = [`${requestBody.sortField} ${requestBody.sortOrder || 'ASC'}`];
     }
 
     if (requestBody.namePattern) {
-        filterObject.where.name = { like: requestBody.namePattern };
+        networkFilterObject.where.name = { like: requestBody.namePattern };
     } else if (requestBody.name) {
-        filterObject.where.name = requestBody.name;
+        networkFilterObject.where.name = requestBody.name;
     }
 
-    if (principal && !principal.allNetworksAvailable && principal.networkIds) {
-        filterObject.where.id = { inq: principal.networkIds };
+    if (principal && principal.networkIds) {
+        networkFilterObject.where.id = { inq: principal.networkIds };
     }
 
-    return await networkDAO.find(filterObject);
+    if (principal && !principal.getUser().isAdmin()) {
+        let networks;
+
+        networkFilterObject.include = { relation: `users` };
+
+        networks = await networkDAO.find(networkFilterObject);
+
+        networks = networks.filter((network) => {
+            const users = network.toObject().users;
+
+            return users.length > 0 ? users[0].id === principal.user.id : false;
+        });
+
+        return networks;
+    } else {
+        return await networkDAO.find(networkFilterObject);
+    }
 }

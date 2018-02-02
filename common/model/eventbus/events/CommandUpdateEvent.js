@@ -19,7 +19,7 @@ class CommandUpdateEvent extends Event {
     }
 
     set command(value) {
-        this._command = new DeviceCommand(value);
+        this._command = value ? new DeviceCommand(value) : value;
     }
 
     getApplicableFilters() {
@@ -29,13 +29,13 @@ class CommandUpdateEvent extends Event {
             new Filter({
                 networkId: me.command.networkId,
                 deviceTypeId: me.command.deviceTypeId,
-                deviceId: me.command.deviceId,
+                deviceId: me.command.id,
                 eventName: `COMMAND_UPDATE_EVENT`, // TODO
             }),
             new Filter({
                 networkId: me.command.networkId,
                 deviceTypeId:  me.command.deviceTypeId,
-                deviceId: me.command.deviceId,
+                deviceId: me.command.id,
                 eventName: `COMMAND_UPDATE_EVENT`, // TODO
                 name: me.command.command
             })

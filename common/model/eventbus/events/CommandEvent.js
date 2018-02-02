@@ -19,7 +19,7 @@ class CommandEvent extends Event {
     }
 
     set command(value) {
-        this._command = new DeviceCommand(value);
+        this._command = value ? new DeviceCommand(value) : value;
     }
 
     getApplicableFilters() {

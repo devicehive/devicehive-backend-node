@@ -27,46 +27,6 @@ class Filter extends HazelcastPortable {
         me.name = name;
     }
 
-    get deviceTypeId() {
-        return this._deviceTypeId;
-    }
-
-    set deviceTypeId(value) {
-        this._deviceTypeId = value;
-    }
-
-    get networkId() {
-        return this._networkId;
-    }
-
-    set networkId(value) {
-        this._networkId = value;
-    }
-
-    get deviceId() {
-        return this._deviceId;
-    }
-
-    set deviceId(value) {
-        this._deviceId = value;
-    }
-
-    get eventName() {
-        return this._eventName;
-    }
-
-    set eventName(value) {
-        this._eventName = value;
-    }
-
-    get name() {
-        return this._name;
-    }
-
-    set name(value) {
-        this._name = value;
-    }
-
     getFirstKey() {
         const me = this;
 

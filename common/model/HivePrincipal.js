@@ -1,4 +1,5 @@
 const HazelcastPortable = require(`./HazelcastPortable`);
+const User = require(`./User`);
 const Long = require(`long`);
 
 
@@ -22,76 +23,10 @@ class HivePrincipal extends HazelcastPortable {
         me.user = user;
     }
 
-    get actions() {
+    getUser() {
         const me = this;
 
-        return me._actions;
-    }
-
-    set actions(value) {
-        const me = this;
-
-        me._actions = value;
-    }
-
-    get networkIds() {
-        const me = this;
-
-        return me._networkIds;
-    }
-
-    set networkIds(value) {
-        const me = this;
-
-        me._networkIds = value;
-    }
-
-    get deviceTypeIds() {
-        const me = this;
-
-        return me._deviceTypeIds;
-    }
-
-    set deviceTypeIds(value) {
-        const me = this;
-
-        me._deviceTypeIds = value;
-    }
-
-    get allNetworksAvailable() {
-        const me = this;
-
-        return me._allNetworksAvailable;
-    }
-
-    set allNetworksAvailable(value) {
-        const me = this;
-
-        me._allNetworksAvailable = value;
-    }
-
-    get allDeviceTypesAvailable() {
-        const me = this;
-
-        return me._allDeviceTypesAvailable;
-    }
-
-    set allDeviceTypesAvailable(value) {
-        const me = this;
-
-        me._allDeviceTypesAvailable = value;
-    }
-
-    get user() {
-        const me = this;
-
-        return me._user;
-    }
-
-    set user(value) {
-        const me = this;
-
-        me._user = value;
+        return new User(me.user);
     }
 
     getFactoryId() {

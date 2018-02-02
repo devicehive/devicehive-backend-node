@@ -31,7 +31,7 @@ async function getDeviceTypes (listDeviceTypeRequestBody) {
     const models = await db.getModels();
     const deviceTypeDAO = models[`DeviceType`];
     const deviceTypeFilterObject = { where: {} };
-    let deviceTypes;
+    const principal = listDeviceTypeRequestBody.principal;
 
     if (listDeviceTypeRequestBody.skip) {
         deviceTypeFilterObject.skip = listDeviceTypeRequestBody.skip;
@@ -51,7 +51,25 @@ async function getDeviceTypes (listDeviceTypeRequestBody) {
         deviceTypeFilterObject.where.name = listDeviceTypeRequestBody.name;
     }
 
-    deviceTypes = await deviceTypeDAO.find(deviceTypeFilterObject);
+    if (principal && principal.deviceTypeIds) {
+        deviceTypeFilterObject.where.id = { inq: principal.deviceTypeIds };
+    }
 
-    return deviceTypes;
+    if (principal && !principal.getUser().isAdmin()) {
+        let deviceTypes;
+
+        deviceTypeFilterObject.include = { relation: `users` };
+
+        deviceTypes = await deviceTypeDAO.find(deviceTypeFilterObject);
+
+        deviceTypes = deviceTypes.filter((deviceType) => {
+            const users = deviceType.toObject().users;
+
+            return users.length > 0 ? users[0].id === principal.user.id : false;
+        });
+
+        return deviceTypes;
+    } else {
+        return await deviceTypeDAO.find(deviceTypeFilterObject);
+    }
 }

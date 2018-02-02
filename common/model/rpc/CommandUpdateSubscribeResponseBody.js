@@ -5,7 +5,7 @@ const DeviceCommand = require(`../DeviceCommand`);
 
 class CommandUpdateSubscribeResponseBody extends Body {
 
-    constructor({ subscriptionId, deviceCommand, ...rest } = {}) {
+    constructor({ subscriptionId, deviceCommand = null, ...rest } = {}) {
         super({ action: Action.COMMAND_UPDATE_SUBSCRIBE_RESPONSE, subscriptionId, deviceCommand, ...rest });
 
         const me = this;

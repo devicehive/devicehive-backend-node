@@ -19,7 +19,7 @@ class NotificationEvent extends Event {
     }
 
     set notification(value) {
-        this._notification = new DeviceNotification(value);
+        this._notification = value ? new DeviceNotification(value) : value;
     }
 
     getApplicableFilters() {

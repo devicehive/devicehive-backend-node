@@ -30,7 +30,7 @@ module.exports = async (request) => {
 async function getDevices (listDeviceRequestBody) {
     const models = await db.getModels();
     const deviceDAO = models[`Device`];
-    const deviceFilterObject = { where: {} };
+    const deviceFilterObject = { where: {}, include: [] } ;
     const principal = listDeviceRequestBody.principal;
     let devices;
 
@@ -52,22 +52,32 @@ async function getDevices (listDeviceRequestBody) {
         deviceFilterObject.where.name = listDeviceRequestBody.name;
     }
 
-    if (listDeviceRequestBody.networkId) {
-        deviceFilterObject.where.networkId = listDeviceRequestBody.networkId;
-    }
-
-    if (principal && !principal.allDeviceTypesAvailable && principal.deviceIds) {
+    if (principal && principal.deviceIds) {
         deviceFilterObject.where.deviceId = { inq: principal.deviceIds };
     }
 
+    if (principal && principal.deviceTypeIds) {
+        deviceFilterObject.where.deviceTypeId = { inq: principal.deviceTypeIds };
+    }
+
+    if (principal && principal.networkIds) {
+        deviceFilterObject.where.networkId = { inq: principal.networkIds };
+    }
+
+    if (listDeviceRequestBody.networkId && (!principal.networkIds || principal.networkIds.includes(listDeviceRequestBody.networkId)) ) {
+        deviceFilterObject.where.networkId = listDeviceRequestBody.networkId;
+    }
+
     if (listDeviceRequestBody.networkName) {
-        deviceFilterObject.where.include = { relation: `network`, scope: { where: { name: listDeviceRequestBody.networkName } } };
+        deviceFilterObject.include.push('network');
     }
 
     devices = await deviceDAO.find(deviceFilterObject);
 
     if (listDeviceRequestBody.networkName) { //TODO native join functionality
-        devices = devices.filter((device) => !!device.toObject().network );
+        devices = devices.filter((device) => {
+            return device.toObject().network.name === listDeviceRequestBody.networkName;
+        } );
     }
 
     return devices;

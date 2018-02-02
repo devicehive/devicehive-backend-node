@@ -28,7 +28,9 @@ class EventBus {
         const me = this;
 
         event.getApplicableFilters()
-            .map((filter) => me.filterRegistry.getSubscribers(filter))
+            .map((filter) => {
+                return me.filterRegistry.getSubscribers(filter)
+            })
             .forEach((subscribers) => subscribers.forEach((subscriber) => {
                 const response = new Response({
                     correlationId: subscriber.correlationId,

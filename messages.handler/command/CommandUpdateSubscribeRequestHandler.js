@@ -36,7 +36,7 @@ async function findCommand(id, deviceId) {
     const deviceCommand = await hazelcastService.find(DeviceCommand.getClassName(), {
         id: id,
         deviceIds: [ deviceId ]
-    })[0];
+    });
 
-    return deviceCommand ? deviceCommand.toObject() : deviceCommand;
+    return deviceCommand[0] ? deviceCommand[0].toObject() : deviceCommand[0];
 }

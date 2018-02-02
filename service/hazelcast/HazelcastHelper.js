@@ -5,7 +5,7 @@ const DeviceNotification = require(`../../common/model/DeviceNotification`);
 
 class HazelcastHelper {
 
-    static preparePredicate(entityName, { id, deviceIds, networkIds, deviceTypeIds, names, from, to, returnUpdated, status, limit }) {
+    static preparePredicate(entityName, { id, deviceIds, networkIds, deviceTypeIds, names, from, to, returnUpdated, status, limit } = {}) {
         const predicates = [];
         const namesKey = entityName === DeviceNotification.getClassName() ? SearchableField.NOTIFICATION : SearchableField.COMMAND;
         const timestampKey = returnUpdated ? SearchableField.LAST_UPDATED : SearchableField.TIMESTAMP;
