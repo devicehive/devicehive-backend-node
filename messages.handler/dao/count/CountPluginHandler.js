@@ -16,7 +16,7 @@ module.exports = async (request) => {
         response.failed = false;
         response.withBody(new CountResponseBody({ count: count }));
     } catch (err) {
-        response.errorCode = 400;
+        response.errorCode = 500;
         response.failed = true;
         response.withBody(new ErrorResponseBody());
     }
@@ -29,10 +29,14 @@ async function countPlugins (countPluginRequestBody) {
     const models = await db.getModels();
     const pluginDAO = models[`Plugin`];
     const pluginFilterObject = {};
+    const principal = countPluginRequestBody.principal;
+
 
     if (countPluginRequestBody.namePattern) {
         pluginFilterObject.name = { like: countPluginRequestBody.namePattern };
-    } else if (countPluginRequestBody.name) {
+    }
+
+    if (countPluginRequestBody.name) {
         pluginFilterObject.name = countPluginRequestBody.name;
     }
 
@@ -46,6 +50,14 @@ async function countPlugins (countPluginRequestBody) {
 
     if (countPluginRequestBody.userId) {
         pluginFilterObject.userId = countPluginRequestBody.userId;
+    }
+
+    if (principal) {
+        const user = principal.getUser();
+
+        if (user && !user.isAdmin()) {
+            pluginFilterObject.userId = user.id;
+        }
     }
 
     return await pluginDAO.count(pluginFilterObject);

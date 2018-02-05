@@ -1,6 +1,6 @@
 const DeviceNotification = require(`./DeviceNotification`);
 const DeviceCommand = require(`./DeviceCommand`);
-const HivePrincipal = require(`./HivePrincipal`);
+const HivePrincipal = require(`../auth/HivePrincipal`);
 const Filter = require(`./eventbus/Filter`);
 const Subscriber = require(`./eventbus/Subscriber`);
 

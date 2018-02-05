@@ -16,7 +16,7 @@ module.exports = async (request) => {
         response.failed = false;
         response.withBody(new CountResponseBody({ count: count }));
     } catch (err) {
-        response.errorCode = 400;
+        response.errorCode = 500;
         response.failed = true;
         response.withBody(new ErrorResponseBody());
     }
@@ -28,33 +28,62 @@ module.exports = async (request) => {
 async function countDevices (countDeviceRequestBody) {
     const models = await db.getModels();
     const deviceDAO = models[`Device`];
-    const deviceFilterObject = { where: {} };
+    const networkDAO = models[`Network`];
+    const userNetworkDAO = models[`UserNetwork`];
+    const deviceFilterObject = {};
     const principal = countDeviceRequestBody.principal;
-    let devices;
+
 
     if (countDeviceRequestBody.namePattern) {
-        deviceFilterObject.where.name = { like: countDeviceRequestBody.namePattern };
-    } else if (countDeviceRequestBody.name) {
-        deviceFilterObject.where.name = countDeviceRequestBody.name;
+        deviceFilterObject.name = { like: countDeviceRequestBody.namePattern };
+    }
+
+    if (countDeviceRequestBody.name) {
+        deviceFilterObject.name = countDeviceRequestBody.name;
     }
 
     if (countDeviceRequestBody.networkId) {
-        deviceFilterObject.where.networkId = countDeviceRequestBody.networkId;
-    }
-
-    if (principal && !principal.allDeviceTypesAvailable && principal.deviceIds) {
-        deviceFilterObject.where.deviceId = { inq: principal.deviceIds };
+        deviceFilterObject.networkId = { inq: [ countDeviceRequestBody.networkId ] };
     }
 
     if (countDeviceRequestBody.networkName) {
-        deviceFilterObject.include = { relation: `network`, scope: { where: { name: countDeviceRequestBody.networkName } } };
+        const networkFilterObject = { where: { name: countDeviceRequestBody.networkName } };
+        let networks;
+
+        if (countDeviceRequestBody.networkId) {
+            networkFilterObject.where.id = countDeviceRequestBody.networkId;
+        }
+
+        networks = await networkDAO.find(networkFilterObject);
+
+        deviceFilterObject.networkId = { inq: networks.map(network => parseInt(network.id)) };
     }
 
-    devices = await deviceDAO.find(deviceFilterObject);
+    if (principal) {
+        const user = principal.getUser();
 
-    if (countDeviceRequestBody.networkName) { //TODO native join functionality
-        devices = devices.filter((device) => !!device.toObject().network);
+        if (user && !user.isAdmin()) {
+            if (deviceFilterObject.networkId) {
+                const userNetworks = await userNetworkDAO.find({where: {userId: user.id}});
+                const userNetworkIds = userNetworks.map(userNetwork => parseInt(userNetwork.networkId));
+
+                const filteredNetworkIds = deviceFilterObject.networkId.inq.filter(networkId => {
+                    return userNetworkIds.includes(networkId);
+                });
+
+                deviceFilterObject.networkId = { inq: filteredNetworkIds };
+            }
+        }
+
+        if (principal.networkIds) {
+            deviceFilterObject.networkId = { inq: principal.networkIds };
+        }
+
+        if (principal.deviceTypeIds) {
+            deviceFilterObject.deviceTypeId = { inq: principal.deviceTypeIds };
+        }
     }
 
-    return devices.length;
+
+    return await deviceDAO.count(deviceFilterObject);
 }

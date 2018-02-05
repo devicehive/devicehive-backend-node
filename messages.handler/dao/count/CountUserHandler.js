@@ -16,7 +16,7 @@ module.exports = async (request) => {
         response.failed = false;
         response.withBody(new CountResponseBody({ count: count }));
     } catch (err) {
-        response.errorCode = 400;
+        response.errorCode = 500;
         response.failed = true;
         response.withBody(new ErrorResponseBody());
     }
@@ -29,6 +29,7 @@ async function countUsers (countUserRequestBody) {
     const models = await db.getModels();
     const userDAO = models[`User`];
     const userFilterObject = {};
+
 
     if (countUserRequestBody.loginPattern) {
         userFilterObject.login = { like: countUserRequestBody.loginPattern };

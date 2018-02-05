@@ -1,5 +1,5 @@
 const Body = require(`../../../shim/Body`);
-const HivePrincipal = require(`../HivePrincipal`);
+const HivePrincipal = require(`../../auth/HivePrincipal`);
 
 
 class CountDeviceRequestBody extends Body {

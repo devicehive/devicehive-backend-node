@@ -18,7 +18,7 @@ module.exports = async (request) => {
             plugins: plugins.map((plugin) => plugin.toObject())
         }))
     } catch (err) {
-        response.errorCode = 400;
+        response.errorCode = 500;
         response.failed = true;
         response.withBody(new ErrorResponseBody());
     }
@@ -31,6 +31,8 @@ async function getPlugins (listPluginRequestBody) {
     const models = await db.getModels();
     const pluginDAO = models[`Plugin`];
     const pluginFilterObject = { where: {} };
+    const principal = listPluginRequestBody.principal;
+
 
     if (listPluginRequestBody.skip) {
         pluginFilterObject.skip = listPluginRequestBody.skip;
@@ -46,8 +48,30 @@ async function getPlugins (listPluginRequestBody) {
 
     if (listPluginRequestBody.namePattern) {
         pluginFilterObject.where.name = { like: listPluginRequestBody.namePattern };
-    } else if (listPluginRequestBody.name) {
+    }
+
+    if (listPluginRequestBody.name) {
         pluginFilterObject.where.name = listPluginRequestBody.name;
+    }
+
+    if (listPluginRequestBody.topicName) {
+        pluginFilterObject.where.topicName = listPluginRequestBody.topicName;
+    }
+
+    if (listPluginRequestBody.status) {
+        pluginFilterObject.where.status = listPluginRequestBody.status;
+    }
+
+    if (listPluginRequestBody.userId) {
+        pluginFilterObject.where.userId = listPluginRequestBody.userId;
+    }
+
+    if (principal) {
+        const user = principal.getUser();
+
+        if (user && !user.isAdmin()) {
+            pluginFilterObject.where.userId = user.id;
+        }
     }
 
     return await pluginDAO.find(pluginFilterObject);

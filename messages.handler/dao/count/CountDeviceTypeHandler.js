@@ -16,7 +16,7 @@ module.exports = async (request) => {
         response.failed = false;
         response.withBody(new CountResponseBody({ count: count }));
     } catch (err) {
-        response.errorCode = 400;
+        response.errorCode = 500;
         response.failed = true;
         response.withBody(new ErrorResponseBody());
     }
@@ -28,12 +28,42 @@ module.exports = async (request) => {
 async function countDeviceTypes (countDeviceTypeRequestBody) {
     const models = await db.getModels();
     const deviceTypeDAO = models[`DeviceType`];
+    const userDeviceTypeDAO = models[`UserDeviceType`];
     const deviceTypeFilterObject = {};
+    const principal = countDeviceTypeRequestBody.principal;
+
 
     if (countDeviceTypeRequestBody.namePattern) {
         deviceTypeFilterObject.name = { like: countDeviceTypeRequestBody.namePattern };
-    } else if (countDeviceTypeRequestBody.name) {
+    }
+
+    if (countDeviceTypeRequestBody.name) {
         deviceTypeFilterObject.name = countDeviceTypeRequestBody.name;
+    }
+
+    if (principal) {
+        const user = principal.getUser();
+
+        if (user && !user.isAdmin() && !user.allDeviceTypesAvailable) {
+            const userDeviceTypes = await userDeviceTypeDAO.find({ where: { userId: user.id } });
+            const userDeviceTypeIds = userDeviceTypes.map(userDeviceType => parseInt(userDeviceType.deviceTypeId));
+
+            deviceTypeFilterObject.id = { inq : userDeviceTypeIds };
+        }
+
+        if (principal.deviceTypeIds) {
+            let deviceTypeIds;
+
+            if (deviceTypeFilterObject.id) {
+                deviceTypeIds = deviceTypeFilterObject.id.inq.filter(deviceTypeId => {
+                    return principal.deviceTypeIds.includes(deviceTypeId);
+                });
+            } else {
+                deviceTypeIds = principal.deviceTypeIds;
+            }
+
+            deviceTypeFilterObject.id = { inq: deviceTypeIds };
+        }
     }
 
     return await deviceTypeDAO.count(deviceTypeFilterObject);

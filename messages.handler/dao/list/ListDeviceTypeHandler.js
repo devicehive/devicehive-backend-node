@@ -18,7 +18,7 @@ module.exports = async (request) => {
             deviceTypes: deviceTypes.map((deviceType) => deviceType.toObject())
         }));
     } catch (err) {
-        response.errorCode = 400;
+        response.errorCode = 500;
         response.failed = true;
         response.withBody(new ErrorResponseBody());
     }
@@ -30,8 +30,10 @@ module.exports = async (request) => {
 async function getDeviceTypes (listDeviceTypeRequestBody) {
     const models = await db.getModels();
     const deviceTypeDAO = models[`DeviceType`];
+    const userDeviceTypeDAO = models[`UserDeviceType`];
     const deviceTypeFilterObject = { where: {} };
     const principal = listDeviceTypeRequestBody.principal;
+
 
     if (listDeviceTypeRequestBody.skip) {
         deviceTypeFilterObject.skip = listDeviceTypeRequestBody.skip;
@@ -47,29 +49,36 @@ async function getDeviceTypes (listDeviceTypeRequestBody) {
 
     if (listDeviceTypeRequestBody.namePattern) {
         deviceTypeFilterObject.where.name = { like: listDeviceTypeRequestBody.namePattern };
-    } else if (listDeviceTypeRequestBody.name) {
+    }
+
+    if (listDeviceTypeRequestBody.name) {
         deviceTypeFilterObject.where.name = listDeviceTypeRequestBody.name;
     }
 
-    if (principal && principal.deviceTypeIds) {
-        deviceTypeFilterObject.where.id = { inq: principal.deviceTypeIds };
+    if (principal) {
+        const user = principal.getUser();
+
+        if (user && !user.isAdmin() && !user.allDeviceTypesAvailable) {
+            const userDeviceTypes = await userDeviceTypeDAO.find({ where: { userId: user.id } });
+            const userDeviceTypeIds = userDeviceTypes.map(userDeviceType => parseInt(userDeviceType.deviceTypeId));
+
+             deviceTypeFilterObject.where.id = { inq : userDeviceTypeIds };
+        }
+
+        if (principal.deviceTypeIds) {
+            let deviceTypeIds;
+
+            if (deviceTypeFilterObject.where.id) {
+                deviceTypeIds = deviceTypeFilterObject.where.id.inq.filter(deviceTypeId => {
+                    return principal.deviceTypeIds.includes(deviceTypeId);
+                });
+            } else {
+                deviceTypeIds = principal.deviceTypeIds;
+            }
+
+            deviceTypeFilterObject.where.id = { inq: deviceTypeIds };
+        }
     }
 
-    if (principal && !principal.getUser().isAdmin()) {
-        let deviceTypes;
-
-        deviceTypeFilterObject.include = { relation: `users` };
-
-        deviceTypes = await deviceTypeDAO.find(deviceTypeFilterObject);
-
-        deviceTypes = deviceTypes.filter((deviceType) => {
-            const users = deviceType.toObject().users;
-
-            return users.length > 0 ? users[0].id === principal.user.id : false;
-        });
-
-        return deviceTypes;
-    } else {
-        return await deviceTypeDAO.find(deviceTypeFilterObject);
-    }
+    return await deviceTypeDAO.find(deviceTypeFilterObject);
 }

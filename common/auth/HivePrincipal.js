@@ -1,5 +1,6 @@
-const HazelcastPortable = require(`./HazelcastPortable`);
-const User = require(`./User`);
+const HazelcastPortable = require(`../model/HazelcastPortable`);
+const HiveAction = require(`./HiveAction`);
+const User = require(`../model/User`);
 const Long = require(`long`);
 
 
@@ -10,17 +11,17 @@ class HivePrincipal extends HazelcastPortable {
 
     static getClassName() { return HivePrincipal.name };
 
-    constructor({ actions, networkIds, deviceTypeIds, allNetworksAvailable, allDevicesAvailable, user } = {}) {
+    constructor({ actions = [], networkIds = [], deviceTypeIds = [], allNetworksAvailable = false, allDevicesAvailable = false, user } = {}) {
         super();
 
         const me = this;
 
-        me.actions = actions;
+        me.actions = actions.length > 0 ? actions.map(action => new HiveAction(action)) : actions;
         me.networkIds = networkIds;
         me.deviceTypeIds = deviceTypeIds;
         me.allNetworksAvailable = allNetworksAvailable;
         me.allDeviceTypesAvailable = allDevicesAvailable;
-        me.user = user;
+        me.user = user ? new User(user) : user;
     }
 
     getUser() {

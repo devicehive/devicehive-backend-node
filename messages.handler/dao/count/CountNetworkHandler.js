@@ -16,7 +16,7 @@ module.exports = async (request) => {
         response.failed = false;
         response.withBody(new CountResponseBody({ count: count }));
     } catch (err) {
-        response.errorCode = 400;
+        response.errorCode = 500;
         response.failed = true;
         response.withBody(new ErrorResponseBody());
     }
@@ -28,12 +28,42 @@ module.exports = async (request) => {
 async function countNetworks (countNetworkRequestBody) {
     const models = await db.getModels();
     const networkDAO = models[`Network`];
+    const userNetworkDAO = models[`UserNetwork`];
+    const principal = countNetworkRequestBody.principal;
     const networkFilterObject = {};
+
 
     if (countNetworkRequestBody.namePattern) {
         networkFilterObject.name = { like: countNetworkRequestBody.namePattern };
-    } else if (countNetworkRequestBody.name) {
+    }
+
+    if (countNetworkRequestBody.name) {
         networkFilterObject.name = countNetworkRequestBody.name;
+    }
+
+    if (principal) {
+        const user = principal.getUser();
+
+        if (user && !user.isAdmin()) {
+            const userNetworks = await userNetworkDAO.find({where: {userId: user.id}});
+            const userNetworkIds = userNetworks.map(userNetwork => parseInt(userNetwork.networkId));
+
+            networkFilterObject.id = { inq: userNetworkIds };
+        }
+
+        if (principal.networkIds) {
+            let networkIds;
+
+            if (networkFilterObject.id) {
+                networkIds = networkFilterObject.id.inq.filter(networkId => {
+                    return principal.networkIds.includes(networkId);
+                });
+            } else {
+                networkIds = principal.networkIds;
+            }
+
+            networkFilterObject.id = { inq: networkIds };
+        }
     }
 
     return await networkDAO.count(networkFilterObject);

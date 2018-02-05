@@ -18,7 +18,7 @@ module.exports = async (request) => {
             users: users.map((user) => user.toObject())
         }));
     } catch (err) {
-        response.errorCode = 400;
+        response.errorCode = 500;
         response.failed = true;
         response.withBody(new ErrorResponseBody());
     }
@@ -31,6 +31,7 @@ async function getUsers (listUserRequestBody) {
     const models = await db.getModels();
     const userDAO = models[`User`];
     const filterObject = { where: {} };
+
 
     if (listUserRequestBody.skip) {
         filterObject.skip = listUserRequestBody.skip;
@@ -54,7 +55,9 @@ async function getUsers (listUserRequestBody) {
 
     if (listUserRequestBody.loginPattern) {
         filterObject.where.login = { like: listUserRequestBody.loginPattern };
-    } else if (listUserRequestBody.login) {
+    }
+
+    if (listUserRequestBody.login) {
         filterObject.where.login = listUserRequestBody.login;
     }
 
