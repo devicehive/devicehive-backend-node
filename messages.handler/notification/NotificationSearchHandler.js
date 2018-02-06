@@ -7,7 +7,7 @@ const Response = require(`../../shim/Response`);
 
 module.exports = async (request) => {
     const notificationSearchRequestBody = new NotificationSearchRequestBody(request.body);
-    const response = new Response({last: false});
+    const response = new Response();
     const notifications = notificationSearchRequestBody.id && notificationSearchRequestBody.deviceId ?
         await searchSingleNotificationByDeviceAndId(notificationSearchRequestBody.id, notificationSearchRequestBody.deviceId) :
         await searchMultipleNotifications(notificationSearchRequestBody);
@@ -39,5 +39,5 @@ async function searchMultipleNotifications(notificationSearchRequestBody) {
 
 async function searchSingleNotificationByDeviceAndId(id, deviceId) {
     return (await hazelcastService.find(DeviceNotification.getClassName(), { id: id, deviceIds: [ deviceId ] }))
-        .map((deviceNotification) => deviceNotification.toObject())
+        .map((deviceNotification) => deviceNotification.toObject());
 }

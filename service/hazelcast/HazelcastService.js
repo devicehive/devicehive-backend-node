@@ -29,6 +29,7 @@ class HazelcastService extends EventEmitter {
         config.networkConfig.addresses = HAZELCAST_CONFIG.networkConfig.addresses;
         config.serializationConfig.portableFactories[1] = new DevicePortableFactory();
         config.properties["hazelcast.client.event.thread.count"] = HAZELCAST_CONFIG.eventThreadCount;
+        config.properties["hazelcast.logging"] = `off`;
 
         HazelcastClient
             .newHazelcastClient(config)
@@ -43,7 +44,6 @@ class HazelcastService extends EventEmitter {
                 me.client = hazelcastClient;
                 me.isClientReady = true;
 
-                console.log('Hazelcast Client started');
                 me.emit(`clientReady`);
             });
     }

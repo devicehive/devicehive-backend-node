@@ -58,7 +58,7 @@ class DeviceNotification extends HazelcastPortable {
         writer.writeUTF("notification", me.notification);
         writer.writeUTF("deviceId", me.deviceId);
         writer.writeLong("networkId", Long.fromNumber(me.networkId, false));
-        writer.writeLong("deviceTypeId", Long.fromNumber(me.networkId, false));
+        writer.writeLong("deviceTypeId", Long.fromNumber(me.deviceTypeId, false));
         writer.writeLong("timestamp", Long.fromNumber(new Date(me.timestamp).getTime(), false));
         writer.writeUTF("parameters", me.parameters ? JSON.stringify(me.parameters) : null);
     };

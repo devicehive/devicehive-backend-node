@@ -11,7 +11,7 @@ module.exports = async (request) => {
     const notificationInsertRequestBody = new NotificationInsertRequestBody(request.body);
     const deviceNotification = notificationInsertRequestBody.deviceNotification;
     const notificationEvent = new NotificationEvent(request.body);
-    const response = new Response({ last: false });
+    const response = new Response();
 
     eventBus.publish(notificationEvent);
     await hazelcastService.store(DeviceNotification.getClassName(), deviceNotification);
