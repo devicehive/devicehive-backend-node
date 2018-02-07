@@ -1,32 +1,40 @@
+const debug = require(`debug`)(`request-handler:plugin-list`);
 const db = require(`../../../db/index`);
 const Response = require(`../../../shim/Response`);
 const ListPluginRequestBody = require(`../../../common/model/rpc/ListPluginRequestBody`);
 const ListPluginResponseBody = require(`../../../common/model/rpc/ListPluginResponseBody`);
-const ErrorResponseBody = require(`../../../common/model/rpc/ErrorResponseBody`);
+const PluginStatus = require(`../../../common/model/enums/PluginStatus`);
 
 
+/**
+ * Plugin list request handler
+ * @param request
+ * @returns {Promise<void>}
+ */
 module.exports = async (request) => {
     const listPluginRequestBody = new ListPluginRequestBody(request.body);
-    const response = new Response({ last: true });
+    const response = new Response();
 
-    try {
-        const plugins = await getPlugins(listPluginRequestBody);
+    debug(`Request (correlation id: ${request.correlationId}): ${listPluginRequestBody}`);
 
-        response.errorCode = 0;
-        response.failed = false;
-        response.withBody(new ListPluginResponseBody({
-            plugins: plugins.map((plugin) => plugin.toObject())
-        }))
-    } catch (err) {
-        response.errorCode = 500;
-        response.failed = true;
-        response.withBody(new ErrorResponseBody());
-    }
+    const plugins = await getPlugins(listPluginRequestBody);
+
+    response.errorCode = 0;
+    response.failed = false;
+    response.withBody(new ListPluginResponseBody({
+        plugins: plugins.map(plugin => Object.assign(plugin.toObject(), { status: PluginStatus.getStatusByIndex(plugin.status) }))
+    }));
+
+    debug(`Response (correlation id: ${request.correlationId}): ${response.body}`);
 
     return response;
 };
 
-
+/**
+ * Fetch Plugins from db by predicates
+ * @param listPluginRequestBody
+ * @returns {Promise<*>}
+ */
 async function getPlugins (listPluginRequestBody) {
     const models = await db.getModels();
     const pluginDAO = models[`Plugin`];

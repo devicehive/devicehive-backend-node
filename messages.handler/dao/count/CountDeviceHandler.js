@@ -1,30 +1,37 @@
+const debug = require(`debug`)(`request-handler:device-count`);
 const db = require(`../../../db/index`);
 const Response = require(`../../../shim/Response`);
 const CountDeviceRequestBody = require(`../../../common/model/rpc/CountDeviceRequestBody`);
 const CountResponseBody = require(`../../../common/model/rpc/CountResponseBody`);
-const ErrorResponseBody = require(`../../../common/model/rpc/ErrorResponseBody`);
 
 
+/**
+ * Device count request handler
+ * @param request
+ * @returns {Promise<void>}
+ */
 module.exports = async (request) => {
     const countDeviceRequestBody = new CountDeviceRequestBody(request.body);
     const response = new Response();
 
-    try {
-        const count = await countDevices(countDeviceRequestBody);
+    debug(`Request (correlation id: ${request.correlationId}): ${countDeviceRequestBody}`);
 
-        response.errorCode = 0;
-        response.failed = false;
-        response.withBody(new CountResponseBody({ count: count }));
-    } catch (err) {
-        response.errorCode = 500;
-        response.failed = true;
-        response.withBody(new ErrorResponseBody());
-    }
+    const count = await countDevices(countDeviceRequestBody);
+
+    response.errorCode = 0;
+    response.failed = false;
+    response.withBody(new CountResponseBody({ count: count }));
+
+    debug(`Response (correlation id: ${request.correlationId}): ${response.body}`);
 
     return response;
 };
 
-
+/**
+ * Fetch devices amount from db by predicates
+ * @param countDeviceRequestBody
+ * @returns {Promise<*>}
+ */
 async function countDevices (countDeviceRequestBody) {
     const models = await db.getModels();
     const deviceDAO = models[`Device`];
@@ -83,7 +90,6 @@ async function countDevices (countDeviceRequestBody) {
             deviceFilterObject.deviceTypeId = { inq: principal.deviceTypeIds };
         }
     }
-
 
     return await deviceDAO.count(deviceFilterObject);
 }

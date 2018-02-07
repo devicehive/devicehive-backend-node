@@ -1,32 +1,39 @@
+const debug = require(`debug`)(`request-handler:user-list`);
 const db = require(`../../../db/index`);
 const Response = require(`../../../shim/Response`);
 const ListUserRequestBody = require(`../../../common/model/rpc/ListUserRequestBody`);
 const ListUserResponseBody = require(`../../../common/model/rpc/ListUserResponseBody`);
-const ErrorResponseBody = require(`../../../common/model/rpc/ErrorResponseBody`);
 
 
+/**
+ * User list request handler
+ * @param request
+ * @returns {Promise<void>}
+ */
 module.exports = async (request) => {
     const listUserRequestBody = new ListUserRequestBody(request.body);
-    const response = new Response({ last: true });
+    const response = new Response();
 
-    try {
-        const users = await getUsers(listUserRequestBody);
+    debug(`Request (correlation id: ${request.correlationId}): ${listUserRequestBody}`);
 
-        response.errorCode = 0;
-        response.failed = false;
-        response.withBody(new ListUserResponseBody({
-            users: users.map((user) => user.toObject())
-        }));
-    } catch (err) {
-        response.errorCode = 500;
-        response.failed = true;
-        response.withBody(new ErrorResponseBody());
-    }
+    const users = await getUsers(listUserRequestBody);
+
+    response.errorCode = 0;
+    response.failed = false;
+    response.withBody(new ListUserResponseBody({
+        users: users.map((user) => user.toObject())
+    }));
+
+    debug(`Response (correlation id: ${request.correlationId}): ${response.body}`);
 
     return response;
 };
 
-
+/**
+ * Fetch Users from db by predicates
+ * @param listUserRequestBody
+ * @returns {Promise<*>}
+ */
 async function getUsers (listUserRequestBody) {
     const models = await db.getModels();
     const userDAO = models[`User`];

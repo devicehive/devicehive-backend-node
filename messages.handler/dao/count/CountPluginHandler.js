@@ -1,30 +1,37 @@
+const debug = require(`debug`)(`request-handler:plugin-count`);
 const db = require(`../../../db/index`);
 const Response = require(`../../../shim/Response`);
 const CountPluginRequestBody = require(`../../../common/model/rpc/CountPluginRequestBody`);
 const CountResponseBody = require(`../../../common/model/rpc/CountResponseBody`);
-const ErrorResponseBody = require(`../../../common/model/rpc/ErrorResponseBody`);
 
 
+/**
+ * Plugin count request handler
+ * @param request
+ * @returns {Promise<void>}
+ */
 module.exports = async (request) => {
     const countPluginRequestBody = new CountPluginRequestBody(request.body);
     const response = new Response();
 
-    try {
-        const count = await countPlugins(countPluginRequestBody);
+    debug(`Request (correlation id: ${request.correlationId}): ${countPluginRequestBody}`);
 
-        response.errorCode = 0;
-        response.failed = false;
-        response.withBody(new CountResponseBody({ count: count }));
-    } catch (err) {
-        response.errorCode = 500;
-        response.failed = true;
-        response.withBody(new ErrorResponseBody());
-    }
+    const count = await countPlugins(countPluginRequestBody);
+
+    response.errorCode = 0;
+    response.failed = false;
+    response.withBody(new CountResponseBody({ count: count }));
+
+    debug(`Response (correlation id: ${request.correlationId}): ${response.body}`);
 
     return response;
 };
 
-
+/**
+ * Fetch Plugins amount from db by predicates
+ * @param countPluginRequestBody
+ * @returns {Promise<*>}
+ */
 async function countPlugins (countPluginRequestBody) {
     const models = await db.getModels();
     const pluginDAO = models[`Plugin`];

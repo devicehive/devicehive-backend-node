@@ -1,30 +1,37 @@
+const debug = require(`debug`)(`request-handler:user-count`);
 const db = require(`../../../db/index`);
 const Response = require(`../../../shim/Response`);
 const CountUserRequestBody = require(`../../../common/model/rpc/CountUserRequestBody`);
 const CountResponseBody = require(`../../../common/model/rpc/CountResponseBody`);
-const ErrorResponseBody = require(`../../../common/model/rpc/ErrorResponseBody`);
 
 
+/**
+ * User count request handler
+ * @param request
+ * @returns {Promise<void>}
+ */
 module.exports = async (request) => {
     const countUserRequestBody = new CountUserRequestBody(request.body);
     const response = new Response();
 
-    try {
-        const count = await countUsers(countUserRequestBody);
+    debug(`Request (correlation id: ${request.correlationId}): ${countUserRequestBody}`);
 
-        response.errorCode = 0;
-        response.failed = false;
-        response.withBody(new CountResponseBody({ count: count }));
-    } catch (err) {
-        response.errorCode = 500;
-        response.failed = true;
-        response.withBody(new ErrorResponseBody());
-    }
+    const count = await countUsers(countUserRequestBody);
+
+    response.errorCode = 0;
+    response.failed = false;
+    response.withBody(new CountResponseBody({ count: count }));
+
+    debug(`Response (correlation id: ${request.correlationId}): ${response.body}`);
 
     return response;
 };
 
-
+/**
+ * Fetch Users amount from db by predicates
+ * @param countUserRequestBody
+ * @returns {Promise<*>}
+ */
 async function countUsers (countUserRequestBody) {
     const models = await db.getModels();
     const userDAO = models[`User`];

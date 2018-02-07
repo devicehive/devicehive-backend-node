@@ -1,30 +1,37 @@
+const debug = require(`debug`)(`request-handler:devicetype-count`);
 const db = require(`../../../db/index`);
 const Response = require(`../../../shim/Response`);
 const CountDeviceTypeRequestBody = require(`../../../common/model/rpc/CountDeviceTypeRequestBody`);
 const CountResponseBody = require(`../../../common/model/rpc/CountResponseBody`);
-const ErrorResponseBody = require(`../../../common/model/rpc/ErrorResponseBody`);
 
 
+/**
+ * DeviceTypes count request handler
+ * @param request
+ * @returns {Promise<void>}
+ */
 module.exports = async (request) => {
     const countDeviceTypeRequestBody = new CountDeviceTypeRequestBody(request.body);
     const response = new Response();
 
-    try {
-        const count = await countDeviceTypes(countDeviceTypeRequestBody);
+    debug(`Request (correlation id: ${request.correlationId}): ${countDeviceTypeRequestBody}`);
 
-        response.errorCode = 0;
-        response.failed = false;
-        response.withBody(new CountResponseBody({ count: count }));
-    } catch (err) {
-        response.errorCode = 500;
-        response.failed = true;
-        response.withBody(new ErrorResponseBody());
-    }
+    const count = await countDeviceTypes(countDeviceTypeRequestBody);
+
+    response.errorCode = 0;
+    response.failed = false;
+    response.withBody(new CountResponseBody({ count: count }));
+
+    debug(`Response (correlation id: ${request.correlationId}): ${response.body}`);
 
     return response;
 };
 
-
+/**
+ * Fetch DeviceTypes amount from db by predicates
+ * @param countDeviceTypeRequestBody
+ * @returns {Promise<*>}
+ */
 async function countDeviceTypes (countDeviceTypeRequestBody) {
     const models = await db.getModels();
     const deviceTypeDAO = models[`DeviceType`];

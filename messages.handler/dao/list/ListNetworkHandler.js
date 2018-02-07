@@ -1,32 +1,39 @@
+const debug = require(`debug`)(`request-handler:network-list`);
 const db = require(`../../..//db/index`);
 const Response = require(`../../../shim/Response`);
 const ListNetworkRequestBody = require(`../../../common/model/rpc/ListNetworkRequestBody`);
 const ListNetworkResponseBody = require(`../../../common/model/rpc/ListNetworkResponseBody`);
-const ErrorResponseBody = require(`../../../common/model/rpc/ErrorResponseBody`);
 
 
+/**
+ * Network list request handler
+ * @param request
+ * @returns {Promise<void>}
+ */
 module.exports = async (request) => {
     const listNetworkRequestBody = new ListNetworkRequestBody(request.body);
-    const response = new Response({ last: true });
+    const response = new Response();
 
-    try {
-        const networks = await getNetworks(listNetworkRequestBody);
+    debug(`Request (correlation id: ${request.correlationId}): ${listNetworkRequestBody}`);
 
-        response.errorCode = 0;
-        response.failed = false;
-        response.withBody(new ListNetworkResponseBody({
-            networks: networks.map((network) => network.toObject())
-        }));
-    } catch (err) {
-        response.errorCode = 500;
-        response.failed = true;
-        response.withBody(new ErrorResponseBody());
-    }
+    const networks = await getNetworks(listNetworkRequestBody);
+
+    response.errorCode = 0;
+    response.failed = false;
+    response.withBody(new ListNetworkResponseBody({
+        networks: networks.map((network) => network.toObject())
+    }));
+
+    debug(`Response (correlation id: ${request.correlationId}): ${response.body}`);
 
     return response;
 };
 
-
+/**
+ * Fetch Networks from db by predicated
+ * @param listNetworkRequestBody
+ * @returns {Promise<*>}
+ */
 async function getNetworks (listNetworkRequestBody) {
     const models = await db.getModels();
     const networkDAO = models[`Network`];

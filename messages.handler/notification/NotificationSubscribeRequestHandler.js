@@ -1,3 +1,4 @@
+const debug = require(`debug`)(`request-handler:notification-subscribe`);
 const eventBus = require(`../../eventbus/EventBus`);
 const hazelcastService = require(`../../service/hazelcast/HazelcastService`);
 const NotificationSubscribeRequestBody = require(`../../common/model/rpc/NotificationSubscribeRequestBody`);
@@ -9,9 +10,16 @@ const Response = require(`../../shim/Response`);
 const NOTIFICATIONS_LIMIT = 100;
 
 
+/**
+ * Notification subscription request handler
+ * @param request
+ * @returns {Promise<void>}
+ */
 module.exports = async (request) => {
     const notificationSubscribeRequestBody = new NotificationSubscribeRequestBody(request.body);
     const response = new Response({ last: false });
+
+    debug(`Request (correlation id: ${request.correlationId}): ${notificationSubscribeRequestBody}`);
 
     eventBus.subscribe(
         notificationSubscribeRequestBody.filter,
@@ -31,10 +39,18 @@ module.exports = async (request) => {
             notificationSubscribeRequestBody.timestamp)
     }));
 
+    debug(`Response (correlation id: ${request.correlationId}): ${response.body}`);
+
     return response;
 };
 
-
+/**
+ * Find notification which corresponds to subscription filter (in case if timestamp is present)
+ * @param filter
+ * @param names
+ * @param timestamp
+ * @returns {Promise<Array>}
+ */
 async function findNotifications(filter, names, timestamp) {
     let notifications = [];
 

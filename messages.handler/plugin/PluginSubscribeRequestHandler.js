@@ -1,7 +1,6 @@
+const debug = require(`debug`)(`request-handler:plugin-subscribe`);
 const PluginSubscribeRequestBody = require(`../../common/model/rpc/PluginSubscribeRequestBody`);
 const PluginSubscribeResponseBody = require(`../../common/model/rpc/PluginSubscribeResponseBody`);
-const PluginUnsubscribeRequestBody = require(`../../common/model/rpc/PluginUnsubscribeRequestBody`);
-const pluginUnsubscribeRequestHandler = require(`./PluginUnsubscribeRequestHandler`);
 const NotificationSubscribeRequestBody = require(`../../common/model/rpc/NotificationSubscribeRequestBody`);
 const notificationSubscribeRequestHandler = require(`../notification/NotificationSubscribeRequestHandler`);
 const CommandSubscribeRequestBody = require(`../../common/model/rpc/CommandSubscribeRequestBody`);
@@ -10,22 +9,27 @@ const Request = require(`../../shim/Request`);
 const Response = require(`../../shim/Response`);
 
 
+/**
+ * Plugin subscription request handler
+ * @param request
+ * @returns {Promise<void>}
+ */
 module.exports = async (request) => {
     const pluginSubscribeRequestBody = new PluginSubscribeRequestBody(request.body);
     const response = new Response({ last: false });
 
-    // TODO unsubscribe
+    debug(`Request (correlation id: ${request.correlationId}): ${pluginSubscribeRequestBody}`);
 
     if (pluginSubscribeRequestBody.returnCommands === true) {
-        createCommandSubscription(pluginSubscribeRequestBody, false);
+        await createCommandSubscription(pluginSubscribeRequestBody, false, request.correlationId);
     }
 
     if (pluginSubscribeRequestBody.returnUpdatedCommands === true) {
-        createCommandSubscription(pluginSubscribeRequestBody, true);
+        await createCommandSubscription(pluginSubscribeRequestBody, true, request.correlationId);
     }
 
     if (pluginSubscribeRequestBody.returnNotifications === true) {
-        createNotificationSubscription(pluginSubscribeRequestBody);
+        await createNotificationSubscription(pluginSubscribeRequestBody, request.correlationId);
     }
 
     response.errorCode = 0;
@@ -34,45 +38,56 @@ module.exports = async (request) => {
         subId: pluginSubscribeRequestBody.subscriptionId
     }));
 
+    debug(`Response (correlation id: ${request.correlationId}): ${response.body}`);
+
     return response;
 };
 
+/**
+ * Create plugin notification subscription
+ * @param pluginSubscribeRequestBody
+ * @param correlationId
+ * @returns {Promise}
+ */
+function createNotificationSubscription(pluginSubscribeRequestBody, correlationId) {
+    return Promise.all(pluginSubscribeRequestBody.filters.map(filter => {
+        filter.eventName = `NOTIFICATION_EVENT`; //TODO
 
-function createNotificationSubscription(pluginSubscribeRequestBody) {
-
-    pluginSubscribeRequestBody.filters
-        .forEach((filter) => {
-            filter.eventName = `NOTIFICATION_EVENT`; //TODO
-
-            notificationSubscribeRequestHandler(new Request({ //TODO
-                body: new NotificationSubscribeRequestBody({
-                    subscriptionId: pluginSubscribeRequestBody.subscriptionId,
-                    filter: filter,
-                    names: pluginSubscribeRequestBody.names,
-                }),
-                singleReplyExpected: false,
-                replyTo: pluginSubscribeRequestBody.topicName
-            }));
-        });
+        return notificationSubscribeRequestHandler(new Request({ //TODO
+            correlationId: correlationId,
+            body: new NotificationSubscribeRequestBody({
+                subscriptionId: pluginSubscribeRequestBody.subscriptionId,
+                filter: filter,
+                names: pluginSubscribeRequestBody.names,
+            }),
+            singleReplyExpected: false,
+            replyTo: pluginSubscribeRequestBody.topicName
+        }));
+    }));
 }
 
+/**
+ * Create plugin command subscription
+ * @param pluginSubscribeRequestBody
+ * @param returnUpdated
+ * @param correlationId
+ * @returns {Promise}
+ */
+function createCommandSubscription(pluginSubscribeRequestBody, returnUpdated, correlationId) {
+    return Promise.all(pluginSubscribeRequestBody.filters.map(filter => {
+        filter.eventName = `COMMAND_EVENT`; //TODO
 
-function createCommandSubscription(pluginSubscribeRequestBody, returnUpdated) {
-
-    pluginSubscribeRequestBody.filters
-        .forEach((filter) => {
-            filter.eventName = `COMMAND_EVENT`; //TODO
-
-            commandSubscribeRequestHandler(new Request({ //TODO
-                body: new CommandSubscribeRequestBody({
-                    subscriptionId: pluginSubscribeRequestBody.subscriptionId,
-                    filter: filter,
-                    names: pluginSubscribeRequestBody.names,
-                    returnUpdated: returnUpdated,
-                    limit: 0
-                }),
-                singleReplyExpected: false,
-                replyTo: pluginSubscribeRequestBody.topicName
-            }));
-        });
+        return commandSubscribeRequestHandler(new Request({ //TODO
+            correlationId: correlationId,
+            body: new CommandSubscribeRequestBody({
+                subscriptionId: pluginSubscribeRequestBody.subscriptionId,
+                filter: filter,
+                names: pluginSubscribeRequestBody.names,
+                returnUpdated: returnUpdated,
+                limit: 0
+            }),
+            singleReplyExpected: false,
+            replyTo: pluginSubscribeRequestBody.topicName
+        }));
+    }));
 }

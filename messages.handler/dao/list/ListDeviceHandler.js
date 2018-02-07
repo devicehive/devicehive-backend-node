@@ -1,32 +1,39 @@
+const debug = require(`debug`)(`request-handler:device-list`);
 const db = require(`../../../db/index`);
 const Response = require(`../../../shim/Response`);
 const ListDeviceRequestBody = require(`../../../common/model/rpc/ListDeviceRequestBody`);
 const ListDeviceResponseBody = require(`../../../common/model/rpc/ListDeviceResponseBody`);
-const ErrorResponseBody = require(`../../../common/model/rpc/ErrorResponseBody`);
 
 
+/**
+ * Device list request handler
+ * @param request
+ * @returns {Promise<void>}
+ */
 module.exports = async (request) => {
     const listDeviceRequestBody = new ListDeviceRequestBody(request.body);
-    const response = new Response({ last: true });
+    const response = new Response();
 
-    try {
-        const devices = await getDevices(listDeviceRequestBody);
+    debug(`Request (correlation id: ${request.correlationId}): ${listDeviceRequestBody}`);
 
-        response.errorCode = 0;
-        response.failed = false;
-        response.withBody(new ListDeviceResponseBody({
-            devices: devices.map((device) => Object.assign(device.toObject(), { id: device.deviceId }))
-        }))
-    } catch (err) {
-        response.errorCode = 500;
-        response.failed = true;
-        response.withBody(new ErrorResponseBody());
-    }
+    const devices = await getDevices(listDeviceRequestBody);
+
+    response.errorCode = 0;
+    response.failed = false;
+    response.withBody(new ListDeviceResponseBody({
+        devices: devices.map((device) => Object.assign(device.toObject(), { id: device.deviceId }))
+    }));
+
+    debug(`Response (correlation id: ${request.correlationId}): ${response.body}`);
 
     return response;
 };
 
-
+/**
+ * Fetch Devices from db by predicates
+ * @param listDeviceRequestBody
+ * @returns {Promise<*>}
+ */
 async function getDevices (listDeviceRequestBody) {
     const models = await db.getModels();
     const deviceDAO = models[`Device`];
@@ -97,7 +104,6 @@ async function getDevices (listDeviceRequestBody) {
             deviceFilterObject.where.deviceTypeId = { inq: principal.deviceTypeIds };
         }
     }
-
 
     return await deviceDAO.find(deviceFilterObject);
 }

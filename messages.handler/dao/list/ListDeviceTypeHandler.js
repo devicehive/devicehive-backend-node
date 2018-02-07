@@ -1,32 +1,39 @@
+const debug = require(`debug`)(`request-handler:devicetype-list`);
 const db = require(`../../../db/index`);
 const Response = require(`../../../shim/Response`);
 const ListDeviceTypeRequestBody = require(`../../../common/model/rpc/ListDeviceTypeRequestBody`);
 const ListDeviceTypeResponseBody = require(`../../../common/model/rpc/ListDeviceTypeResponseBody`);
-const ErrorResponseBody = require(`../../../common/model/rpc/ErrorResponseBody`);
 
 
+/**
+ * DeviceType list request handler
+ * @param request
+ * @returns {Promise<void>}
+ */
 module.exports = async (request) => {
     const listDeviceTypeRequestBody = new ListDeviceTypeRequestBody(request.body);
-    const response = new Response({ last: true });
+    const response = new Response();
 
-    try {
-        const deviceTypes = await getDeviceTypes(listDeviceTypeRequestBody);
+    debug(`Request (correlation id: ${request.correlationId}): ${listDeviceTypeRequestBody}`);
 
-        response.errorCode = 0;
-        response.failed = false;
-        response.withBody(new ListDeviceTypeResponseBody( {
-            deviceTypes: deviceTypes.map((deviceType) => deviceType.toObject())
-        }));
-    } catch (err) {
-        response.errorCode = 500;
-        response.failed = true;
-        response.withBody(new ErrorResponseBody());
-    }
+    const deviceTypes = await getDeviceTypes(listDeviceTypeRequestBody);
+
+    response.errorCode = 0;
+    response.failed = false;
+    response.withBody(new ListDeviceTypeResponseBody( {
+        deviceTypes: deviceTypes.map((deviceType) => deviceType.toObject())
+    }));
+
+    debug(`Response (correlation id: ${request.correlationId}): ${response.body}`);
 
     return response;
 };
 
-
+/**
+ * Fetch DeviceTypes from db by predicates
+ * @param listDeviceTypeRequestBody
+ * @returns {Promise<*>}
+ */
 async function getDeviceTypes (listDeviceTypeRequestBody) {
     const models = await db.getModels();
     const deviceTypeDAO = models[`DeviceType`];

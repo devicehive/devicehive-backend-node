@@ -1,30 +1,37 @@
+const debug = require(`debug`)(`request-handler:network-count`);
 const db = require(`../../../db/index`);
 const Response = require(`../../../shim/Response`);
 const CountNetworkRequestBody = require(`../../../common/model/rpc/CountNetworkRequestBody`);
 const CountResponseBody = require(`../../../common/model/rpc/CountResponseBody`);
-const ErrorResponseBody = require(`../../../common/model/rpc/ErrorResponseBody`);
 
 
+/**
+ * Network count request handler
+ * @param request
+ * @returns {Promise<void>}
+ */
 module.exports = async (request) => {
     const countNetworkRequestBody = new CountNetworkRequestBody(request.body);
     const response = new Response();
 
-    try {
-        const count = await countNetworks(countNetworkRequestBody);
+    debug(`Request (correlation id: ${request.correlationId}): ${countNetworkRequestBody}`);
 
-        response.errorCode = 0;
-        response.failed = false;
-        response.withBody(new CountResponseBody({ count: count }));
-    } catch (err) {
-        response.errorCode = 500;
-        response.failed = true;
-        response.withBody(new ErrorResponseBody());
-    }
+    const count = await countNetworks(countNetworkRequestBody);
+
+    response.errorCode = 0;
+    response.failed = false;
+    response.withBody(new CountResponseBody({ count: count }));
+
+    debug(`Response (correlation id: ${request.correlationId}): ${response.body}`);
 
     return response;
 };
 
-
+/**
+ * Fetch Networks amount from db by predicates
+ * @param countNetworkRequestBody
+ * @returns {Promise<*>}
+ */
 async function countNetworks (countNetworkRequestBody) {
     const models = await db.getModels();
     const networkDAO = models[`Network`];

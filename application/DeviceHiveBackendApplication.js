@@ -65,7 +65,7 @@ async function handleClientRequest(request) {
         try {
             response = await requestHandler(request);
         } catch (error) {
-            logger.error(`Error while handling client request action #${request.body.action}: ${error.message}`);
+            logger.error(`Error while handling client request action #${request.body.action} (correlation id: ${request.correlationId}): ${error.message}`);
 
             response = getErrorResponse(request, 500, error.message)
         }
