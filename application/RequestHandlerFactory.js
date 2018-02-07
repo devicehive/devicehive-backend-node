@@ -1,5 +1,4 @@
 const Action = require(`../shim/Action`);
-const Response = require(`../shim/Response`);
 const listDeviceHandler = require(`../messages.handler/dao/list/ListDeviceHandler`);
 const listDeviceTypeHandler = require(`../messages.handler/dao/list/ListDeviceTypeHandler`);
 const listNetworkHandler = require(`../messages.handler/dao/list/ListNetworkHandler`);
@@ -53,10 +52,20 @@ actionToHandlerMap.set(Action.COUNT_PLUGIN_REQUEST, countPluginHandler);
 actionToHandlerMap.set(Action.COUNT_USER_REQUEST, countUserHandler);
 
 
+/**
+ * Request handler class
+ */
 class RequestHandlerFactory {
+
+    /**
+     * Returns request handler by request action
+     * @param action
+     * @returns {Function}
+     */
     static getHandlerByAction(action) {
         return actionToHandlerMap.get(action);
     }
 }
+
 
 module.exports = RequestHandlerFactory;

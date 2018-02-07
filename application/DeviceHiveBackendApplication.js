@@ -47,11 +47,10 @@ proxyClient.on(`message`, async (message) => {
     }
 });
 
-
 /**
- *
+ * Client request handler
  * @param request
- * @returns {Promise<void>}
+ * @returns {Promise<Response>}
  */
 async function handleClientRequest(request) {
     const requestHandler = RequestHandlerFactory.getHandlerByAction(request.body.action);
@@ -76,22 +75,21 @@ async function handleClientRequest(request) {
     return response;
 }
 
-
 /**
- *
+ * Returns Response object for ping request
  * @param request
+ * @returns {Response}
  */
 function getPongResponse(request) {
     return new Response({correlationId: request.correlationId});
 }
 
-
 /**
- *
+ * Returns ErrorResponse object
  * @param request
  * @param code
  * @param message
- * @returns {*}
+ * @returns {Response}
  */
 function getErrorResponse(request, code, message) {
     return (new Response({
