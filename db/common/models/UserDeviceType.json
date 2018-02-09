@@ -1,0 +1,56 @@
+{
+    "name": "UserDeviceType",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true,
+        "postgresql": {
+            "schema": "public",
+            "table": "user_device_type"
+        }
+    },
+    "properties": {
+        "id": {
+            "type": "number",
+            "required": true,
+            "postgresql": {
+                "columnName": "id"
+            }
+        },
+        "userId": {
+            "type": "number",
+            "required": true,
+            "postgresql": {
+                "columnName": "user_id"
+            }
+        },
+        "deviceTypeId": {
+            "type": "number",
+            "required": true,
+            "postgresql": {
+                "columnName": "device_type_id"
+            }
+        },
+        "entityVersion": {
+            "type": "number",
+            "postgresql": {
+                "columnName": "entity_version"
+            }
+        }
+    },
+    "validations": [],
+    "relations": {
+        "user": {
+            "type": "belongsTo",
+            "model": "User",
+            "foreignKey": "userId"
+        },
+        "deviceType": {
+            "type": "belongsTo",
+            "model": "DeviceType",
+            "foreignKey": "deviceTypeId"
+        }
+    },
+    "acls": [],
+    "methods": {}
+}

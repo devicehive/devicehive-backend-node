@@ -1,0 +1,40 @@
+{
+    "name": "devicehive-server-backend-node",
+    "version": "1.0.0",
+    "description": "devicehive-server-backend-node",
+    "author": "Ihor T.",
+    "main": "appllication/DeviceHiveBackendApplication.js",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/devicehive/devicehive-backend-node.git"
+    },
+    "license": "Apache-2.0",
+    "scripts": {
+        "start": "node ./appllication/DeviceHiveBackendApplication.js"
+    },
+    "dependencies": {
+        "compression": "^1.0.3",
+        "cors": "^2.5.2",
+        "debug": "^3.1.0",
+        "devicehive-proxy-message": "^1.0.11",
+        "hazelcast-client": "^0.7.0",
+        "helmet": "^1.3.0",
+        "json-evn-configurator": "^1.0.5",
+        "long": "^3.2.0",
+        "loopback": "^3.18.1",
+        "loopback-boot": "^2.6.5",
+        "loopback-component-explorer": "^4.0.0",
+        "loopback-connector-postgresql": "^2.9.0",
+        "moment": "^2.20.1",
+        "serve-favicon": "^2.0.1",
+        "strong-error-handler": "^2.3.1",
+        "uuid": "^3.2.1",
+        "winston": "^2.4.0",
+        "ws": "^3.3.3"
+    },
+    "devDependencies": {
+        "eslint": "^3.17.1",
+        "eslint-config-loopback": "^8.0.0",
+        "nsp": "^2.1.0"
+    }
+}

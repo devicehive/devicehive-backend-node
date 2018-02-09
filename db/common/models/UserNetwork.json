@@ -1,0 +1,56 @@
+{
+    "name": "UserNetwork",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true,
+        "postgresql": {
+            "schema": "public",
+            "table": "user_network"
+        }
+    },
+    "properties": {
+        "id": {
+            "type": "number",
+            "required": true,
+            "postgresql": {
+                "columnName": "id"
+            }
+        },
+        "userId": {
+            "type": "number",
+            "required": true,
+            "postgresql": {
+                "columnName": "user_id"
+            }
+        },
+        "networkId": {
+            "type": "number",
+            "required": true,
+            "postgresql": {
+                "columnName": "network_id"
+            }
+        },
+        "entityVersion": {
+            "type": "number",
+            "postgresql": {
+                "columnName": "entity_version"
+            }
+        }
+    },
+    "validations": [],
+    "relations": {
+        "user": {
+            "type": "belongsTo",
+            "model": "User",
+            "foreignKey": "userId"
+        },
+        "network": {
+            "type": "belongsTo",
+            "model": "Network",
+            "foreignKey": "networkId"
+        }
+    },
+    "acls": [],
+    "methods": {}
+}

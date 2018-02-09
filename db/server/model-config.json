@@ -1,0 +1,48 @@
+{
+    "_meta": {
+        "sources": [
+            "loopback/common/models",
+            "loopback/server/models",
+            "../common/models",
+            "./models"
+        ],
+        "mixins": [
+            "loopback/common/mixins",
+            "loopback/server/mixins",
+            "../common/mixins",
+            "./mixins"
+        ]
+    },
+    "Device": {
+        "dataSource": "pg",
+        "public": false
+    },
+    "Network": {
+        "dataSource": "pg",
+        "public": false
+    },
+    "Configuration": {
+        "dataSource": "pg",
+        "public": false
+    },
+    "User": {
+        "dataSource": "pg",
+        "public": false
+    },
+    "UserNetwork": {
+        "dataSource": "pg",
+        "public": false
+    },
+    "DeviceType": {
+        "dataSource": "pg",
+        "public": false
+    },
+    "UserDeviceType": {
+        "dataSource": "pg",
+        "public": false
+    },
+    "Plugin": {
+        "dataSource": "pg",
+        "public": false
+    }
+}

@@ -1,0 +1,82 @@
+{
+    "name": "Device",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true,
+        "postgresql": {
+            "schema": "public",
+            "table": "device"
+        }
+    },
+    "properties": {
+        "id": {
+            "type": "string",
+            "required": true,
+            "postgresql": {
+                "columnName": "id"
+            }
+        },
+        "deviceId": {
+            "type": "string",
+            "required": true,
+            "postgresql": {
+                "columnName": "device_id"
+            }
+        },
+        "name": {
+            "type": "string",
+            "required": true,
+            "postgresql": {
+                "columnName": "name"
+            }
+        },
+        "data": {
+            "type": "object",
+            "postgresql": {
+                "columnName": "data"
+            }
+        },
+        "networkId": {
+            "type": "number",
+            "required": true,
+            "postgresql": {
+                "columnName": "network_id"
+            }
+        },
+        "blocked": {
+            "type": "boolean",
+            "required": true,
+            "postgresql": {
+                "columnName": "blocked"
+            }
+        },
+        "deviceTypeId": {
+            "type": "number",
+            "postgresql": {
+                "columnName": "device_type_id"
+            }
+        },
+        "entityVersion": {
+            "type": "number",
+            "postgresql": {
+                "columnName": "entity_version"
+            }
+        }
+    },
+    "validations": [],
+    "relations": {
+        "network": {
+            "type": "belongsTo",
+            "model": "Network",
+            "foreignKey": "networkId"
+        },
+        "deviceType": {
+            "type": "belongsTo",
+            "model": "DeviceType",
+            "foreignKey": "deviceTypeId"
+        }
+    },
+    "acls": [],
+    "methods": {}
+}
