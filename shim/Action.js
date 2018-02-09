@@ -1,4 +1,6 @@
-
+/**
+ * DeviceHive Action class
+ */
 class Action {
     static get EMPTY() { return 0; }
     static get ERROR_RESPONSE() { return 1; }
@@ -59,5 +61,6 @@ class Action {
 
     static get COUNT_RESPONSE() { return 47; }
 }
+
 
 module.exports = Action;

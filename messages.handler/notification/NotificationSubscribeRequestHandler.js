@@ -61,7 +61,6 @@ async function findNotifications(filter, names, timestamp) {
             deviceTypeIds: [ filter.deviceTypeId ],
             names: names,
             from: timestamp,
-            status: null,
             limit: NOTIFICATIONS_LIMIT
         })).map((deviceNotification) => deviceNotification.toObject());
     }

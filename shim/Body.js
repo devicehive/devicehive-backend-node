@@ -1,6 +1,13 @@
-
+/**
+ *
+ */
 class Body {
 
+    /**
+     *
+     * @param a
+     * @param rest
+     */
     static normalize({ a, ...rest }) {
         return new Body({
             action: a,
@@ -8,6 +15,11 @@ class Body {
         });
     }
 
+    /**
+     *
+     * @param action
+     * @param rest
+     */
     constructor({ action, ...rest } = {}) {
         const me = this;
 
@@ -54,6 +66,12 @@ class Body {
         return JSON.stringify(me.toObject());
     }
 
+    /**
+     *
+     * @param fieldName
+     * @param fieldValue
+     * @returns {Body}
+     */
     addField(fieldName, fieldValue) {
         const me = this;
 
@@ -62,5 +80,6 @@ class Body {
         return me;
     }
 }
+
 
 module.exports = Body;

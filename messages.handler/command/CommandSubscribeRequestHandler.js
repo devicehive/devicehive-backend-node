@@ -68,7 +68,6 @@ async function findCommands(filter, names, timestamp, returnUpdated, limit) {
             names: names,
             from: timestamp,
             returnUpdated: returnUpdated,
-            status: null,
             limit: limit
         })).map((deviceCommand) => deviceCommand.toObject());
     }

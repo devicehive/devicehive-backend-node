@@ -1,6 +1,6 @@
 const HazelcastPortable = require(`./HazelcastPortable`);
 const Long = require(`long`);
-
+const moment = require(`moment`);
 
 class DeviceCommand extends HazelcastPortable {
 
@@ -17,8 +17,8 @@ class DeviceCommand extends HazelcastPortable {
 
         me.id = id;
         me.command = command;
-        me.timestamp = timestamp;
-        me.lastUpdated = lastUpdated;
+        me.timestamp = new Date(timestamp).getTime();
+        me.lastUpdated = new Date(lastUpdated).getTime();
         me.userId = userId;
         me.deviceId = deviceId;
         me.networkId = networkId;
@@ -53,7 +53,7 @@ class DeviceCommand extends HazelcastPortable {
     getHazelcastKey() {
         const me = this;
 
-        return `${me.id}-${me.deviceId}-${me.timestamp}`;
+        return `${me.id}-${me.deviceId}`;
     }
 
     getFactoryId() {

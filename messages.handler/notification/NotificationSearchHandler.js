@@ -43,12 +43,10 @@ async function searchMultipleNotifications(notificationSearchRequestBody) {
         names: notificationSearchRequestBody.names,
         limit: (notificationSearchRequestBody.take || 0) - (notificationSearchRequestBody.skip || 0),
         from: notificationSearchRequestBody.start,
-        to: notificationSearchRequestBody.end,
-        returnUpdated: false,
-        status: null
+        to: notificationSearchRequestBody.end
     });
 
-    return notifications.map((deviceNotification) => deviceNotification.toObject());
+    return notifications ? notifications.map(deviceNotification => deviceNotification.toObject()) : [];
 }
 
 /**
@@ -58,6 +56,7 @@ async function searchMultipleNotifications(notificationSearchRequestBody) {
  * @returns {Promise<void>}
  */
 async function searchSingleNotificationByDeviceAndId(id, deviceId) {
-    return (await hazelcastService.find(DeviceNotification.getClassName(), { id: id, deviceIds: [ deviceId ] }))
-        .map((deviceNotification) => deviceNotification.toObject());
+    const notifications = await hazelcastService.find(DeviceNotification.getClassName(), { id: id, deviceIds: [ deviceId ] });
+
+    return notifications ? notifications.map(deviceNotification => deviceNotification.toObject()) : [];
 }

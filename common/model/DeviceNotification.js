@@ -19,7 +19,7 @@ class DeviceNotification extends HazelcastPortable {
         me.deviceId = deviceId;
         me.networkId = networkId;
         me.deviceTypeId = deviceTypeId;
-        me.timestamp = timestamp;
+        me.timestamp = new Date(timestamp).getTime();
         me.parameters = parameters;
     }
 
@@ -40,7 +40,7 @@ class DeviceNotification extends HazelcastPortable {
     getHazelcastKey() {
         const me = this;
 
-        return `${me.id}-${me.deviceId}-${me.timestamp}`;
+        return `${me.id}-${me.deviceId}`;
     }
 
     getFactoryId() {

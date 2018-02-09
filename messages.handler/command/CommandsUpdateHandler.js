@@ -18,7 +18,7 @@ module.exports = async (request) => {
 
     debug(`Request (correlation id: ${request.correlationId}): ${commandsUpdateRequestBody}`);
 
-    await hazelcastService.store(DeviceCommand.getClassName(), commandsUpdateRequestBody.deviceCommand);
+    await hazelcastService.update(DeviceCommand.getClassName(), commandsUpdateRequestBody.deviceCommand);
     eventBus.publish(new CommandsUpdateEvent(request.body));
 
     response.errorCode = 0;

@@ -1,14 +1,26 @@
 const Utils = require(`./Utils`);
 
 
+/**
+ * HashBasedTable class
+ */
 class HashBasedTable {
 
+    /**
+     * Creates new HashBasedTable object
+     */
     constructor() {
         const me = this;
 
         me.hashMap = new Map();
     }
 
+    /**
+     * Checks if keys are exist
+     * @param firstKey
+     * @param secondKey
+     * @returns {boolean}
+     */
     has(firstKey, secondKey) {
         const me = this;
         let result = false;
@@ -26,6 +38,12 @@ class HashBasedTable {
         return result;
     }
 
+    /**
+     * Returns value by keys
+     * @param firstKey
+     * @param secondKey
+     * @returns {*}
+     */
     get(firstKey, secondKey) {
         const me = this;
         let result;
@@ -43,6 +61,12 @@ class HashBasedTable {
         return result;
     }
 
+    /**
+     * Adds value by keys
+     * @param firstKey
+     * @param secondKey
+     * @param items
+     */
     add(firstKey, secondKey, items) {
         const me = this;
         let secondLevelMap = me.hashMap.get(firstKey);
@@ -62,6 +86,12 @@ class HashBasedTable {
         Utils.forEach(items, (item) => set.add(item));
     }
 
+    /**
+     * Deletes value by keys
+     * @param firstKey
+     * @param secondKey
+     * @returns {boolean}
+     */
     delete(firstKey, secondKey) {
         const me = this;
         let result = false;
@@ -79,6 +109,13 @@ class HashBasedTable {
         return result;
     }
 
+    /**
+     * Returns size of map
+     * @param firstKey
+     * @param secondKey
+     * @param needSetSize
+     * @returns {*}
+     */
     size(firstKey, secondKey, needSetSize=false) {
         const me = this;
         let result;

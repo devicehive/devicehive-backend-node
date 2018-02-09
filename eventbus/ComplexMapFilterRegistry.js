@@ -2,8 +2,15 @@ const Filter = require(`../common/model/eventbus/Filter`);
 const HashBasedTable = require(`../utils/HashBasedTable`);
 const Utils = require(`../utils/Utils`);
 
+
+/**
+ * ComplexMapFilterRegistry class
+ */
 class ComplexMapFilterRegistry {
 
+    /**
+     * Creates new ComplexMapFilterRegistry object
+     */
     constructor() {
         const me = this;
 
@@ -11,6 +18,11 @@ class ComplexMapFilterRegistry {
         me.subscriptionIdToFilterMap = new Map();
     }
 
+    /**
+     * Registers new subscriber
+     * @param filter
+     * @param subscriber
+     */
     register(filter, subscriber) {
         const me = this;
         const filters = me.subscriptionIdToFilterMap.get(subscriber.id) || [];
@@ -20,6 +32,10 @@ class ComplexMapFilterRegistry {
         me.subscriptionIdToFilterMap.set(subscriber.id, filters);
     }
 
+    /**
+     * Unregisters subscriber
+     * @param subscriber
+     */
     unregister(subscriber) {
         const me = this;
         const filters = me.subscriptionIdToFilterMap.get(subscriber.id);
@@ -49,6 +65,11 @@ class ComplexMapFilterRegistry {
         }
     }
 
+    /**
+     * Returns subscribers by filter
+     * @param filter
+     * @returns {Array<Subscriber>}
+     */
     getSubscribers(filter) {
         const me = this;
         const firstKeyWildeCardSubscribersSet = me.registryTable.get(Filter.FIRST_KEY_WILDE_CARD, filter.getSecondKey()) || new Set();
@@ -60,6 +81,10 @@ class ComplexMapFilterRegistry {
             .concat(Array.from(filterSubscribersSet));
     }
 
+    /**
+     * Unregisters device subscription
+     * @param device
+     */
     unregisterDevice(device) {
         const me = this;
         const filter = new Filter({
@@ -71,5 +96,6 @@ class ComplexMapFilterRegistry {
         me.registryTable.delete(filter.getFirstKey());
     }
 }
+
 
 module.exports = ComplexMapFilterRegistry;

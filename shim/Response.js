@@ -1,7 +1,33 @@
 const Body = require(`./Body`);
 
+
+/**
+ *
+ */
 class Response {
 
+    /**
+     *
+     * @param data
+     */
+    static normalize(data) {
+        return new Response({
+            body: Body.normalize(data.b ? JSON.parse(data.b) : {}),
+            correlationId: data.cId,
+            last: data.l,
+            errorCode: data.err,
+            failed: data.fld
+        })
+    }
+
+    /**
+     *
+     * @param body
+     * @param correlationId
+     * @param last
+     * @param errorCode
+     * @param failed
+     */
     constructor({ body, correlationId, last, errorCode = 0, failed } = {}) {
         const me = this;
 
@@ -72,6 +98,11 @@ class Response {
         me._failed = value;
     }
 
+    /**
+     *
+     * @param value
+     * @returns {*}
+     */
     withBody(value) {
         const me = this;
 
@@ -80,6 +111,11 @@ class Response {
         return me.body;
     }
 
+    /**
+     *
+     * @param value
+     * @returns {Response}
+     */
     withErrorCode(value) {
         const me = this;
 
@@ -88,6 +124,10 @@ class Response {
         return me;
     }
 
+    /**
+     *
+     * @returns {{b: undefined, cId: *, l: *, err: *, fld: *}}
+     */
     toObject() {
         const me = this;
 
@@ -100,22 +140,16 @@ class Response {
         };
     }
 
+    /**
+     *
+     * @returns {string}
+     */
     toString() {
         const me = this;
 
         return JSON.stringify(me.toObject());
     }
-
-    static normalize(data) {
-        return new Response({
-            body: Body.normalize(data.b ? JSON.parse(data.b) : {}),
-            correlationId: data.cId,
-            last: data.l,
-            errorCode: data.err,
-            failed: data.fld
-        })
-    }
-
 }
+
 
 module.exports = Response;

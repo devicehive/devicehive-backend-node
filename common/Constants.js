@@ -1,4 +1,6 @@
-
+/**
+ * DeviceHive constants
+ */
 class Constants {
 
     //Internal use

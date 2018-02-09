@@ -1,11 +1,24 @@
 const uuid = require('uuid/v1');
 const Body = require(`./Body`);
 
+
+/**
+ *
+ */
 class Request {
 
     static get CLIENT_REQUEST_TYPE () { return 0; }
     static get PING_TYPE () { return 1; }
 
+    /**
+     *
+     * @param b
+     * @param cId
+     * @param pK
+     * @param sre
+     * @param rTo
+     * @param t
+     */
     static normalize({ b, cId, pK, sre, rTo, t } = {}) {
         return new Request({
             body: Body.normalize(b ? b : {}),
@@ -17,6 +30,15 @@ class Request {
         })
     }
 
+    /**
+     *
+     * @param body
+     * @param correlationId
+     * @param partitionKey
+     * @param singleReplyExpected
+     * @param replyTo
+     * @param type
+     */
     constructor({ body, correlationId = uuid(), partitionKey, singleReplyExpected, replyTo, type }) {
         const me = this;
 
@@ -101,18 +123,30 @@ class Request {
         me._type = value;
     }
 
+    /**
+     *
+     * @returns {boolean}
+     */
     isPing() {
       const me = this;
 
       return me.type === Request.PING_TYPE;
     }
 
+    /**
+     *
+     * @returns {boolean}
+     */
     isClientRequest() {
       const me = this;
 
       return me.type === Request.CLIENT_REQUEST_TYPE;
     }
 
+    /**
+     *
+     * @returns {string}
+     */
     toString() {
         const me = this;
 
@@ -126,5 +160,6 @@ class Request {
         });
     }
 }
+
 
 module.exports = Request;

@@ -1,8 +1,8 @@
+const debug = require(`debug`)(`proxy:client`);
 const CONFIG = require(`../config`).proxy;
 const WS = require(`ws`);
 const EventEmitter = require(`events`);
 const { Message } = require(`devicehive-proxy-message`);
-const debug = require(`debug`)(`proxy-client`);
 
 
 /**
@@ -10,6 +10,10 @@ const debug = require(`debug`)(`proxy-client`);
  */
 class ProxyClient extends EventEmitter {
 
+    /**
+     * Creates new ProxyClient object
+     * @param webSocketServerUrl
+     */
     constructor(webSocketServerUrl = CONFIG.WS_PROXY_ENDPOINT) {
         super();
 
@@ -49,7 +53,11 @@ class ProxyClient extends EventEmitter {
         });
     }
 
-    sendMessage(message=new Message()) {
+    /**
+     * Sends message to WS Proxy
+     * @param message
+     */
+    sendMessage(message = new Message()) {
         const me = this;
 
         me.ws.send(message.toString());
