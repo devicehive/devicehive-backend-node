@@ -59,7 +59,7 @@ async function handleClientRequest(request) {
     if (!requestHandler) {
         logger.warn(`No corresponding request handler for request #${request.body.action}`);
 
-        response = getErrorResponse(request, 500, `No corresponding request handler`); //TODO error
+        response = getErrorResponse(request, 500, `No corresponding request handler`);
     } else {
         try {
             response = await requestHandler(request);

@@ -41,7 +41,7 @@ module.exports = async (request) => {
  * @returns {Promise<*>|Response}
  */
 function removeNotificationSubscription(pluginSubscribeRequestBody, correlationId) {
-    return notificationUnsubscribeRequestHandler(new Request({ //TODO
+    return notificationUnsubscribeRequestHandler(new Request({
         correlationId: correlationId,
         body: new NotificationUnsubscribeRequestBody({
             subscriptionIds: [pluginSubscribeRequestBody.subscriptionId]
@@ -58,7 +58,7 @@ function removeNotificationSubscription(pluginSubscribeRequestBody, correlationI
  * @returns {Promise<*>|Response}
  */
 function removeCommandSubscription(pluginSubscribeRequestBody, correlationId) {
-    return commandUnsubscribeRequestHandler(new Request({ //TODO
+    return commandUnsubscribeRequestHandler(new Request({
         correlationId: correlationId,
         body: new CommandUnsubscribeRequestBody({
             subscriptionIds: [pluginSubscribeRequestBody.subscriptionId]

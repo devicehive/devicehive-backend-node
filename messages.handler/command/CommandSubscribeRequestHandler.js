@@ -1,4 +1,5 @@
 const debug = require(`debug`)(`request-handler:command-subscribe`);
+const Constants = require(`../../common/Constants`);
 const eventBus = require(`../../eventbus/EventBus`);
 const hazelcastService = require(`../../service/hazelcast/HazelcastService`);
 const CommandSubscribeRequestBody = require(`../../common/model/rpc/CommandSubscribeRequestBody`);
@@ -20,7 +21,7 @@ module.exports = async (request) => {
     debug(`Request (correlation id: ${request.correlationId}): ${commandSubscribeRequestBody}`);
 
     if (commandSubscribeRequestBody.returnUpdated === true) {
-        commandSubscribeRequestBody.filter.eventName = `COMMANDS_UPDATE_EVENT`; // TODO
+        commandSubscribeRequestBody.filter.eventName = Constants.COMMANDS_UPDATE_EVENT;
     }
 
     eventBus.subscribe(
