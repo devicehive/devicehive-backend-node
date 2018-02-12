@@ -19,6 +19,17 @@ class LoopBackApplication extends EventEmitter {
         me.app = loopback();
         me.isReady = false;
 
+        me.app.dataSource('pg', {
+            "host": "localhost",
+            "port": 5432,
+            "url": "postgres://postgres:12345@localhost:5432/devicehive",
+            "database": "devicehive",
+            "password": "12345",
+            "name": "pg",
+            "user": "postgres",
+            "connector": "postgresql"
+        });
+
         boot(me.app, __dirname, function (err) {
             if (err) {
                 me.emit(`error`, err);

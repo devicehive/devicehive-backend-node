@@ -1,15 +1,7 @@
 {
-    "groupConfig": {
-        "name": "dev",
-        "password": "dev-pass"
-    },
-    "networkConfig": {
-        "addresses": [
-            {
-                "host": "127.0.0.1",
-                "port": "5701"
-            }
-        ]
-    },
-    "eventThreadCount": 5
+    "ADDRESSES": "127.0.0.1:5701,",
+    "GROUP_NAME": "dev",
+    "GROUP_PASSWORD": "dev-pass",
+    "EVENT_THREAD_COUNT": 5,
+    "LOGGING": "off"
 }
