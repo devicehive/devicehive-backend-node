@@ -50,17 +50,17 @@ services:
       MAX_HEAP_SIZE: "512m"
       MIN_HEAP_SIZE: "512m"
 
-#  backend:
-#    build: .
-#    environment:
-#      PROXY.WS_PROXY_ENDPOINT: "wsproxy:3000"
-#      HAZELCAST.ADDRESSES: "hazelcast:5701"
-#      POSTGRES.HOST: "postgres"
-#      POSTGRES.PORT: 5432
-#      POSTGRES.DATABASE: "devicehive"
-#      POSTGRES.PASSWORD: "12345"
-#      POSTGRES.USER: "postgres"
-#    links:
-#     - postgres
-#     - wsproxy
-#     - hazelcast
+  backend:
+    build: .
+    environment:
+      PROXY.WS_PROXY_ENDPOINT: "ws://wsproxy:3000"
+      HAZELCAST.ADDRESSES: "hazelcast:5701"
+      POSTGRES.HOST: "postgres"
+      POSTGRES.PORT: 5432
+      POSTGRES.DATABASE: "devicehive"
+      POSTGRES.PASSWORD: "12345"
+      POSTGRES.USER: "postgres"
+    links:
+     - postgres
+     - wsproxy
+     - hazelcast
