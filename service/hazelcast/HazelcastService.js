@@ -1,5 +1,5 @@
 const debug = require(`debug`)(`hazelcast:service`);
-const HAZELCAST_CONFIG = require(`./config.json`);
+const HazelcastConfig = require(`../../config`).hazelcast;
 const EventEmitter = require(`events`);
 const SearchableField = require(`../../common/model/enums/SearchableField`);
 const HazelcastClient = require(`hazelcast-client`).Client;
@@ -18,6 +18,27 @@ const COMMANDS_MAP = `COMMANDS-MAP`;
  */
 class HazelcastService extends EventEmitter {
 
+    static normalizeConfiguration(config) {
+        const result = {};
+        const hostWithPortList = config.ADDRESSES.split(`,`);
+        const addresses = hostWithPortList.map(hostWithPort => {
+            const [ host, port ] = hostWithPort.split(`:`);
+
+            return { host, port };
+        });
+
+        result.networkConfig = {
+            addresses: addresses
+        };
+
+        result.groupConfig = {
+            name: config.GROUP_NAME,
+            password: config.GROUP_PASSWORD
+        };
+
+        return result;
+    }
+
     /**
      * Creates new HazelcastService object
      */
@@ -32,11 +53,13 @@ class HazelcastService extends EventEmitter {
         me.notificationsMap = {};
         me.commandsMap = {};
 
-        config.groupConfig = HAZELCAST_CONFIG.groupConfig;
-        config.networkConfig.addresses = HAZELCAST_CONFIG.networkConfig.addresses;
+        const hazelcastConfig = HazelcastService.normalizeConfiguration(HazelcastConfig);
+
+        config.groupConfig = hazelcastConfig.groupConfig;
+        config.networkConfig.addresses = hazelcastConfig.networkConfig.addresses;
         config.serializationConfig.portableFactories[1] = new DevicePortableFactory();
-        config.properties["hazelcast.client.event.thread.count"] = HAZELCAST_CONFIG.eventThreadCount;
-        config.properties["hazelcast.logging"] = `off`;
+        config.properties["hazelcast.client.event.thread.count"] = HazelcastConfig.eventThreadCount;
+        config.properties["hazelcast.logging"] = HazelcastConfig.LOGGING;
 
         HazelcastClient
             .newHazelcastClient(config)

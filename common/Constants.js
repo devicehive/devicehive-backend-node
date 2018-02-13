@@ -120,6 +120,11 @@ class Constants {
    static get THREADS_COUNT() { return `threads.count`; }
 
    static get WELCOME_MESSAGE() { return `The DeviceHive RESTful API is now running, please refer to documentation to get the list of available resources.`; }
+
+   static get COMMAND_EVENT() { return `COMMAND_EVENT` }
+   static get COMMAND_UPDATE_EVENT() { return `COMMAND_UPDATE_EVENT` }
+   static get COMMANDS_UPDATE_EVENT() { return `COMMANDS_UPDATE_EVENT` }
+   static get NOTIFICATION_EVENT() { return `NOTIFICATION_EVENT` }
 }
 
 

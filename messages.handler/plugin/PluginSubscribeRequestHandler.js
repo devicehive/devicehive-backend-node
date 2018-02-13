@@ -1,4 +1,5 @@
 const debug = require(`debug`)(`request-handler:plugin-subscribe`);
+const Constants = require(`../../common/Constants`);
 const PluginSubscribeRequestBody = require(`../../common/model/rpc/PluginSubscribeRequestBody`);
 const PluginSubscribeResponseBody = require(`../../common/model/rpc/PluginSubscribeResponseBody`);
 const NotificationSubscribeRequestBody = require(`../../common/model/rpc/NotificationSubscribeRequestBody`);
@@ -51,9 +52,9 @@ module.exports = async (request) => {
  */
 function createNotificationSubscription(pluginSubscribeRequestBody, correlationId) {
     return Promise.all(pluginSubscribeRequestBody.filters.map(filter => {
-        filter.eventName = `NOTIFICATION_EVENT`; //TODO
+        filter.eventName = Constants.NOTIFICATION_EVENT;
 
-        return notificationSubscribeRequestHandler(new Request({ //TODO
+        return notificationSubscribeRequestHandler(new Request({
             correlationId: correlationId,
             body: new NotificationSubscribeRequestBody({
                 subscriptionId: pluginSubscribeRequestBody.subscriptionId,
@@ -75,9 +76,9 @@ function createNotificationSubscription(pluginSubscribeRequestBody, correlationI
  */
 function createCommandSubscription(pluginSubscribeRequestBody, returnUpdated, correlationId) {
     return Promise.all(pluginSubscribeRequestBody.filters.map(filter => {
-        filter.eventName = `COMMAND_EVENT`; //TODO
+        filter.eventName = Constants.COMMAND_EVENT;
 
-        return commandSubscribeRequestHandler(new Request({ //TODO
+        return commandSubscribeRequestHandler(new Request({
             correlationId: correlationId,
             body: new CommandSubscribeRequestBody({
                 subscriptionId: pluginSubscribeRequestBody.subscriptionId,

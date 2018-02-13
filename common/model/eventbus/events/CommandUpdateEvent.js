@@ -1,3 +1,4 @@
+const Constants = require(`../../../Constants`);
 const Event = require(`./Event`);
 const DeviceCommand = require(`../../DeviceCommand`);
 const Action = require(`../../../../shim/Action`);
@@ -30,13 +31,13 @@ class CommandUpdateEvent extends Event {
                 networkId: me.command.networkId,
                 deviceTypeId: me.command.deviceTypeId,
                 deviceId: me.command.id,
-                eventName: `COMMAND_UPDATE_EVENT`, // TODO
+                eventName: Constants.COMMAND_UPDATE_EVENT
             }),
             new Filter({
                 networkId: me.command.networkId,
                 deviceTypeId:  me.command.deviceTypeId,
                 deviceId: me.command.id,
-                eventName: `COMMAND_UPDATE_EVENT`, // TODO
+                eventName: Constants.COMMAND_UPDATE_EVENT,
                 name: me.command.command
             })
         ];
