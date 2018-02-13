@@ -28,8 +28,6 @@ services:
       POSTGRES_USER: ${DH_POSTGRES_USERNAME:-postgres}
       POSTGRES_PASSWORD: ${DH_POSTGRES_PASSWORD:-12345}
       POSTGRES_DB: ${DH_POSTGRES_DB:-devicehive}
-    volumes:
-      - devicehive-db-dev:/var/lib/postgresql/data
 
   wsproxy:
     image: devicehive/devicehive-ws-proxy:${DH_WS_PROXY_TAG:-development}
@@ -52,14 +50,17 @@ services:
       MAX_HEAP_SIZE: "512m"
       MIN_HEAP_SIZE: "512m"
 
-  backend:
-    build: .
-    container_name: backend
-    environment:
-      PROXY.WS_PROXY_ENDPOINT: "wsproxy:3000"
-      HAZELCAST.ADDRESSES": "hazelcast:5701",
-    links:
-     - kafka
-     - postgres
-     - wsproxy
-     - hazelcast
+#  backend:
+#    build: .
+#    environment:
+#      PROXY.WS_PROXY_ENDPOINT: "wsproxy:3000"
+#      HAZELCAST.ADDRESSES: "hazelcast:5701"
+#      POSTGRES.HOST: "postgres"
+#      POSTGRES.PORT: 5432
+#      POSTGRES.DATABASE: "devicehive"
+#      POSTGRES.PASSWORD: "12345"
+#      POSTGRES.USER: "postgres"
+#    links:
+#     - postgres
+#     - wsproxy
+#     - hazelcast

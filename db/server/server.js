@@ -1,3 +1,4 @@
+const PostgresConfig = require(`../../config`).postgres;
 const EventEmitter = require('events');
 const loopback = require('loopback');
 const boot = require('loopback-boot');
@@ -19,15 +20,14 @@ class LoopBackApplication extends EventEmitter {
         me.app = loopback();
         me.isReady = false;
 
-        me.app.dataSource('pg', {
-            "host": "localhost",
-            "port": 5432,
-            "url": "postgres://postgres:12345@localhost:5432/devicehive",
-            "database": "devicehive",
-            "password": "12345",
-            "name": "pg",
-            "user": "postgres",
-            "connector": "postgresql"
+        me.app.dataSource(`pg`, {
+            name: `pg`,
+            connector: `postgresql`,
+            host: PostgresConfig.HOST,
+            port: PostgresConfig.PORT,
+            database: PostgresConfig.DATABASE,
+            password: PostgresConfig.PASSWORD,
+            user: PostgresConfig.USER
         });
 
         boot(me.app, __dirname, function (err) {
