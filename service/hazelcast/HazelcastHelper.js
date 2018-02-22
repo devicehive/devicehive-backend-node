@@ -1,6 +1,7 @@
 const Predicates = require(`hazelcast-client`).Predicates;
 const SearchableField = require(`../../common/model/enums/SearchableField`);
 const DeviceNotification = require(`../../common/model/DeviceNotification`);
+const HazelcastEntityComparator = require(`../../common/model/HazelcastEntityComparator`);
 
 
 /**
@@ -39,21 +40,8 @@ class HazelcastHelper {
         if (status) { predicates.push(Predicates.isEqualTo(SearchableField.STATUS, status)); }
 
         return limit && limit > 0 ?
-            Predicates.paging(Predicates.and(...predicates), limit) :
+            Predicates.paging(Predicates.and(...predicates), limit, new HazelcastEntityComparator()) :
             Predicates.and(...predicates);
-    }
-
-    /**
-     *
-     * @param o1
-     * @param o2
-     * @returns {number}
-     */
-    static comparator(o1, o2) {
-        const timestamp1 = new Date(o1.timestamp).getTime();
-        const timestamp2 = new Date(o2.timestamp).getTime();
-
-        return timestamp2 - timestamp1;
     }
 }
 
