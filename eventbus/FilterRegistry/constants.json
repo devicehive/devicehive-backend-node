@@ -1,0 +1,13 @@
+{
+    "COMMUNICATOR_TYPE": {
+        "IPC": "ipc",
+        "UDP": "udp",
+        "COTE": "cote"
+    },
+    "ACTION": {
+        "REGISTER": "register",
+        "UNREGISTER": "unregister",
+        "GET_SUBSCRIBERS": "getSubscribers",
+        "UNREGISTER_DEVICE": "unregisterDevice"
+    }
+}
