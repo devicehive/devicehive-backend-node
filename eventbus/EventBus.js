@@ -1,5 +1,6 @@
+const Config = require(`../config`).backend;
 const debug = require(`debug`)(`eventbus`);
-const FilterRegistry = require(`./FilterRegistry`);
+const FilterRegistryFactory = require(`./FilterRegistry`);
 const ProxyMessageDispatcher = require(`./ProxyMessageDispatcher`);
 const Response = require(`../shim/Response`);
 
@@ -14,8 +15,19 @@ class EventBus {
      */
     constructor() {
         const me = this;
+        const FilterRegistry = FilterRegistryFactory(Config.CLUSTER_COMMUNICATOR_TYPE);
+        const FilterRegistryServer = FilterRegistry.Server;
+        const FilterRegistryClient = FilterRegistry.Client;
 
-        me.filterRegistry = new FilterRegistry();
+        if (process.env.isMaster === `true`) { //TODO
+            FilterRegistryServer.start(Config.CLUSTER_COMMUNICATOR_PORT);
+
+            debug(`Filter registry server started`);
+        }
+
+        me.filterRegistryClient = new FilterRegistryClient();
+
+        debug(`Filter registry client started`);
     }
 
     /**
@@ -26,7 +38,7 @@ class EventBus {
     subscribe(filter, subscriber) {
         const me = this;
 
-        me.filterRegistry.register(filter, subscriber);
+        me.filterRegistryClient.register(filter, subscriber);
 
         debug(`Subscription request. Filter: ${JSON.stringify(filter)}, subscriber: ${JSON.stringify(subscriber)}`);
     }
@@ -38,7 +50,7 @@ class EventBus {
     unsubscribe(subscriber) {
         const me = this;
 
-        me.filterRegistry.unregister(subscriber);
+        me.filterRegistryClient.unregister(subscriber);
 
         debug(`Unsubscription request. Subscriber: ${JSON.stringify(subscriber)}`);
     }
@@ -50,21 +62,25 @@ class EventBus {
     publish(event) {
         const me = this;
 
-        event.getApplicableFilters()
-            .map(filter => me.filterRegistry.getSubscribers(filter))
-            .forEach(subscribers => subscribers.forEach((subscriber) => {
-                const response = new Response({
-                    correlationId: subscriber.correlationId,
-                    last: false,
-                    failed: false
-                });
+        Promise.all(event.getApplicableFilters().map(filter => me.filterRegistryClient.getSubscribers(filter)))
+            .then((r) => {
+                r.forEach(subscribers => subscribers.forEach((subscriber) => {
+                    const response = new Response({
+                        correlationId: subscriber.correlationId,
+                        last: false,
+                        failed: false
+                    });
 
-                response.withBody(event);
+                    response.withBody(event);
 
-                ProxyMessageDispatcher.send(subscriber.replyTo, response);
+                    ProxyMessageDispatcher.send(subscriber.replyTo, response);
 
-                debug(`Publish request. Subscriber ${JSON.stringify(subscriber)}, message: ${JSON.stringify(response)}`);
-            }));
+                    debug(`Publish request. Subscriber ${JSON.stringify(subscriber)}, message: ${JSON.stringify(response)}`);
+                }));
+            })
+            .catch((error) => {
+                debugger; //TODO
+            });
     }
 
     /**
@@ -74,7 +90,7 @@ class EventBus {
     unsubscribeDevice(device) {
         const me = this;
 
-        me.filterRegistry.unregisterDevice(device);
+        me.filterRegistryClient.unregisterDevice(device);
 
         debug(`Device unsubscription request. Device: ${JSON.stringify(device)}`);
     }
