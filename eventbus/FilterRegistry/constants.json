@@ -1,8 +1,7 @@
 {
     "COMMUNICATOR_TYPE": {
         "IPC": "ipc",
-        "UDP": "udp",
-        "COTE": "cote"
+        "UDP": "udp"
     },
     "ACTION": {
         "REGISTER": "register",

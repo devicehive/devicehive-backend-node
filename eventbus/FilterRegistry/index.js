@@ -10,10 +10,8 @@ module.exports = function (communicationType) {
             Client = require(`./ipc/Client`);
             break;
         case Const.COMMUNICATOR_TYPE.UDP:
-            // TODO
-            break;
-        case Const.COMMUNICATOR_TYPE.COTE:
-            // TODO
+            Server = require(`./udp/Server`);
+            Client = require(`./udp/Client`);
             break;
         default:
             throw `Unsupported communicator type`;

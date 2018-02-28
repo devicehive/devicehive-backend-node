@@ -10,7 +10,7 @@
     },
     "license": "Apache-2.0",
     "scripts": {
-        "start": "node ./appllication/DeviceHiveBackendApplication.js"
+        "start": "node ./application/DeviceHiveBackendApplication.js"
     },
     "dependencies": {
         "compression": "^1.7.2",
