@@ -25,7 +25,7 @@ class EventBus {
             debug(`Filter registry server started`);
         }
 
-        me.filterRegistryClient = new FilterRegistryClient();
+        me.filterRegistryClient = new FilterRegistryClient(Config.CLUSTER_COMMUNICATOR_PORT);
 
         debug(`Filter registry client started`);
     }

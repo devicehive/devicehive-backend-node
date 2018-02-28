@@ -15,7 +15,7 @@ class Server extends BaseRegistryServer {
      */
     static start() {
         new Server();
-    };
+    }
 
     /**
      * Creates new ComplexMapFilterRegistry object
