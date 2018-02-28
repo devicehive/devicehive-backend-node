@@ -6,7 +6,7 @@ const Subscriber = require(`../../../common/model/eventbus/Subscriber`);
 
 class Server extends BaseRegistryServer {
     /**
-     * Start Filter Registry server
+     * Start Filter Registry UDP server
      */
     static start(port) {
         const server = new Server();
@@ -23,11 +23,22 @@ class Server extends BaseRegistryServer {
         });
     }
 
+    /**
+     * Bind server to specific port
+     * @param port
+     * @returns {Server}
+     */
     listen(port) {
         this._socket.bind(port, 'localhost', console.error);
         return this;
     }
 
+    /**
+     * Handle request and respond
+     * @param data
+     * @param info
+     * @private
+     */
     _respond(data, info) {
         switch(data.params.method) {
             case 'register':
@@ -55,6 +66,14 @@ class Server extends BaseRegistryServer {
         }
     }
 
+    /**
+     * Respond to request
+     * @param message
+     * @param port
+     * @param host
+     * @param callback
+     * @private
+     */
     _sendResponse(message, ...args) {
         this._socket.send('response', message, ...args);
     }

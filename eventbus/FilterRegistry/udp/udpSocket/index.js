@@ -3,10 +3,18 @@ const EventEmitter = require('events');
 const shortId = require(`shortid`);
 
 class Socket extends EventEmitter {
+    /**
+     * Creates socket based on UDP4
+     * @returns {Socket}
+     */
     static createUDP4() {
         return new Socket('udp4');
     }
 
+    /**
+     * Creates Socket instance
+     * @param udpV UDP version to use
+     */
     constructor(udpV) {
         super();
 
@@ -18,6 +26,11 @@ class Socket extends EventEmitter {
 
     }
 
+    /**
+     * Handle each message and emit appropriate event based on channel
+     * @returns {Socket}
+     * @private
+     */
     _handleMessages() {
         this._socket.on('message', (payloadBuffer, info) => {
             const payload = this._parsePayload(payloadBuffer.toString());
@@ -27,6 +40,11 @@ class Socket extends EventEmitter {
         return this;
     }
 
+    /**
+     * Handle response for request and resolve request's promise if there is some pending
+     * @returns {Socket}
+     * @private
+     */
     _handleResponses() {
         this.on('response', (res, info) => {
             const pending = res.reqId && this._requests.get(res.reqId);
@@ -35,8 +53,16 @@ class Socket extends EventEmitter {
                 this._requests.delete(res.reqId);
             }
         });
+
+        return this;
     }
 
+    /**
+     * Parse message payload, return null in case of error
+     * @param rawMessage
+     * @returns {Object|null}
+     * @private
+     */
     _parsePayload(rawMessage) {
         try {
             return JSON.parse(rawMessage);
@@ -45,20 +71,47 @@ class Socket extends EventEmitter {
         }
     }
 
+    /**
+     * Prepare message payload
+     * @param payloadData
+     * @returns {String}
+     * @private
+     */
     _preparePayload(payloadData) {
         return JSON.stringify(payloadData);
     }
 
+    /**
+     * Bind UDP socket to specific port
+     * @param port
+     * @param host
+     * @param callback
+     * @returns {Socket}
+     */
     bind(...args) {
         this._socket.bind(...args);
         return this;
     }
 
+    /**
+     * Close UDP socket
+     * @param callback
+     * @returns {Socket}
+     */
     close(...args) {
         this._socket.close(...args);
         return this;
     }
 
+    /**
+     * Send message for specific channel
+     * @param channel
+     * @param message
+     * @param port
+     * @param host
+     * @param callback
+     * @returns {Socket}
+     */
     send(channel, message, ...args) {
         const payload = this._preparePayload({ channel, message });
         this._socket.send(payload, ...args);
@@ -66,6 +119,14 @@ class Socket extends EventEmitter {
         return this;
     }
 
+    /**
+     * Send request over UDP
+     * @param params
+     * @param port
+     * @param host
+     * @param callback
+     * @returns {Promise<*>}
+     */
     request(params, port, host, callback = () => {}) {
         const reqId = shortId.generate();
         const payload = this._preparePayload({ channel: 'request', params, reqId });
@@ -84,6 +145,10 @@ class Socket extends EventEmitter {
         });
     }
 
+    /**
+     * Set timeout for requests
+     * @param value
+     */
     requestTimeout(value) {
         if (value > 0) {
             this._requestTimeout = value;
