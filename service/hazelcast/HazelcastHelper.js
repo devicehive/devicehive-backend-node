@@ -40,8 +40,7 @@ class HazelcastHelper {
         if (status) { predicates.push(Predicates.isEqualTo(SearchableField.STATUS, status)); }
 
         return limit && limit > 0 ?
-            //Predicates.paging(Predicates.and(...predicates), limit, new HazelcastEntityComparator()) :
-            Predicates.paging(Predicates.and(...predicates), limit) :
+            Predicates.paging(Predicates.and(...predicates), limit, new HazelcastEntityComparator()) :
             Predicates.and(...predicates);
     }
 }

@@ -2,32 +2,18 @@
 
 class HazelcastEntityComparator {
 
-    static get FACTORY_ID() { return 1001; }
-    static get CLASS_ID() { return 1; }
+    static get FACTORY_ID() { return 1; }
+    static get CLASS_ID() { return 7; }
 
     static getClassName() { return HazelcastEntityComparator.name };
-
-    constructor() {
-        const me = this;
-
-        me.test = `test`;
-    }
 
     getFactoryId() { return HazelcastEntityComparator.FACTORY_ID; };
 
     getClassId() { return HazelcastEntityComparator.CLASS_ID; };
 
-    readData(input) {
-        const me = this;
+    readPortable(input) {}
 
-        me.test = input.readUTF();
-    }
-
-    writeData(output) {
-        const me = this;
-
-        output.writeUTF(me.test);
-    }
+    writePortable(output) {}
 
     sort(o1, o2) {
         const timestamp1 = new Date(o1[1].timestamp).getTime();

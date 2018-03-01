@@ -5,7 +5,6 @@ const SearchableField = require(`../../common/model/enums/SearchableField`);
 const HazelcastClient = require(`hazelcast-client`).Client;
 const Config = require(`hazelcast-client`).Config;
 const HazelcastHelper = require(`./HazelcastHelper`);
-const DataSerializableFactory = require(`../../common/model/DataSerializableFactory`);
 const DevicePortableFactory = require(`../../common/model/DevicePortableFactory`);
 const DeviceNotification = require(`../../common/model/DeviceNotification`);
 const DeviceCommand = require(`../../common/model/DeviceCommand`);
@@ -58,7 +57,6 @@ class HazelcastService extends EventEmitter {
 
         config.groupConfig = hazelcastConfig.groupConfig;
         config.networkConfig.addresses = hazelcastConfig.networkConfig.addresses;
-        config.serializationConfig.dataSerializableFactories[1001] = new DataSerializableFactory();
         config.serializationConfig.portableFactories[1] = new DevicePortableFactory();
         config.properties["hazelcast.client.event.thread.count"] = HazelcastConfig.eventThreadCount;
         config.properties["hazelcast.logging"] = HazelcastConfig.LOGGING;
@@ -92,7 +90,6 @@ class HazelcastService extends EventEmitter {
         const me = this;
         const map = me._getMapByEntityName(entityName);
         const predicate = HazelcastHelper.preparePredicate(entityName, filterValues);
-        let result;
 
         debug(`Find request. Entity: ${entityName}, filter: ${JSON.stringify(filterValues)}`);
 
