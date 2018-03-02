@@ -9,11 +9,11 @@ class HazelcastEntityComparator extends HazelcastPortable {
     static get FACTORY_ID() { return 1; }
     static get CLASS_ID() { return 7; }
 
-    static getClassName() { return HazelcastEntityComparator.name };
+    static getClassName() { return HazelcastEntityComparator.name; }
 
-    getFactoryId() { return HazelcastEntityComparator.FACTORY_ID; };
+    getFactoryId() { return HazelcastEntityComparator.FACTORY_ID; }
 
-    getClassId() { return HazelcastEntityComparator.CLASS_ID; };
+    getClassId() { return HazelcastEntityComparator.CLASS_ID; }
 
     readPortable(input) {}
 
