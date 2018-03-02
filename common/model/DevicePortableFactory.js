@@ -1,5 +1,6 @@
 const DeviceNotification = require(`./DeviceNotification`);
 const DeviceCommand = require(`./DeviceCommand`);
+const HazelcastEntityComparator = require(`./HazelcastEntityComparator`);
 const HivePrincipal = require(`../auth/HivePrincipal`);
 const Filter = require(`./eventbus/Filter`);
 const Subscriber = require(`./eventbus/Subscriber`);
@@ -25,6 +26,9 @@ class DevicePortableFactory {
                 break;
             case Subscriber.CLASS_ID:
                 portable = new Subscriber();
+                break;
+            case HazelcastEntityComparator.CLASS_ID:
+                portable = new HazelcastEntityComparator();
                 break;
         }
 
