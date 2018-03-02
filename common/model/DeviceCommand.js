@@ -1,6 +1,6 @@
 const HazelcastPortable = require(`./HazelcastPortable`);
 const Long = require(`long`);
-const moment = require(`moment`);
+
 
 class DeviceCommand extends HazelcastPortable {
 

@@ -1,6 +1,10 @@
+const HazelcastPortable = require(`./HazelcastPortable`);
 
 
-class HazelcastEntityComparator {
+/**
+ * HazelcastEntityComparator class
+ */
+class HazelcastEntityComparator extends HazelcastPortable {
 
     static get FACTORY_ID() { return 1; }
     static get CLASS_ID() { return 7; }
@@ -15,6 +19,12 @@ class HazelcastEntityComparator {
 
     writePortable(output) {}
 
+    /**
+     * Hazelcast entity sorting functionality
+     * @param o1
+     * @param o2
+     * @returns {number}
+     */
     sort(o1, o2) {
         const timestamp1 = new Date(o1[1].timestamp).getTime();
         const timestamp2 = new Date(o2[1].timestamp).getTime();
