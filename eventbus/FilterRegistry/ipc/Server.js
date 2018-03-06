@@ -6,7 +6,7 @@ const Subscriber = require(`../../../common/model/eventbus/Subscriber`);
 
 
 /**
- * Filter Registry Server class
+ * Filter Registry IPC Server class
  */
 class Server extends BaseRegistryServer {
 
@@ -34,15 +34,18 @@ class Server extends BaseRegistryServer {
 
             switch (request.action) {
                 case Const.ACTION.REGISTER:
+                    eventEmitter.emit(Const.ACTION.CLEAR_CACHE);
                     response = me.register(new Filter(requestData.filter), new Subscriber(requestData.subscriber));
                     break;
                 case Const.ACTION.UNREGISTER:
+                    eventEmitter.emit(Const.ACTION.CLEAR_CACHE);
                     response = me.unregister(new Subscriber(requestData.subscriber));
                     break;
                 case Const.ACTION.GET_SUBSCRIBERS:
                     response = me.getSubscribers(new Filter(requestData.filter));
                     break;
                 case Const.ACTION.UNREGISTER_DEVICE:
+                    eventEmitter.emit(Const.ACTION.CLEAR_CACHE);
                     response = me.unregisterDevice(requestData.device);
                     break;
             }

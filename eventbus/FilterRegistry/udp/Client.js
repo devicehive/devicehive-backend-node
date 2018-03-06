@@ -1,7 +1,12 @@
+const Const = require(`../constants.json`);
 const udpSocket = require('./udpSocket');
-
 const IFilterRegistry = require(`../IFilterRegistry`);
+const LRU = require(`lru`);
 
+
+/**
+ * Filter Registry UDP Client class
+ */
 class Client extends IFilterRegistry {
     /**
      * Creates new Filter Registry Client
@@ -13,6 +18,11 @@ class Client extends IFilterRegistry {
         this._socket = udpSocket.createUDP4();
         this._port = port;
         this._host = 'localhost';
+        this._cache = new LRU(Const.CACHE_MAX_ITEMS);
+
+        this._socket.on(Const.ACTION.CLEAR_CACHE, () => {
+            this._cache.clear();
+        })
     }
 
     /**
@@ -21,7 +31,9 @@ class Client extends IFilterRegistry {
      * @param subscriber
      */
     register(filter, subscriber) {
-        return this._request('register', { filter, subscriber });
+        this._cache.clear();
+
+        return this._request(Const.ACTION.REGISTER, { filter, subscriber });
     }
 
     /**
@@ -29,7 +41,9 @@ class Client extends IFilterRegistry {
      * @param subscriber
      */
     unregister(subscriber) {
-        return this._request('unregister', { subscriber });
+        this._cache.clear();
+
+        return this._request(Const.ACTION.UNREGISTER, { subscriber });
     }
 
     /**
@@ -38,7 +52,15 @@ class Client extends IFilterRegistry {
      * @returns {Promise<Array<Subscriber>>}
      */
     getSubscribers(filter) {
-        return this._request('getSubscribers', { filter }).then(res => res.subscribers);
+        const cachedValue = this._cache.get(`${filter.getFirstKey()}${filter.getSecondKey()}`);
+
+        return cachedValue ?
+            Promise.resolve(cachedValue) :
+            this._request(Const.ACTION.GET_SUBSCRIBERS, { filter }).then(res => {
+                this._cache.set(`${filter.getFirstKey()}${filter.getSecondKey()}`, res.subscribers);
+
+                return res.subscribers;
+            });
     }
 
     /**
@@ -46,7 +68,9 @@ class Client extends IFilterRegistry {
      * @param device
      */
     unregisterDevice(device) {
-        return this._request('unregisterDevice', { device });
+        this._cache.clear();
+
+        return this._request(Const.ACTION.UNREGISTER_DEVICE, { device });
     }
 
     /**
@@ -60,5 +84,6 @@ class Client extends IFilterRegistry {
         return this._socket.request({ method, ...params }, this._port, this._host);
     }
 }
+
 
 module.exports = Client;

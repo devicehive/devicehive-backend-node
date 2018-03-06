@@ -1,4 +1,5 @@
 const Config = require(`../config`).backend;
+const Utils = require(`../utils/Utils`);
 const debug = require(`debug`)(`eventbus`);
 const FilterRegistryFactory = require(`./FilterRegistry`);
 const ProxyMessageDispatcher = require(`./ProxyMessageDispatcher`);
@@ -19,15 +20,15 @@ class EventBus {
         const FilterRegistryServer = FilterRegistry.Server;
         const FilterRegistryClient = FilterRegistry.Client;
 
-        if (process.env.isMaster === `true`) { //TODO
+        if (Utils.isTrue(process.env.isMaster)) {
             FilterRegistryServer.start(Config.CLUSTER_COMMUNICATOR_PORT);
 
-            debug(`Filter registry server started`);
+            debug(`Filter registry server started. Communicator type: ${Config.CLUSTER_COMMUNICATOR_TYPE}`);
         }
 
         me.filterRegistryClient = new FilterRegistryClient(Config.CLUSTER_COMMUNICATOR_PORT);
 
-        debug(`Filter registry client started`);
+        debug(`Filter registry client started. Communicator type: ${Config.CLUSTER_COMMUNICATOR_TYPE}`);
     }
 
     /**

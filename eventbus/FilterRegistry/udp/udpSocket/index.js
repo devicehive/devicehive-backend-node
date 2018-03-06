@@ -2,7 +2,12 @@ const dgram = require('dgram');
 const EventEmitter = require('events');
 const shortId = require(`shortid`);
 
+
+/**
+ * UDP Socket class
+ */
 class Socket extends EventEmitter {
+
     /**
      * Creates socket based on UDP4
      * @returns {Socket}
@@ -51,6 +56,8 @@ class Socket extends EventEmitter {
             if (pending) {
                 pending.respond(res);
                 this._requests.delete(res.reqId);
+            } else if (res.method) {
+                this.emit(res.method);
             }
         });
 
@@ -155,5 +162,6 @@ class Socket extends EventEmitter {
         }
     }
 }
+
 
 module.exports = Socket;

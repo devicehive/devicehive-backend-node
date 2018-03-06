@@ -2,6 +2,6 @@
     "LOGGER_LEVEL": "info",
     "PROXY_SUBSCRIPTION_GROUP": "backend_subscription_group",
     "CLUSTER_WORKERS": "cpu",
-    "CLUSTER_COMMUNICATOR_TYPE": "ipc",
-    "CLUSTER_COMMUNICATOR_PORT": "0"
+    "CLUSTER_COMMUNICATOR_TYPE": "udp",
+    "CLUSTER_COMMUNICATOR_PORT": "17170"
 }

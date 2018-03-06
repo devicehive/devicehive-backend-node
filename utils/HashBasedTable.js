@@ -124,7 +124,7 @@ class HashBasedTable {
             const secondLevelMap = me.hashMap.get(firstKey);
 
             if (needSetSize) {
-                set = secondLevelMap.get(secondKey);
+                const set = secondLevelMap.get(secondKey);
 
                 if (set) {
                     result = set.size;

@@ -2,10 +2,11 @@ const Const = require(`../constants.json`);
 const IFilterRegistry = require(`../IFilterRegistry`);
 const Xev = require(`xev`).default;
 const shortId = require(`shortid`);
+const LRU = require(`lru`);
 
 
 /**
- * Filter Registry Client class
+ * Filter Registry IPC Client class
  */
 class Client extends IFilterRegistry {
 
@@ -18,6 +19,11 @@ class Client extends IFilterRegistry {
         const me = this;
 
         me.eventEmitter = new Xev();
+        me.cache = new LRU(Const.CACHE_MAX_ITEMS);
+
+        me.eventEmitter.on(Const.ACTION.CLEAR_CACHE, () => {
+            me.cache.clear();
+        });
     }
 
     /**
@@ -29,6 +35,8 @@ class Client extends IFilterRegistry {
         const me = this;
         const id = shortId.generate();
         const action = Const.ACTION.REGISTER;
+
+        me.cache.clear();
 
         return new Promise((resolve) => {
             me.eventEmitter.once(`${id}-${action}`, resolve);
@@ -45,6 +53,8 @@ class Client extends IFilterRegistry {
         const id = shortId.generate();
         const action = Const.ACTION.UNREGISTER;
 
+        me.cache.clear();
+
         return new Promise((resolve) => {
             me.eventEmitter.once(`${id}-${action}`, resolve);
             me.eventEmitter.emit(`request`, { id, action, data: { subscriber } });
@@ -60,9 +70,13 @@ class Client extends IFilterRegistry {
         const me = this;
         const id = shortId.generate();
         const action = Const.ACTION.GET_SUBSCRIBERS;
+        const cachedValue = me.cache.get(`${filter.getFirstKey()}${filter.getSecondKey()}`);
 
-        return new Promise((resolve) => {
-            me.eventEmitter.once(`${id}-${action}`, resolve);
+        return cachedValue ? Promise.resolve(cachedValue) : new Promise((resolve) => {
+            me.eventEmitter.once(`${id}-${action}`, (subscribers) => {
+                me.cache.set(`${filter.getFirstKey()}${filter.getSecondKey()}`, subscribers);
+                resolve(subscribers);
+            });
             me.eventEmitter.emit(`request`, { id, action, data: { filter } });
         });
     }
@@ -75,6 +89,8 @@ class Client extends IFilterRegistry {
         const me = this;
         const id = shortId.generate();
         const action = Const.ACTION.UNREGISTER_DEVICE;
+
+        me.cache.clear();
 
         return new Promise((resolve) => {
             me.eventEmitter.once(`${id}-${action}`, resolve);
