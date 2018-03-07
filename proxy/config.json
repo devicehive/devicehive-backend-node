@@ -1,3 +1,5 @@
 {
-    "WS_PROXY_ENDPOINT": "ws://localhost:3000"
+    "WS_PROXY_ENDPOINT": "ws://localhost:3000",
+    "RECONNECTION_INTERVAL_MS": 5000,
+    "PERSIST_MESSAGE_WHILE_RECONNECTING": true
 }
