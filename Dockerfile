@@ -27,4 +27,4 @@ RUN apk update \
 RUN npm install pm2 -g
 
 VOLUME ["/usr/src/app/conf"]
-CMD ["pm2-docker", "application/DeviceHiveBackendApplication.js"]
+CMD ["pm2-docker", "application/DeviceHiveBackendApplication-cluster.js"]

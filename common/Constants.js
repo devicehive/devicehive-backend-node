@@ -125,6 +125,8 @@ class Constants {
    static get COMMAND_UPDATE_EVENT() { return `COMMAND_UPDATE_EVENT` }
    static get COMMANDS_UPDATE_EVENT() { return `COMMANDS_UPDATE_EVENT` }
    static get NOTIFICATION_EVENT() { return `NOTIFICATION_EVENT` }
+
+   static get CPU_TAG() { return `cpu` }
 }
 
 
