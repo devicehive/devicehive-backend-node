@@ -90,14 +90,12 @@ class HazelcastService extends EventEmitter {
         const me = this;
         const map = me._getMapByEntityName(entityName);
         const predicate = HazelcastHelper.preparePredicate(entityName, filterValues);
-        let result;
 
         debug(`Find request. Entity: ${entityName}, filter: ${JSON.stringify(filterValues)}`);
 
         await me._getClient();
-        result = await map.valuesWithPredicate(predicate);
 
-        return result.sort(HazelcastHelper.comparator);
+        return await map.valuesWithPredicate(predicate);
     }
 
     /**

@@ -1,17 +1,21 @@
-const Filter = require(`../common/model/eventbus/Filter`);
-const HashBasedTable = require(`../utils/HashBasedTable`);
-const Utils = require(`../utils/Utils`);
+const IFilterRegistry = require(`./IFilterRegistry`);
+const HashBasedTable = require(`../../utils/HashBasedTable`);
+const Utils = require(`../../utils/Utils`);
+const Filter = require(`../../common/model/eventbus/Filter`);
+const Subscriber = require(`../../common/model/eventbus/Subscriber`);
 
 
 /**
- * ComplexMapFilterRegistry class
+ * Base Filter Registry class
  */
-class ComplexMapFilterRegistry {
+class BaseRegistryServer extends IFilterRegistry {
 
     /**
      * Creates new ComplexMapFilterRegistry object
      */
     constructor() {
+        super ();
+
         const me = this;
 
         me.registryTable = new HashBasedTable();
@@ -98,4 +102,4 @@ class ComplexMapFilterRegistry {
 }
 
 
-module.exports = ComplexMapFilterRegistry;
+module.exports = BaseRegistryServer;

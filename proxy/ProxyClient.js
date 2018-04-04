@@ -1,8 +1,10 @@
 const debug = require(`debug`)(`proxy:client`);
-const CONFIG = require(`../config`).proxy;
+const Config = require(`../config`).proxy;
+const Utils = require(`../utils/Utils`);
 const WS = require(`ws`);
 const EventEmitter = require(`events`);
 const { Message } = require(`devicehive-proxy-message`);
+const FIFO = require('fifo');
 
 
 /**
@@ -10,30 +12,101 @@ const { Message } = require(`devicehive-proxy-message`);
  */
 class ProxyClient extends EventEmitter {
 
+    static get ERROR_CONNECTION_RESET_CODE() { return `ECONNRESET`; }
+    static get ERROR_CONNECTION_REFUSED_CODE() { return `ECONNREFUSED`; }
+    static get NORMAL_CLOSE_CODE() { return 1000; }
+
     /**
      * Creates new ProxyClient object
-     * @param webSocketServerUrl
+     * @param config {Object} configuration object
+     * @param config.webSocketServerUrl {String} DeviceHive WS Proxy URL
+     * @param config.autoReconnectIntervalMs {Number} auto reconnection interval in ms
+     * @param config.persistMessageWhileReconnecting {Boolean} persist message while WS Proxy is nor reachable
      */
-    constructor(webSocketServerUrl = CONFIG.WS_PROXY_ENDPOINT) {
+    constructor({
+        webSocketServerUrl = Config.WS_PROXY_ENDPOINT,
+        autoReconnectIntervalMs = Config.RECONNECTION_INTERVAL_MS,
+        persistMessageWhileReconnecting = Config.PERSIST_MESSAGE_WHILE_RECONNECTING
+    } = {}) {
         super();
 
         const me = this;
 
-        me.ws = new WS(webSocketServerUrl);
+        me.url = webSocketServerUrl;
+        me.autoReconnectIntervalMs= autoReconnectIntervalMs;
+        me.persistMessageWhileReconnecting= persistMessageWhileReconnecting;
+        me.pendingMessageBuffer = new FIFO();
+        me.isReconnecting = false;
+
+        me._open();
+    }
+
+    /**
+     * Sends message to WS Proxy
+     * @param message {Message} message to send
+     */
+    sendMessage(message = new Message()) {
+        const me = this;
+
+        try {
+            if (Utils.isTrue(me.isReconnecting) &&
+                Utils.isTrue(me.persistMessageWhileReconnecting)) {
+                me._persistPendingMessage(message);
+            } else {
+                me.ws.send(message.toString());
+            }
+        } catch (error) {
+            debug(`Error while sending message: ${error}`);
+
+            me._persistPendingMessage(message);
+        }
+    }
+
+    /**
+     * Opens WS connection
+     * @private
+     */
+    _open() {
+        const me = this;
+
+        me.ws = new WS(me.url);
 
         me.ws.addEventListener(`open`, () => {
+            me.isReconnecting = false;
+
             process.nextTick(() => me.emit(`open`));
-            debug(`Connected to ${webSocketServerUrl}`);
+            debug(`Connected to ${me.url}`);
+
+            me._sendAllPendingMessages();
         });
 
-        me.ws.addEventListener(`close`, () => {
-            process.nextTick(() => me.emit(`close`));
-            debug(`Connection has been closed`);
+        me.ws.addEventListener(`close`, (code, reason) => {
+            me.isReconnecting = false;
+
+            switch (code){
+                case ProxyClient.NORMAL_CLOSE_CODE:
+                    process.nextTick(() => me.emit(`close`));
+                    debug(`Connection has been closed. Reason: ${reason}`);
+                    break;
+                default:
+                    me._reconnect();
+                    break;
+            }
         });
 
         me.ws.addEventListener(`error`, (error) => {
-            me.emit(`error`, error);
-            debug(`Proxy client error: ${error}`);
+            me.isReconnecting = false;
+
+            switch (error.code){
+                case ProxyClient.ERROR_CONNECTION_RESET_CODE:
+                case ProxyClient.ERROR_CONNECTION_REFUSED_CODE:
+                    me._reconnect();
+                    break;
+                default:
+                    me.emit(`error`, error);
+                    debug(`Proxy client error: ${error}`);
+                    break;
+            }
         });
 
         me.ws.addEventListener(`ping`, (pingData) => {
@@ -44,9 +117,11 @@ class ProxyClient extends EventEmitter {
         me.ws.addEventListener(`message`, (event) => {
             try {
                 let messages = JSON.parse(event.data);
-                messages = messages.length ? messages : [messages];
+                messages = messages.length ? messages : [ messages ];
 
-                messages.forEach((message) => me.emit(`message`, Message.normalize(message)));
+                for (let messageCount = 0; messageCount < messages.length; messageCount++) {
+                    me.emit(`message`, Message.normalize(messages[messageCount]));
+                }
             } catch (error) {
                 debug(`Error on incoming message: ${error}`);
             }
@@ -54,13 +129,58 @@ class ProxyClient extends EventEmitter {
     }
 
     /**
-     * Sends message to WS Proxy
-     * @param message
+     * Reconnection routine
+     * @private
      */
-    sendMessage(message = new Message()) {
+    _reconnect() {
         const me = this;
 
-        me.ws.send(message.toString());
+        me.isReconnecting = true;
+
+        debug(`Reconnection in ${me.autoReconnectIntervalMs} ms`);
+        me.ws.removeAllListeners();
+
+        setTimeout(() => {
+            debug(`Reconnecting...`);
+            me._open();
+        }, me.autoReconnectIntervalMs);
+    }
+
+    /**
+     * Adds message to pending buffer
+     * @param message {Message} pending message
+     * @private
+     */
+    _persistPendingMessage(message) {
+        const me = this;
+
+        if (Utils.isTrue(me.isReconnecting) &&
+            Utils.isTrue(me.persistMessageWhileReconnecting)) {
+            me.pendingMessageBuffer.push(message);
+
+            debug(`New message in pending status. Total pending messages: ${me.pendingMessageBuffer.length}`);
+        }
+    }
+
+    /**
+     * Sends all pending messages
+     * @private
+     */
+    _sendAllPendingMessages() {
+        const me = this;
+
+        if (!Utils.isTrue(me.isReconnecting) &&
+            Utils.isTrue(me.persistMessageWhileReconnecting) &&
+            me.pendingMessageBuffer.length > 0) {
+
+            debug(`Starting to send pending messages. Total pending messages: ${me.pendingMessageBuffer.length}`);
+
+            while(me.pendingMessageBuffer.length) {
+                me.sendMessage(me.pendingMessageBuffer.shift());
+            }
+
+            debug(`All ${me.pendingMessageBuffer.length} pending messages were sent`);
+        }
     }
 }
 

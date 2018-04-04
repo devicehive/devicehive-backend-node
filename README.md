@@ -16,6 +16,10 @@ To start backend application just use next command:
     [path-to-backend-project]/application/config.json
 
 - _**LOGGER_LEVEL**_ - Application logging level (default: "info")
+- _**PROXY_SUBSCRIPTION_GROUP**_ -  "backend_subscription_group"
+- _**CLUSTER_WORKERS**_ - Number of workers in cluster or "cpu" as amount of cores in cpu (default: "cpu")
+- _**CLUSTER_COMMUNICATOR_TYPE**_ - Interprocess communicator type. Can be "ipc" or "udp" (default: "ipc")
+- _**CLUSTER_COMMUNICATOR_PORT**_ -  Port for "udp" CLUSTER_COMMUNICATOR_TYPE
 
 Each configuration field can be overridden with corresponding environmental variable with "BACKEND" prefix, for example:
 

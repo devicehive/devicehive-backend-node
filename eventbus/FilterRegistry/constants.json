@@ -1,0 +1,14 @@
+{
+    "COMMUNICATOR_TYPE": {
+        "IPC": "ipc",
+        "UDP": "udp"
+    },
+    "ACTION": {
+        "REGISTER": "register",
+        "UNREGISTER": "unregister",
+        "GET_SUBSCRIBERS": "getSubscribers",
+        "UNREGISTER_DEVICE": "unregisterDevice",
+        "CLEAR_CACHE": "clearCache"
+    },
+    "CACHE_MAX_ITEMS": 1000000
+}
