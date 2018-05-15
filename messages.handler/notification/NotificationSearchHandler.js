@@ -35,7 +35,7 @@ module.exports = async (request) => {
 /**
  * Search multiple notifications by predicate
  * @param notificationSearchRequestBody
- * @returns {Promise<void>}
+ * @returns {Promise<Array>}
  */
 async function searchMultipleNotifications(notificationSearchRequestBody) {
     const notifications = await hazelcastService.find(DeviceNotification.getClassName(), {
@@ -46,17 +46,17 @@ async function searchMultipleNotifications(notificationSearchRequestBody) {
         to: notificationSearchRequestBody.end
     });
 
-    return notifications ? notifications.map(deviceNotification => deviceNotification.toObject()) : [];
+    return notifications.map(deviceNotification => deviceNotification.toObject());
 }
 
 /**
  * Search one notification by id and deviceId
  * @param id
  * @param deviceId
- * @returns {Promise<void>}
+ * @returns {Promise<Array>}
  */
 async function searchSingleNotificationByDeviceAndId(id, deviceId) {
     const notifications = await hazelcastService.find(DeviceNotification.getClassName(), { id: id, deviceIds: [ deviceId ] });
 
-    return notifications ? notifications.map(deviceNotification => deviceNotification.toObject()) : [];
+    return notifications.map(deviceNotification => deviceNotification.toObject());
 }
