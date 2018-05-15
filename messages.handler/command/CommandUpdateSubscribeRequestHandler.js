@@ -49,10 +49,10 @@ module.exports = async (request) => {
  * @returns {Promise<*>}
  */
 async function findCommand(id, deviceId) {
-    const deviceCommand = await hazelcastService.find(DeviceCommand.getClassName(), {
+    const deviceCommand = (await hazelcastService.find(DeviceCommand.getClassName(), {
         id: id,
         deviceIds: [ deviceId ]
-    });
+    }));
 
     return deviceCommand[0] ? deviceCommand[0].toObject() : deviceCommand[0];
 }

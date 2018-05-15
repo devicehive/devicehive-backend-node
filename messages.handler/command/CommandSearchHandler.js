@@ -18,7 +18,10 @@ module.exports = async (request) => {
     debug(`Request (correlation id: ${request.correlationId}): ${commandSearchRequestBody}`);
 
     const commands = commandSearchRequestBody.id && commandSearchRequestBody.deviceId ?
-        await searchSingleCommandByDeviceAndId(commandSearchRequestBody.id, commandSearchRequestBody.deviceId) :
+        await searchSingleCommandByDeviceAndId(
+            commandSearchRequestBody.id,
+            commandSearchRequestBody.deviceId,
+            commandSearchRequestBody.returnUpdated) :
         await searchMultipleCommands(commandSearchRequestBody);
 
     response.errorCode = 0;
@@ -44,8 +47,8 @@ async function searchMultipleCommands(commandSearchRequestBody) {
         limit: (commandSearchRequestBody.take || 0) - (commandSearchRequestBody.skip || 0),
         from: commandSearchRequestBody.start,
         to: commandSearchRequestBody.end,
-        returnUpdated: false,
-        status: null
+        returnUpdated: commandSearchRequestBody.returnUpdated,
+        status: commandSearchRequestBody.status
     });
 
     return commands.map((deviceCommand) => deviceCommand.toObject());
@@ -55,9 +58,15 @@ async function searchMultipleCommands(commandSearchRequestBody) {
  * Search one command by id and deviceId
  * @param id
  * @param deviceId
- * @returns {Promise<void>}
+ * @param returnUpdated
+ * @returns {Promise<Array>}
  */
-async function searchSingleCommandByDeviceAndId(id, deviceId) {
-    return (await hazelcastService.find(DeviceCommand.getClassName(), { id: id, deviceIds: [ deviceId ] }))
-        .map((deviceCommand) => deviceCommand.toObject());
+async function searchSingleCommandByDeviceAndId(id, deviceId, returnUpdated) {
+    const commands = await hazelcastService.find(DeviceCommand.getClassName(), {
+        id: id,
+        deviceIds: [ deviceId ],
+        returnUpdated: returnUpdated
+    });
+
+    return commands.map((deviceCommand) => deviceCommand.toObject());
 }
