@@ -1,5 +1,5 @@
-const CONFIG = require(`../config`).backend;
-const logger = require(`../logger/ApplicationLogger`).init(`DH BACKEND`, CONFIG.LOGGER_LEVEL);
+const Config = require(`../config`).backend;
+const logger = require(`../logger/ApplicationLogger`).init(`DH BACKEND`, Config.LOGGER_LEVEL);
 const { MessageUtils, MessageBuilder } = require(`devicehive-proxy-message`);
 const proxyClient = require(`../proxy/ProxyClient`);
 const Request = require(`../shim/Request`);
@@ -11,7 +11,10 @@ const ErrorResponseBody = require(`../common/model/rpc/ErrorResponseBody`);
 proxyClient.on(`open`, () => {
     logger.info(`ProxyClient has been started`);
 
-    proxyClient.sendMessage(MessageBuilder.subscribeTopic({ topicList: [`request_topic`] }));
+    proxyClient.sendMessage(MessageBuilder.subscribeTopic({
+        topicList: [`request_topic`],
+        subscriptionGroup: Config.PROXY_SUBSCRIPTION_GROUP
+    }));
 });
 
 proxyClient.on(`message`, async (message) => {
