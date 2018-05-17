@@ -1,7 +1,7 @@
 const Const = require(`../constants.json`);
 const IFilterRegistry = require(`../IFilterRegistry`);
 const Xev = require(`xev`).default;
-const shortId = require(`shortid`);
+const uniqid = require(`uniqid`);
 const LRU = require(`lru`);
 
 
@@ -33,7 +33,7 @@ class Client extends IFilterRegistry {
      */
     register(filter, subscriber) {
         const me = this;
-        const id = shortId.generate();
+        const id = uniqid.process();
         const action = Const.ACTION.REGISTER;
 
         me.cache.clear();
@@ -50,7 +50,7 @@ class Client extends IFilterRegistry {
      */
     unregister(subscriber) {
         const me = this;
-        const id = shortId.generate();
+        const id = uniqid.process();
         const action = Const.ACTION.UNREGISTER;
 
         me.cache.clear();
@@ -68,13 +68,13 @@ class Client extends IFilterRegistry {
      */
     getSubscribers(filter) {
         const me = this;
-        const id = shortId.generate();
-        const action = Const.ACTION.GET_SUBSCRIBERS;
-        const cachedValue = me.cache.get(`${filter.getFirstKey()}${filter.getSecondKey()}`);
+        const cachedValue = me.cache.get(filter.getComplexKey());
 
         return cachedValue ? Promise.resolve(cachedValue) : new Promise((resolve) => {
+            const id = uniqid.process();
+            const action = Const.ACTION.GET_SUBSCRIBERS;
             me.eventEmitter.once(`${id}-${action}`, (subscribers) => {
-                me.cache.set(`${filter.getFirstKey()}${filter.getSecondKey()}`, subscribers);
+                me.cache.set(filter.getComplexKey(), subscribers);
                 resolve(subscribers);
             });
             me.eventEmitter.emit(`request`, { id, action, data: { filter } });
@@ -87,7 +87,7 @@ class Client extends IFilterRegistry {
      */
     unregisterDevice(device) {
         const me = this;
-        const id = shortId.generate();
+        const id = uniqid.process();
         const action = Const.ACTION.UNREGISTER_DEVICE;
 
         me.cache.clear();

@@ -25,24 +25,36 @@ class Filter extends HazelcastPortable {
         me.deviceId = deviceId;
         me.eventName = eventName;
         me.name = name;
+
+        me.firstKey = [me.networkId || WILDE_CARD, me.deviceTypeId || WILDE_CARD, me.deviceId || WILDE_CARD].join(KEY_JOINER);
+        me.secondKey = [me.eventName || WILDE_CARD, me.name || WILDE_CARD].join(KEY_JOINER);
+        me.deviceIgnoredFirstKey = [me.networkId || WILDE_CARD, me.deviceTypeId || WILDE_CARD, WILDE_CARD].join(KEY_JOINER);
+
+        me.complexKey = `${me.getFirstKey()}${me.getSecondKey()}`;
     }
 
     getFirstKey() {
         const me = this;
 
-        return [me.networkId || WILDE_CARD, me.deviceTypeId || WILDE_CARD, me.deviceId || WILDE_CARD].join(KEY_JOINER);
+        return me.firstKey;
     }
 
     getDeviceIgnoredFirstKey() {
         const me = this;
 
-        return [me.networkId || WILDE_CARD, me.deviceTypeId || WILDE_CARD, WILDE_CARD].join(KEY_JOINER);
+        return me.deviceIgnoredFirstKey;
     }
 
     getSecondKey() {
         const me = this;
 
-        return [me.eventName || WILDE_CARD, me.name || WILDE_CARD].join(KEY_JOINER)
+        return me.secondKey;
+    }
+
+    getComplexKey() {
+        const me = this;
+
+        return me.complexKey;
     }
 
     getFactoryId() {
@@ -71,6 +83,14 @@ class Filter extends HazelcastPortable {
         me.deviceId = reader.readUTF("deviceId");
         me.eventName = reader.readUTF("eventName");
         me.name = reader.readUTF("name");
+
+        //TODO: update filter's keys
+
+        // me.firstKey = [me.networkId || WILDE_CARD, me.deviceTypeId || WILDE_CARD, me.deviceId || WILDE_CARD].join(KEY_JOINER);
+        // me.secondKey = [me.eventName || WILDE_CARD, me.name || WILDE_CARD].join(KEY_JOINER);
+        // me.deviceIgnoredFirstKey = [me.networkId || WILDE_CARD, me.deviceTypeId || WILDE_CARD, WILDE_CARD].join(KEY_JOINER);
+
+        // me.complexKey = `${me.getFirstKey()}${me.getSecondKey()}`;
     };
 }
 

@@ -10,7 +10,8 @@
     },
     "license": "Apache-2.0",
     "scripts": {
-        "start": "node ./application/DeviceHiveBackendApplication.js"
+        "start": "node ./application/DeviceHiveBackendApplication.js",
+        "start-flame": "0x ./application/DeviceHiveBackendApplication.js"
     },
     "dependencies": {
         "compression": "^1.7.2",
@@ -32,6 +33,7 @@
         "serve-favicon": "^2.5.0",
         "shortid": "^2.2.8",
         "strong-error-handler": "^2.3.2",
+        "uniqid": "^4.1.1",
         "uuid": "^3.2.1",
         "winston": "^2.4.2",
         "ws": "^3.3.3",

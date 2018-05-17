@@ -52,12 +52,12 @@ class Client extends IFilterRegistry {
      * @returns {Promise<Array<Subscriber>>}
      */
     getSubscribers(filter) {
-        const cachedValue = this._cache.get(`${filter.getFirstKey()}${filter.getSecondKey()}`);
+        const cachedValue = this._cache.get(filter.getComplexKey());
 
         return cachedValue ?
             Promise.resolve(cachedValue) :
             this._request(Const.ACTION.GET_SUBSCRIBERS, { filter }).then(res => {
-                this._cache.set(`${filter.getFirstKey()}${filter.getSecondKey()}`, res.subscribers);
+                this._cache.set(filter.getComplexKey(), res.subscribers);
 
                 return res.subscribers;
             });
