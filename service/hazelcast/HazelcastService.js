@@ -92,7 +92,7 @@ class HazelcastService extends EventEmitter {
         const predicate = HazelcastHelper.preparePredicate(entityName, filterValues);
         let values;
 
-        debug(`Find request. Entity: ${entityName}, filter: ${JSON.stringify(filterValues)}`);
+        debug(`Find request. Entity: ${entityName}`);
 
         await me._getClient();
         values = await map.valuesWithPredicate(predicate);
@@ -110,7 +110,7 @@ class HazelcastService extends EventEmitter {
         const me = this;
         const map = me._getMapByEntityName(entityName);
 
-        debug(`Store request. Entity: ${entityName}, filter: ${JSON.stringify(data)}`);
+        debug(`Store request. Entity: ${entityName}`);
 
         await me._getClient();
         await map.set(data.getHazelcastKey(), data);
@@ -126,7 +126,7 @@ class HazelcastService extends EventEmitter {
         const me = this;
         const map = me._getMapByEntityName(entityName);
 
-        debug(`Update request. Entity: ${entityName}, filter: ${JSON.stringify(data)}`);
+        debug(`Update request. Entity: ${entityName}`);
 
         await me._getClient();
         await map.replace(data.getHazelcastKey(), data);

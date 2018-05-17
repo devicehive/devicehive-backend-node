@@ -21,6 +21,8 @@ class DeviceNotification extends HazelcastPortable {
         me.deviceTypeId = deviceTypeId;
         me.timestamp = new Date(timestamp).getTime();
         me.parameters = parameters;
+
+        me.hazelCastKey = `${me.id}-${me.deviceId}`;
     }
 
     toObject() {
@@ -40,7 +42,7 @@ class DeviceNotification extends HazelcastPortable {
     getHazelcastKey() {
         const me = this;
 
-        return `${me.id}-${me.deviceId}`;
+        return me.hazelCastKey;
     }
 
     getFactoryId() {
@@ -73,6 +75,8 @@ class DeviceNotification extends HazelcastPortable {
         me.deviceTypeId = reader.readLong("deviceTypeId").toNumber();
         me.timestamp = new Date(reader.readLong("timestamp").toNumber());
         me.parameters = JSON.parse(reader.readUTF("parameters"));
+
+        me.hazelCastKey = `${me.id}-${me.deviceId}`;
     };
 }
 

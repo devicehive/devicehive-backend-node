@@ -28,6 +28,8 @@ class DeviceCommand extends HazelcastPortable {
         me.status = status;
         me.result = result;
         me.isUpdated = isUpdated;
+
+        me.hazelCastKey = `${me.id}-${me.deviceId}`;
     }
 
     toObject() {
@@ -53,7 +55,7 @@ class DeviceCommand extends HazelcastPortable {
     getHazelcastKey() {
         const me = this;
 
-        return `${me.id}-${me.deviceId}`;
+        return me.hazelCastKey;
     }
 
     getFactoryId() {
@@ -98,6 +100,8 @@ class DeviceCommand extends HazelcastPortable {
         me.status = reader.readUTF("status");
         me.result = JSON.parse(reader.readUTF("result"));
         me.isUpdated = reader.readBoolean("isUpdated");
+
+        me.hazelCastKey = `${me.id}-${me.deviceId}`;
     };
 }
 
