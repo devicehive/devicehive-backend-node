@@ -80,7 +80,7 @@ class EventBus {
                 }));
             })
             .catch((error) => {
-                debugger; //TODO
+                debug(`Error while publishing event: ${error}`);
             });
     }
 

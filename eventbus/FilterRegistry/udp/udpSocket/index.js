@@ -1,6 +1,6 @@
 const dgram = require('dgram');
 const EventEmitter = require('events');
-const shortId = require(`shortid`);
+const uniqid = require(`uniqid`);
 
 
 /**
@@ -135,7 +135,7 @@ class Socket extends EventEmitter {
      * @returns {Promise<*>}
      */
     request(params, port, host, callback = () => {}) {
-        const reqId = shortId.generate();
+        const reqId = uniqid.process();
         const payload = this._preparePayload({ channel: 'request', params, reqId });
 
         return new Promise((resolve, reject) => {
