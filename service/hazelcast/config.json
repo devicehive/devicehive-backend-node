@@ -3,5 +3,6 @@
     "GROUP_NAME": "dev",
     "GROUP_PASSWORD": "dev-pass",
     "EVENT_THREAD_COUNT": 5,
-    "LOGGING": "off"
+    "LOGGING": "off",
+    "MONITOR_POLL_INTERVAL_MS": 10000
 }
