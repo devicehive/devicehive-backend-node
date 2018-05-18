@@ -5,6 +5,7 @@ const SearchableField = require(`../../common/model/enums/SearchableField`);
 const HazelcastClient = require(`hazelcast-client`).Client;
 const Config = require(`hazelcast-client`).Config;
 const HazelcastHelper = require(`./HazelcastHelper`);
+const HazelcastMonitor = require(`./HazelcastMonitor`);
 const DevicePortableFactory = require(`../../common/model/DevicePortableFactory`);
 const DeviceNotification = require(`../../common/model/DeviceNotification`);
 const DeviceCommand = require(`../../common/model/DeviceCommand`);
@@ -114,6 +115,8 @@ class HazelcastService extends EventEmitter {
 
         await me._getClient();
         await map.set(data.getHazelcastKey(), data);
+
+        HazelcastMonitor.incrementPutCounter();
     }
 
     /**
@@ -130,6 +133,8 @@ class HazelcastService extends EventEmitter {
 
         await me._getClient();
         await map.replace(data.getHazelcastKey(), data);
+
+        HazelcastMonitor.incrementPutCounter();
     }
 
     /**
