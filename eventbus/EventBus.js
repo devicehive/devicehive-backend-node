@@ -95,6 +95,16 @@ class EventBus {
 
         debug(`Device unsubscription request. Device: ${JSON.stringify(device)}`);
     }
+
+    /**
+     *
+     * @param request
+     */
+    handleFilterRegistryRequest(request) {
+        const me = this;
+
+
+    }
 }
 
 
