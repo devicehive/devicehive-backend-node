@@ -12,8 +12,8 @@ class Filter extends HazelcastPortable {
 
     static getClassName() { return Filter.name };
 
-    static FIRST_KEY_WILDE_CARD() { return `${WILDE_CARD}${KEY_JOINER}${WILDE_CARD}${KEY_JOINER}${WILDE_CARD}`}
-    static SECOND_KEY_WILDE_CARD() { return `${WILDE_CARD}${KEY_JOINER}${WILDE_CARD}`}
+    static FIRST_KEY_WILDE_CARD() { return `${WILDE_CARD}${KEY_JOINER}${WILDE_CARD}${KEY_JOINER}${WILDE_CARD}`; }
+    static SECOND_KEY_WILDE_CARD() { return `${WILDE_CARD}${KEY_JOINER}${WILDE_CARD}`; }
 
     constructor({ networkId, deviceTypeId, deviceId, eventName, name } = {}) {
         super();
@@ -25,6 +25,17 @@ class Filter extends HazelcastPortable {
         me.deviceId = deviceId;
         me.eventName = eventName;
         me.name = name;
+
+        me.firstKey = ``;
+        me.secondKey = ``;
+        me.deviceIgnoredFirstKey = ``;
+        me.complexKey = ``;
+
+        me._buildKeys();
+    }
+
+    _buildKeys() {
+        const me = this;
 
         me.firstKey = [me.networkId || WILDE_CARD, me.deviceTypeId || WILDE_CARD, me.deviceId || WILDE_CARD].join(KEY_JOINER);
         me.secondKey = [me.eventName || WILDE_CARD, me.name || WILDE_CARD].join(KEY_JOINER);
@@ -84,13 +95,7 @@ class Filter extends HazelcastPortable {
         me.eventName = reader.readUTF("eventName");
         me.name = reader.readUTF("name");
 
-        //TODO: update filter's keys
-
-        // me.firstKey = [me.networkId || WILDE_CARD, me.deviceTypeId || WILDE_CARD, me.deviceId || WILDE_CARD].join(KEY_JOINER);
-        // me.secondKey = [me.eventName || WILDE_CARD, me.name || WILDE_CARD].join(KEY_JOINER);
-        // me.deviceIgnoredFirstKey = [me.networkId || WILDE_CARD, me.deviceTypeId || WILDE_CARD, WILDE_CARD].join(KEY_JOINER);
-
-        // me.complexKey = `${me.getFirstKey()}${me.getSecondKey()}`;
+        me._buildKeys();
     };
 }
 

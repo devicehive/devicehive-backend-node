@@ -1,7 +1,10 @@
+const EventEmitter = require(`events`);
+
+
 /**
  * Filter Registry Interface
  */
-class IFilterRegistry {
+class IFilterRegistry extends EventEmitter {
 
     /**
      * Registers new subscriber
@@ -17,7 +20,7 @@ class IFilterRegistry {
      * @param subscriber
      */
     unregister(subscriber) {
-        throw `Method "unregister( subscriber)" should be implemented`;
+        throw `Method "unregister(subscriber)" should be implemented`;
     }
 
     /**
