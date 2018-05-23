@@ -1,5 +1,6 @@
 const debug = require(`debug`)(`request-handler:user-list`);
 const db = require(`../../../db/index`);
+const Utils = require(`../../../utils/Utils`);
 const Response = require(`../../../shim/Response`);
 const ListUserRequestBody = require(`../../../common/model/rpc/ListUserRequestBody`);
 const ListUserResponseBody = require(`../../../common/model/rpc/ListUserResponseBody`);
@@ -40,31 +41,31 @@ async function getUsers (listUserRequestBody) {
     const filterObject = { where: {} };
 
 
-    if (listUserRequestBody.skip) {
+    if (Utils.isDefined(listUserRequestBody.skip)) {
         filterObject.skip = listUserRequestBody.skip;
     }
 
-    if (listUserRequestBody.take) {
+    if (Utils.isDefined(listUserRequestBody.take)) {
         filterObject.limit = listUserRequestBody.take;
     }
 
-    if (listUserRequestBody.sortField) {
+    if (Utils.isDefined(listUserRequestBody.sortField)) {
         filterObject.order = [`${listUserRequestBody.sortField} ${listUserRequestBody.sortOrder || 'ASC'}`];
     }
 
-    if (listUserRequestBody.status) {
+    if (Utils.isDefined(listUserRequestBody.status)) {
         filterObject.where.status = listUserRequestBody.status;
     }
 
-    if (listUserRequestBody.role) {
+    if (Utils.isDefined(listUserRequestBody.role)) {
         filterObject.where.role = listUserRequestBody.role;
     }
 
-    if (listUserRequestBody.loginPattern) {
+    if (Utils.isDefined(listUserRequestBody.loginPattern)) {
         filterObject.where.login = { like: listUserRequestBody.loginPattern };
     }
 
-    if (listUserRequestBody.login) {
+    if (Utils.isDefined(listUserRequestBody.login)) {
         filterObject.where.login = listUserRequestBody.login;
     }
 

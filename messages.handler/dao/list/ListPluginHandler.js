@@ -1,5 +1,6 @@
 const debug = require(`debug`)(`request-handler:plugin-list`);
 const db = require(`../../../db/index`);
+const Utils = require(`../../../utils/Utils`);
 const Response = require(`../../../shim/Response`);
 const ListPluginRequestBody = require(`../../../common/model/rpc/ListPluginRequestBody`);
 const ListPluginResponseBody = require(`../../../common/model/rpc/ListPluginResponseBody`);
@@ -42,35 +43,35 @@ async function getPlugins (listPluginRequestBody) {
     const principal = listPluginRequestBody.principal;
 
 
-    if (listPluginRequestBody.skip) {
+    if (Utils.isDefined(listPluginRequestBody.skip)) {
         pluginFilterObject.skip = listPluginRequestBody.skip;
     }
 
-    if (listPluginRequestBody.take) {
+    if (Utils.isDefined(listPluginRequestBody.take)) {
         pluginFilterObject.limit = listPluginRequestBody.take;
     }
 
-    if (listPluginRequestBody.sortField) {
-        pluginFilterObject.order = [`${listPluginRequestBody.sortField} ${listPluginRequestBody.sortOrder || 'ASC'}`];
+    if (Utils.isDefined(listPluginRequestBody.sortField)) {
+        pluginFilterObject.order = [`${listPluginRequestBody.sortField} ${listPluginRequestBody.sortOrderAsc || 'ASC'}`];
     }
 
-    if (listPluginRequestBody.namePattern) {
+    if (Utils.isDefined(listPluginRequestBody.namePattern)) {
         pluginFilterObject.where.name = { like: listPluginRequestBody.namePattern };
     }
 
-    if (listPluginRequestBody.name) {
+    if (Utils.isDefined(listPluginRequestBody.name)) {
         pluginFilterObject.where.name = listPluginRequestBody.name;
     }
 
-    if (listPluginRequestBody.topicName) {
+    if (Utils.isDefined(listPluginRequestBody.topicName)) {
         pluginFilterObject.where.topicName = listPluginRequestBody.topicName;
     }
 
-    if (listPluginRequestBody.status) {
+    if (Utils.isDefined(listPluginRequestBody.status)) {
         pluginFilterObject.where.status = listPluginRequestBody.status;
     }
 
-    if (listPluginRequestBody.userId) {
+    if (Utils.isDefined(listPluginRequestBody.userId)) {
         pluginFilterObject.where.userId = listPluginRequestBody.userId;
     }
 

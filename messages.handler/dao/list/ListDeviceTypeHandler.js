@@ -1,5 +1,6 @@
 const debug = require(`debug`)(`request-handler:devicetype-list`);
 const db = require(`../../../db/index`);
+const Utils = require(`../../../utils/Utils`);
 const Response = require(`../../../shim/Response`);
 const ListDeviceTypeRequestBody = require(`../../../common/model/rpc/ListDeviceTypeRequestBody`);
 const ListDeviceTypeResponseBody = require(`../../../common/model/rpc/ListDeviceTypeResponseBody`);
@@ -42,23 +43,23 @@ async function getDeviceTypes (listDeviceTypeRequestBody) {
     const principal = listDeviceTypeRequestBody.principal;
 
 
-    if (listDeviceTypeRequestBody.skip) {
+    if (Utils.isDefined(listDeviceTypeRequestBody.skip)) {
         deviceTypeFilterObject.skip = listDeviceTypeRequestBody.skip;
     }
 
-    if (listDeviceTypeRequestBody.take) {
+    if (Utils.isDefined(listDeviceTypeRequestBody.take)) {
         deviceTypeFilterObject.limit = listDeviceTypeRequestBody.take;
     }
 
-    if (listDeviceTypeRequestBody.sortField) {
+    if (Utils.isDefined(listDeviceTypeRequestBody.sortField)) {
         deviceTypeFilterObject.order = [`${listDeviceTypeRequestBody.sortField} ${listDeviceTypeRequestBody.sortOrder || 'ASC'}`];
     }
 
-    if (listDeviceTypeRequestBody.namePattern) {
+    if (Utils.isDefined(listDeviceTypeRequestBody.namePattern)) {
         deviceTypeFilterObject.where.name = { like: listDeviceTypeRequestBody.namePattern };
     }
 
-    if (listDeviceTypeRequestBody.name) {
+    if (Utils.isDefined(listDeviceTypeRequestBody.name)) {
         deviceTypeFilterObject.where.name = listDeviceTypeRequestBody.name;
     }
 
@@ -72,10 +73,10 @@ async function getDeviceTypes (listDeviceTypeRequestBody) {
              deviceTypeFilterObject.where.id = { inq : userDeviceTypeIds };
         }
 
-        if (principal.deviceTypeIds) {
+        if (Utils.isDefined(principal.deviceTypeIds)) {
             let deviceTypeIds;
 
-            if (deviceTypeFilterObject.where.id) {
+            if (Utils.isDefined(deviceTypeFilterObject.where.id)) {
                 deviceTypeIds = deviceTypeFilterObject.where.id.inq.filter(deviceTypeId => {
                     return principal.deviceTypeIds.includes(deviceTypeId);
                 });

@@ -1,5 +1,6 @@
 const debug = require(`debug`)(`request-handler:network-list`);
 const db = require(`../../..//db/index`);
+const Utils = require(`../../../utils/Utils`);
 const Response = require(`../../../shim/Response`);
 const ListNetworkRequestBody = require(`../../../common/model/rpc/ListNetworkRequestBody`);
 const ListNetworkResponseBody = require(`../../../common/model/rpc/ListNetworkResponseBody`);
@@ -42,23 +43,23 @@ async function getNetworks (listNetworkRequestBody) {
     const networkFilterObject = { where: {} };
 
 
-    if (listNetworkRequestBody.skip) {
+    if (Utils.isDefined(listNetworkRequestBody.skip)) {
         networkFilterObject.skip = listNetworkRequestBody.skip;
     }
 
-    if (listNetworkRequestBody.take) {
+    if (Utils.isDefined(listNetworkRequestBody.take)) {
         networkFilterObject.limit = listNetworkRequestBody.take;
     }
 
-    if (listNetworkRequestBody.sortField) {
+    if (Utils.isDefined(listNetworkRequestBody.sortField)) {
         networkFilterObject.order = [`${listNetworkRequestBody.sortField} ${listNetworkRequestBody.sortOrder || 'ASC'}`];
     }
 
-    if (listNetworkRequestBody.namePattern) {
+    if (Utils.isDefined(listNetworkRequestBody.namePattern)) {
         networkFilterObject.where.name = { like: listNetworkRequestBody.namePattern };
     }
 
-    if (listNetworkRequestBody.name) {
+    if (Utils.isDefined(listNetworkRequestBody.name)) {
         networkFilterObject.where.name = listNetworkRequestBody.name;
     }
 
@@ -72,10 +73,10 @@ async function getNetworks (listNetworkRequestBody) {
             networkFilterObject.where.id = { inq: userNetworkIds };
         }
 
-        if (principal.networkIds) {
+        if (Utils.isDefined(principal.networkIds)) {
             let networkIds;
 
-            if (networkFilterObject.where.id) {
+            if (Utils.isDefined(networkFilterObject.where.id)) {
                 networkIds = networkFilterObject.where.id.inq.filter(networkId => {
                     return principal.networkIds.includes(networkId);
                 });

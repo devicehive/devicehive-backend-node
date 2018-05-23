@@ -1,5 +1,6 @@
 const debug = require(`debug`)(`request-handler:device-list`);
 const db = require(`../../../db/index`);
+const Utils = require(`../../../utils/Utils`);
 const Response = require(`../../../shim/Response`);
 const ListDeviceRequestBody = require(`../../../common/model/rpc/ListDeviceRequestBody`);
 const ListDeviceResponseBody = require(`../../../common/model/rpc/ListDeviceResponseBody`);
@@ -43,35 +44,35 @@ async function getDevices (listDeviceRequestBody) {
     const principal = listDeviceRequestBody.principal;
 
 
-    if (listDeviceRequestBody.skip) {
+    if (Utils.isDefined(listDeviceRequestBody.skip)) {
         deviceFilterObject.skip = listDeviceRequestBody.skip;
     }
 
-    if (listDeviceRequestBody.take) {
+    if (Utils.isDefined(listDeviceRequestBody.take)) {
         deviceFilterObject.limit = listDeviceRequestBody.take;
     }
 
-    if (listDeviceRequestBody.sortField) {
+    if (Utils.isDefined(listDeviceRequestBody.sortField)) {
         deviceFilterObject.order = [`${listDeviceRequestBody.sortField} ${listDeviceRequestBody.sortOrder || 'ASC'}`];
     }
 
-    if (listDeviceRequestBody.namePattern) {
+    if (Utils.isDefined(listDeviceRequestBody.namePattern)) {
         deviceFilterObject.where.name = { like: listDeviceRequestBody.namePattern };
     }
 
-    if (listDeviceRequestBody.name) {
+    if (Utils.isDefined(listDeviceRequestBody.name)) {
         deviceFilterObject.where.name = listDeviceRequestBody.name;
     }
 
-    if (listDeviceRequestBody.networkId) {
+    if (Utils.isDefined(listDeviceRequestBody.networkId)) {
         deviceFilterObject.where.networkId = { inq: [ listDeviceRequestBody.networkId ] };
     }
 
-    if (listDeviceRequestBody.networkName) {
+    if (Utils.isDefined(listDeviceRequestBody.networkName)) {
         const networkFilterObject = { where: { name: listDeviceRequestBody.networkName } };
         let networks;
 
-        if (listDeviceRequestBody.networkId) {
+        if (Utils.isDefined(listDeviceRequestBody.networkId)) {
             networkFilterObject.where.id = listDeviceRequestBody.networkId;
         }
 
@@ -84,7 +85,7 @@ async function getDevices (listDeviceRequestBody) {
         const user = principal.getUser();
 
         if (user && !user.isAdmin()) {
-            if (deviceFilterObject.where.networkId) {
+            if (Utils.isDefined(deviceFilterObject.where.networkId)) {
                 const userNetworks = await userNetworkDAO.find({where: {userId: user.id}});
                 const userNetworkIds = userNetworks.map(userNetwork => parseInt(userNetwork.networkId));
 
@@ -96,11 +97,11 @@ async function getDevices (listDeviceRequestBody) {
             }
         }
 
-        if (principal.networkIds) {
+        if (Utils.isDefined(principal.networkIds)) {
             deviceFilterObject.where.networkId = { inq: principal.networkIds };
         }
 
-        if (principal.deviceTypeIds) {
+        if (Utils.isDefined(principal.deviceTypeIds)) {
             deviceFilterObject.where.deviceTypeId = { inq: principal.deviceTypeIds };
         }
     }
