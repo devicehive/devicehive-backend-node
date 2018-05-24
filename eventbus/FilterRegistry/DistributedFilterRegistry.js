@@ -17,18 +17,22 @@ class DistributedFilterRegistry extends IFilterRegistry {
     constructor() {
         super();
 
-        proxyClient.sendMessage(MessageBuilder.subscribeTopic({
-            topicList: [ DistributedFilterRegistry.SUBSCRIPTION_TOPIC ]
-        }));
+        proxyClient.on(`open`, () => {
+            proxyClient.sendMessage(MessageBuilder.subscribeTopic({
+                topicList: [ DistributedFilterRegistry.SUBSCRIPTION_TOPIC ]
+            }));
+        });
     }
 
     /**
      *
      * @param filter
      * @param subscriber
+     * @param id
      */
-    register(filter, subscriber) {
+    register(filter, subscriber, id) {
         const subscribeMessage = new SubscribeMessage({
+            id: id,
             action: SubscribeMessage.REGISTER_ACTION,
             filter: filter,
             subscriber: subscriber
@@ -43,9 +47,11 @@ class DistributedFilterRegistry extends IFilterRegistry {
     /**
      *
      * @param subscriber
+     * @param id
      */
-    unregister(subscriber) {
+    unregister(subscriber, id) {
         const subscribeMessage = new SubscribeMessage({
+            id: id,
             action: SubscribeMessage.UNREGISTER_ACTION,
             subscriber: subscriber
         });
@@ -59,9 +65,11 @@ class DistributedFilterRegistry extends IFilterRegistry {
     /**
      *
      * @param device
+     * @param id
      */
-    unregisterDevice(device) {
+    unregisterDevice(device, id) {
         const subscribeMessage = new SubscribeMessage({
+            id: id,
             action: SubscribeMessage.UNREGISTER_DEVICE_ACTION,
             device: device
         });

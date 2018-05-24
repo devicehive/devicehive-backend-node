@@ -12,20 +12,49 @@ class SubscribeMessage extends Request {
 
     /**
      *
+     * @param id
+     * @param a
+     * @param f
+     * @param s
+     * @param d
+     * @returns {SubscribeMessage}
+     */
+    static normalize({ id, a, f, s, d } = {}) {
+        return new SubscribeMessage({
+            id: id,
+            action: a,
+            filter: f,
+            subscriber: s,
+            device: d
+        })
+    }
+
+    /**
+     *
+     * @param id
      * @param action
      * @param filter
      * @param subscriber
      * @param device
      */
-    constructor({ action, filter, subscriber, device } = {}) {
+    constructor({ id, action, filter, subscriber, device } = {}) {
         super({ type: Request.FILTER_REGISTRY_REQUEST_TYPE });
 
         const me = this;
 
+        me.id = id;
         me.action = action;
         me.filter = filter;
         me.subscriber = subscriber;
         me.device = device;
+    }
+
+    get id() {
+        return this._id;
+    }
+
+    set id(value) {
+        this._id = value;
     }
 
     get action() {
@@ -62,12 +91,13 @@ class SubscribeMessage extends Request {
 
     /**
      *
-     * @returns {{a: *, f: *, s: *, t: *}}
+     * @returns {{id: *, a: *, f: *, s: *, t: *}}
      */
     toObject() {
         const me = this;
 
         return {
+            id: me.id,
             a: me.action,
             f: me.filter,
             s: me.subscriber,

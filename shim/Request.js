@@ -19,15 +19,17 @@ class Request {
      * @param sre
      * @param rTo
      * @param t
+     * @param rest
      */
-    static normalize({b, cId, pK, sre, rTo, t} = {}) {
+    static normalize({b, cId, pK, sre, rTo, t, ...rest} = {}) {
         return new Request({
             body: Body.normalize(b ? b : {}),
             correlationId: cId,
             partitionKey: pK,
             singleReplyExpected: sre,
             replyTo: rTo,
-            type: t
+            type: t,
+            ...rest
         })
     }
 
@@ -39,8 +41,9 @@ class Request {
      * @param singleReplyExpected
      * @param replyTo
      * @param type
+     * @param rest
      */
-    constructor({body, correlationId = uuid(), partitionKey, singleReplyExpected, replyTo, type}) {
+    constructor({body, correlationId = uuid(), partitionKey, singleReplyExpected, replyTo, type, ...rest } = {}) {
         const me = this;
 
         me.body = body;
@@ -49,6 +52,8 @@ class Request {
         me.singleReplyExpected = singleReplyExpected;
         me.replyTo = replyTo;
         me.type = type;
+
+        Object.assign(this, rest);
     }
 
     get body() {

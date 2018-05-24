@@ -1,12 +1,18 @@
 const Const = require(`../constants.json`);
 const Xev = require(`xev`).default;
 const DistributedFilterRegistry = require(`../DistributedFilterRegistry`);
+const uniqid = require(`uniqid`);
+
+
+const SERVER_ID = uniqid.process();
 
 
 /**
  * Filter Registry IPC Server class
  */
 class Server {
+
+    static get ID() { return SERVER_ID; }
 
     /**
      * Start Filter Registry server
@@ -30,15 +36,15 @@ class Server {
             switch (request.action) {
                 case Const.ACTION.REGISTER:
                     eventEmitter.emit(`register`, request);
-                    distributedFilterRegistry.register(requestData.filter, requestData.subscriber);
+                    distributedFilterRegistry.register(requestData.filter, requestData.subscriber, Server.ID);
                     break;
                 case Const.ACTION.UNREGISTER:
                     eventEmitter.emit(`unregister`, request);
-                    distributedFilterRegistry.unregister(requestData.subscriber);
+                    distributedFilterRegistry.unregister(requestData.subscriber, Server.ID);
                     break;
                 case Const.ACTION.UNREGISTER_DEVICE:
                     eventEmitter.emit(`unregisterDevice`, request);
-                    distributedFilterRegistry.unregisterDevice(requestData.device);
+                    distributedFilterRegistry.unregisterDevice(requestData.device, Server.ID);
                     break;
             }
         });

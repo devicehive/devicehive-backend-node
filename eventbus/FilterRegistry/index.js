@@ -6,8 +6,8 @@ module.exports = function (communicationType) {
 
     switch (communicationType) {
         case Const.COMMUNICATOR_TYPE.IPC:
-            Server = require(`./ipc/Server`);
-            Client = require(`./ipc/Client`);
+            Server = require(`./ipc2/Server`);
+            Client = require(`./ipc2/Client`);
             break;
         case Const.COMMUNICATOR_TYPE.UDP:
             Server = require(`./udp/Server`);

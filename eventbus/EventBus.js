@@ -4,6 +4,9 @@ const debug = require(`debug`)(`eventbus`);
 const FilterRegistryFactory = require(`./FilterRegistry`);
 const ProxyMessageDispatcher = require(`./ProxyMessageDispatcher`);
 const Response = require(`../shim/Response`);
+const SubscribeMessage = require(`../shim/SubscribeMessage`);
+const Filter = require(`../common/model/eventbus/Filter`);
+const Subscriber = require(`../common/model/eventbus/Subscriber`);
 
 
 /**
@@ -27,6 +30,7 @@ class EventBus {
         }
 
         me.filterRegistryClient = new FilterRegistryClient(Config.CLUSTER_COMMUNICATOR_PORT);
+        me.filterRegistryServer = FilterRegistry.Server;
 
         debug(`Filter registry client started. Communicator type: ${Config.CLUSTER_COMMUNICATOR_TYPE}`);
     }
@@ -35,11 +39,12 @@ class EventBus {
      * Registers new subscriber
      * @param filter
      * @param subscriber
+     * @param silent
      */
-    subscribe(filter, subscriber) {
+    subscribe(filter, subscriber, silent) {
         const me = this;
 
-        me.filterRegistryClient.register(filter, subscriber);
+        me.filterRegistryClient.register(filter, subscriber, silent);
 
         debug(`Subscription request. Filter: ${JSON.stringify(filter)}, subscriber: ${JSON.stringify(subscriber)}`);
     }
@@ -47,11 +52,12 @@ class EventBus {
     /**
      * Unregisters subscriber
      * @param subscriber
+     * @param silent
      */
-    unsubscribe(subscriber) {
+    unsubscribe(subscriber, silent) {
         const me = this;
 
-        me.filterRegistryClient.unregister(subscriber);
+        me.filterRegistryClient.unregister(subscriber, silent);
 
         debug(`Unsubscription request. Subscriber: ${JSON.stringify(subscriber)}`);
     }
@@ -87,11 +93,12 @@ class EventBus {
     /**
      * Unregister device subscription
      * @param device
+     * @param silent
      */
-    unsubscribeDevice(device) {
+    unsubscribeDevice(device, silent) {
         const me = this;
 
-        me.filterRegistryClient.unregisterDevice(device);
+        me.filterRegistryClient.unregisterDevice(device, silent);
 
         debug(`Device unsubscription request. Device: ${JSON.stringify(device)}`);
     }
@@ -102,8 +109,21 @@ class EventBus {
      */
     handleFilterRegistryRequest(request) {
         const me = this;
+        const subscribeMessage = SubscribeMessage.normalize(request);
 
-
+        if (subscribeMessage.id !== me.filterRegistryServer.ID) {
+            switch (subscribeMessage.action) {
+                case SubscribeMessage.REGISTER_ACTION:
+                    me.subscribe(new Filter(subscribeMessage.filter), new Subscriber(subscribeMessage.subscriber));
+                    break;
+                case SubscribeMessage.UNREGISTER_ACTION:
+                    me.unsubscribe(new Subscriber(subscribeMessage.subscriber));
+                    break;
+                case SubscribeMessage.UNREGISTER_DEVICE_ACTION:
+                    me.unsubscribeDevice(subscribeMessage.device);
+                    break;
+            }
+        }
     }
 }
 

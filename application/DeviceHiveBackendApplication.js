@@ -37,6 +37,7 @@ proxyClient.on(`message`, async (message) => {
                     break;
                 case Request.FILTER_REGISTRY_REQUEST_TYPE:
                     EventBus.handleFilterRegistryRequest(request);
+                    return;
                     break;
                 default:
                     logger.warn(`Unknown request type: ${request.type}`);

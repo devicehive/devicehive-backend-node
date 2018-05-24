@@ -68,13 +68,25 @@ class Filter extends HazelcastPortable {
         return me.complexKey;
     }
 
+    toString() {
+        const me = this;
+
+        return JSON.stringify({
+            networkId: me.networkId,
+            deviceTypeId: me.deviceTypeId,
+            deviceId: me.deviceId,
+            eventName: me.eventName,
+            name: me.name
+        });
+    }
+
     getFactoryId() {
         return Filter.FACTORY_ID;
-    };
+    }
 
     getClassId() {
         return Filter.CLASS_ID;
-    };
+    }
 
     writePortable(writer) {
         const me = this;
@@ -84,7 +96,7 @@ class Filter extends HazelcastPortable {
         writer.writeUTF("deviceId", me.deviceId);
         writer.writeUTF("eventName", me.eventName);
         writer.writeUTF("name", me.name);
-    };
+    }
 
     readPortable(reader) {
         const me = this;
@@ -96,7 +108,7 @@ class Filter extends HazelcastPortable {
         me.name = reader.readUTF("name");
 
         me._buildKeys();
-    };
+    }
 }
 
 
