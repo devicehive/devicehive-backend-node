@@ -1,6 +1,7 @@
 const Const = require(`../constants.json`);
 const Xev = require(`xev`).default;
 const BaseRegistryServer = require(`../BaseRegistryServer`);
+const DistributedFilterRegistry = require(`../DistributedFilterRegistry`);
 const Filter = require(`../../../common/model/eventbus/Filter`);
 const Subscriber = require(`../../../common/model/eventbus/Subscriber`);
 
@@ -24,6 +25,7 @@ class Server extends BaseRegistryServer {
         super();
 
         const me = this;
+        const distributedFilterRegistry = new DistributedFilterRegistry();
         const eventEmitter = new Xev();
 
         eventEmitter.mount();
@@ -33,21 +35,33 @@ class Server extends BaseRegistryServer {
             let response;
 
             switch (request.action) {
-                case Const.ACTION.REGISTER:
+                case Const.ACTION.REGISTER: {
+                    const filter = new Filter(requestData.filter);
+                    const subscriber = new Subscriber(requestData.subscriber);
+
                     eventEmitter.emit(Const.ACTION.CLEAR_CACHE);
-                    response = me.register(new Filter(requestData.filter), new Subscriber(requestData.subscriber));
+                    response = me.register(filter, subscriber);
+                    distributedFilterRegistry.register(filter, subscriber);
                     break;
-                case Const.ACTION.UNREGISTER:
+                }
+                case Const.ACTION.UNREGISTER: {
+                    const subscriber = new Subscriber(requestData.subscriber);
+
                     eventEmitter.emit(Const.ACTION.CLEAR_CACHE);
-                    response = me.unregister(new Subscriber(requestData.subscriber));
+                    response = me.unregister(subscriber);
+                    distributedFilterRegistry.unregister(subscriber);
                     break;
-                case Const.ACTION.GET_SUBSCRIBERS:
+                }
+                case Const.ACTION.GET_SUBSCRIBERS: {
                     response = me.getSubscribers(new Filter(requestData.filter));
                     break;
-                case Const.ACTION.UNREGISTER_DEVICE:
+                }
+                case Const.ACTION.UNREGISTER_DEVICE: {
                     eventEmitter.emit(Const.ACTION.CLEAR_CACHE);
                     response = me.unregisterDevice(requestData.device);
+                    distributedFilterRegistry.unregisterDevice(requestData.device);
                     break;
+                }
             }
 
             eventEmitter.emit(`${request.id}-${request.action}`, response);

@@ -4,12 +4,12 @@ const Utils = require(`../../utils/Utils`);
 
 
 /**
- *
+ * HazelcastMonitor сдфыы
  */
 class HazelcastMonitor {
 
     /**
-     *
+     * Creates new HazelcastMonitor object
      */
     constructor() {
         const me = this;
@@ -54,7 +54,7 @@ class HazelcastMonitor {
     }
 
     /**
-     *
+     * Increments put counter
      * @param counter
      */
     incrementPutCounter(counter = 1) {
@@ -64,17 +64,17 @@ class HazelcastMonitor {
     }
 
     /**
-     *
+     * Returns input throughput of the local node
      * @returns {number}
      */
-    getInputThoughput() {
+    getInputThroughput() {
         const me = this;
 
         return me._localInputThroughput;
     }
 
     /**
-     *
+     * Returns input throughput over the all nodes
      * @returns {number}
      */
     getTotalInputThroughput() {
@@ -84,7 +84,7 @@ class HazelcastMonitor {
     }
 
     /**
-     *
+     * Calculates input throughput
      * @returns {number}
      * @private
      */

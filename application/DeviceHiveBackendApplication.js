@@ -6,6 +6,7 @@ const Request = require(`../shim/Request`);
 const Response = require(`../shim/Response`);
 const RequestHandlerFactory = require(`./RequestHandlerFactory`);
 const ErrorResponseBody = require(`../common/model/rpc/ErrorResponseBody`);
+const EventBus = require(`../eventbus/EventBus`);
 
 
 proxyClient.on(`open`, () => {
@@ -33,6 +34,10 @@ proxyClient.on(`message`, async (message) => {
                     break;
                 case Request.CLIENT_REQUEST_TYPE:
                     response = await handleClientRequest(request);
+                    break;
+                case Request.FILTER_REGISTRY_REQUEST_TYPE:
+                    EventBus.handleFilterRegistryRequest(request);
+                    return;
                     break;
                 default:
                     logger.warn(`Unknown request type: ${request.type}`);

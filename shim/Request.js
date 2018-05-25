@@ -7,8 +7,9 @@ const Body = require(`./Body`);
  */
 class Request {
 
-    static get CLIENT_REQUEST_TYPE () { return 0; }
-    static get PING_TYPE () { return 1; }
+    static get CLIENT_REQUEST_TYPE() { return 0; }
+    static get PING_TYPE() { return 1; }
+    static get FILTER_REGISTRY_REQUEST_TYPE() { return 2; }
 
     /**
      *
@@ -18,15 +19,17 @@ class Request {
      * @param sre
      * @param rTo
      * @param t
+     * @param rest
      */
-    static normalize({ b, cId, pK, sre, rTo, t } = {}) {
+    static normalize({b, cId, pK, sre, rTo, t, ...rest} = {}) {
         return new Request({
             body: Body.normalize(b ? b : {}),
             correlationId: cId,
             partitionKey: pK,
             singleReplyExpected: sre,
             replyTo: rTo,
-            type: t
+            type: t,
+            ...rest
         })
     }
 
@@ -38,8 +41,9 @@ class Request {
      * @param singleReplyExpected
      * @param replyTo
      * @param type
+     * @param rest
      */
-    constructor({ body, correlationId = uuid(), partitionKey, singleReplyExpected, replyTo, type }) {
+    constructor({body, correlationId = uuid(), partitionKey, singleReplyExpected, replyTo, type, ...rest } = {}) {
         const me = this;
 
         me.body = body;
@@ -48,6 +52,8 @@ class Request {
         me.singleReplyExpected = singleReplyExpected;
         me.replyTo = replyTo;
         me.type = type;
+
+        Object.assign(this, rest);
     }
 
     get body() {
@@ -128,9 +134,9 @@ class Request {
      * @returns {boolean}
      */
     isPing() {
-      const me = this;
+        const me = this;
 
-      return me.type === Request.PING_TYPE;
+        return me.type === Request.PING_TYPE;
     }
 
     /**
@@ -138,9 +144,36 @@ class Request {
      * @returns {boolean}
      */
     isClientRequest() {
-      const me = this;
+        const me = this;
 
-      return me.type === Request.CLIENT_REQUEST_TYPE;
+        return me.type === Request.CLIENT_REQUEST_TYPE;
+    }
+
+    /**
+     *
+     * @returns {boolean}
+     */
+    isFilterRegistryRequest() {
+        const me = this;
+
+        return me.type === Request.FILTER_REGISTRY_REQUEST_TYPE;
+    }
+
+    /**
+     *
+     * @returns {{b: string, cId: *, pK: *, sre: *, rTo: *, t: *}}
+     */
+    toObject() {
+        const me = this;
+
+        return {
+            b: me.body.toString(),
+            cId: me.correlationId,
+            pK: me.partitionKey,
+            sre: me.singleReplyExpected,
+            rTo: me.replyTo,
+            t: me.type
+        }
     }
 
     /**
@@ -150,14 +183,7 @@ class Request {
     toString() {
         const me = this;
 
-        return JSON.stringify({
-            b: me.body.toString(),
-            cId: me.correlationId,
-            pK: me.partitionKey,
-            sre: me.singleReplyExpected,
-            rTo: me.replyTo,
-            t: me.type,
-        });
+        return JSON.stringify(me.toObject());
     }
 }
 

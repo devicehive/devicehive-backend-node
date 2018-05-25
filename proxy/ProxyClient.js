@@ -69,7 +69,7 @@ class ProxyClient extends EventEmitter {
     _open() {
         const me = this;
 
-        me.ws = new WS(me.url);
+        me.ws = new WS(`${me.url}?type=be&role=pubsub`);
 
         me.ws.addEventListener(`open`, () => {
             me.isReconnecting = false;
