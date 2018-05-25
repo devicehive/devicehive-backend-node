@@ -39,12 +39,14 @@ class EventBus {
      * Registers new subscriber
      * @param filter
      * @param subscriber
-     * @param silent
+     * @param requestOptions
+     * @param requestOptions.silent
+     * @param requestOptions.distribute
      */
-    subscribe(filter, subscriber, silent) {
+    subscribe(filter, subscriber, requestOptions) {
         const me = this;
 
-        me.filterRegistryClient.register(filter, subscriber, silent);
+        me.filterRegistryClient.register(filter, subscriber, requestOptions);
 
         debug(`Subscription request. Filter: ${JSON.stringify(filter)}, subscriber: ${JSON.stringify(subscriber)}`);
     }
@@ -52,12 +54,14 @@ class EventBus {
     /**
      * Unregisters subscriber
      * @param subscriber
-     * @param silent
+     * @param requestOptions
+     * @param requestOptions.silent
+     * @param requestOptions.distribute
      */
-    unsubscribe(subscriber, silent) {
+    unsubscribe(subscriber, requestOptions) {
         const me = this;
 
-        me.filterRegistryClient.unregister(subscriber, silent);
+        me.filterRegistryClient.unregister(subscriber, requestOptions);
 
         debug(`Unsubscription request. Subscriber: ${JSON.stringify(subscriber)}`);
     }
@@ -93,12 +97,14 @@ class EventBus {
     /**
      * Unregister device subscription
      * @param device
-     * @param silent
+     * @param requestOptions
+     * @param requestOptions.silent
+     * @param requestOptions.distribute
      */
-    unsubscribeDevice(device, silent) {
+    unsubscribeDevice(device, requestOptions) {
         const me = this;
 
-        me.filterRegistryClient.unregisterDevice(device, silent);
+        me.filterRegistryClient.unregisterDevice(device, requestOptions);
 
         debug(`Device unsubscription request. Device: ${JSON.stringify(device)}`);
     }
@@ -112,15 +118,17 @@ class EventBus {
         const subscribeMessage = SubscribeMessage.normalize(request);
 
         if (subscribeMessage.id !== me.filterRegistryServer.ID) {
+            const requestOptions = { distribute: false };
+
             switch (subscribeMessage.action) {
                 case SubscribeMessage.REGISTER_ACTION:
-                    me.subscribe(new Filter(subscribeMessage.filter), new Subscriber(subscribeMessage.subscriber));
+                    me.subscribe(new Filter(subscribeMessage.filter), new Subscriber(subscribeMessage.subscriber), requestOptions);
                     break;
                 case SubscribeMessage.UNREGISTER_ACTION:
-                    me.unsubscribe(new Subscriber(subscribeMessage.subscriber));
+                    me.unsubscribe(new Subscriber(subscribeMessage.subscriber), requestOptions);
                     break;
                 case SubscribeMessage.UNREGISTER_DEVICE_ACTION:
-                    me.unsubscribeDevice(subscribeMessage.device);
+                    me.unsubscribeDevice(subscribeMessage.device, requestOptions);
                     break;
             }
         }

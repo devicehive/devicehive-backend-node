@@ -50,45 +50,51 @@ class Client extends BaseRegistryServer {
      * Registers new subscriber
      * @param filter
      * @param subscriber
-     * @param silent
+     * @param requestOptions
+     * @param requestOptions.silent
+     * @param requestOptions.distribute
      */
-    register(filter, subscriber, silent) {
+    register(filter, subscriber, { silent, distribute } = {}) {
         const me = this;
         const id = uniqid.process();
 
         return silent ? Promise.resolve(super.register(filter, subscriber)) : new Promise((resolve) => {
             me.once(id, resolve);
-            me.eventEmitter.emit(`request`, { id, action: Const.ACTION.REGISTER, data: { filter, subscriber } });
+            me.eventEmitter.emit(`request`, { id, action: Const.ACTION.REGISTER, data: { filter, subscriber }, distribute });
         });
     }
 
     /**
      * Unregisters subscriber
      * @param subscriber
-     * @param silent
+     * @param requestOptions
+     * @param requestOptions.silent
+     * @param requestOptions.distribute
      */
-    unregister(subscriber, silent) {
+    unregister(subscriber, { silent, distribute } = {}) {
         const me = this;
         const id = uniqid.process();
 
         return silent ? Promise.resolve(super.unregister(subscriber)) : new Promise((resolve) => {
             me.once(id, resolve);
-            me.eventEmitter.emit(`request`, { id, action: Const.ACTION.UNREGISTER, data: { subscriber } });
+            me.eventEmitter.emit(`request`, { id, action: Const.ACTION.UNREGISTER, data: { subscriber }, distribute });
         });
     }
 
     /**
      * Unregisters device subscription
      * @param device
-     * @param silent
+     * @param requestOptions
+     * @param requestOptions.silent
+     * @param requestOptions.distribute
      */
-    unregisterDevice(device, silent) {
+    unregisterDevice(device, { silent, distribute } = {}) {
         const me = this;
         const id = uniqid.process();
 
         return silent ? Promise.resolve(super.unregisterDevice(device)) : new Promise((resolve) => {
             me.once(id, resolve);
-            me.eventEmitter.emit(`request`, { id, action: Const.ACTION.UNREGISTER_DEVICE, data: { device } });
+            me.eventEmitter.emit(`request`, { id, action: Const.ACTION.UNREGISTER_DEVICE, data: { device }, distribute });
         });
     }
 }
