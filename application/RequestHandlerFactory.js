@@ -23,6 +23,8 @@ const commandUpdateSubscribeRequestHandler = require(`../messages.handler/comman
 const pluginSubscribeRequestHandler = require(`../messages.handler/plugin/PluginSubscribeRequestHandler`);
 const pluginUnsubscribeRequestHandler = require(`../messages.handler/plugin/PluginUnsubscribeRequestHandler`);
 const deviceDeleteHandler = require(`../messages.handler/DeviceDeleteHandler`);
+const deviceTypeDeleteHandler = require(`../messages.handler/DeviceTypeDeleteHandler`);
+const networkDeleteHandler = require(`../messages.handler/NetworkDeleteHandler`);
 
 const actionToHandlerMap = new Map();
 
@@ -44,6 +46,8 @@ actionToHandlerMap.set(Action.LIST_NETWORK_REQUEST, listNetworkHandler);
 actionToHandlerMap.set(Action.LIST_DEVICE_TYPE_REQUEST, listDeviceTypeHandler);
 actionToHandlerMap.set(Action.LIST_DEVICE_REQUEST, listDeviceHandler);
 actionToHandlerMap.set(Action.DEVICE_DELETE_REQUEST, deviceDeleteHandler);
+actionToHandlerMap.set(Action.DEVICE_TYPE_DELETE_REQUEST, deviceTypeDeleteHandler);
+actionToHandlerMap.set(Action.NETWORK_DELETE_REQUEST, networkDeleteHandler);
 actionToHandlerMap.set(Action.LIST_PLUGIN_REQUEST, listPluginHandler);
 actionToHandlerMap.set(Action.COUNT_DEVICE_REQUEST, countDeviceHandler);
 actionToHandlerMap.set(Action.COUNT_DEVICE_TYPE_REQUEST, countDeviceTypeHandler);
