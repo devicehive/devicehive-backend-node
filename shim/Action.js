@@ -59,7 +59,13 @@ class Action {
     static get DEVICE_DELETE_REQUEST() { return 45; }
     static get DEVICE_DELETE_RESPONSE() { return 46; }
 
-    static get COUNT_RESPONSE() { return 47; }
+    static get NETWORK_DELETE_REQUEST() { return 47; }
+    static get NETWORK_DELETE_RESPONSE() { return 48; }
+
+    static get DEVICE_TYPE_DELETE_REQUEST() { return 49; }
+    static get DEVICE_TYPE_DELETE_RESPONSE() { return 50; }
+
+    static get COUNT_RESPONSE() { return 51; }
 }
 
 
